@@ -332,7 +332,7 @@ function saveFile(html) {
 			console.dir(err);
 			process.exit(1);
 		}
-		console.log("["+chalk.blue("StyleGuide")'] Created file: ' + good(options.outputFile));
+		console.log("["+chalk.blue("StyleGuide")+'] Created file: ' + good(options.outputFile));
 	});
 	fs.outputFile
 }
