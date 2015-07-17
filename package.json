@@ -3,9 +3,6 @@
   "version": "1.0.4",
   "description": "A fork of markdown-styleguide-generator. Searches files for markdown and generates a static style/documentation guide.",
   "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {},
   "repository": {
     "type": "git",
@@ -35,6 +32,6 @@
     "walk": "^2.3.9"
   },
   "bin": {
-    "styleguide": "index.js"
+    "md_documentation": "index.js"
   }
 }

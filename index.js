@@ -93,13 +93,13 @@ if(args.length > 0) {
 		console.log(chalk.blue('                __/ |        __/ |                   '));
 		console.log(chalk.blue('               |___/        |___/                    '));
 		console.log('');
-		console.log('   ' + info('styleguide') + '         Generate styleguide');
-		console.log('   ' + info('styleguide init') + '    Create a new configuration file in the current directory');
-		console.log('   ' + info('styleguide no-lf') + '   Stop "reading [filename]" console output' );
-		console.log('   ' + info('styleguide help') + '    Show this so called help ');
+		console.log('   ' + info('md_documentation') + '         Generate styleguide');
+		console.log('   ' + info('md_documentation init') + '    Create a new configuration file in the current directory');
+		console.log('   ' + info('md_documentation no-lf') + '   Prevent "reading [filename]" console output' );
+		console.log('   ' + info('md_documentation help') + '    Show this');
 		console.log('');
 		console.log('   More help at');
-		console.log('      https://github.com/emiloberg/markdown-styleguide-generator');
+		console.log('      https://github.com/UWHealth/markdown-documentation-generator');
 		console.log('');
 		process.exit(0);
 	}
@@ -121,7 +121,7 @@ if (customOptions !== undefined) {
 		console.dir(err);
 		process.exit(1);
 	}
-	console.log(good('Read configuration file: ') + info('.styleguide'));
+	console.log(good("["+chalk.blue("StyleGuide")+'] Reading ') + info('.styleguide'));
 	options = mergeObjects(options, customOptions);
 }
 // Add walker exclude directories if set
@@ -332,7 +332,7 @@ function saveFile(html) {
 			console.dir(err);
 			process.exit(1);
 		}
-		console.log('Created file: ' + good(options.outputFile));
+		console.log("["+chalk.blue("StyleGuide")'] Created file: ' + good(options.outputFile));
 	});
 	fs.outputFile
 }
