@@ -14,11 +14,20 @@ var path = require('path');
 var error = chalk.bold.red;
 var good = chalk.green;
 var info = chalk.yellow;
+var filelist = true;
+var codeStore = {
+	vars: [],
+	funs: [],
+	mixins: []
+};
 
 var moduleDir = path.dirname(process.mainModule.filename);
+var renderer = new marked.Renderer();
 
 var options = {
 	sgComment: 'SG',
+	devIdentifier: '[[dev]]',
+	exampleIdentifier: 'html_example',
 	srcFolder: process.cwd(),
 	outputFile: path.join(process.cwd(), '/styleguide/dist/styleguide.html'),
 	templateFile: path.join(moduleDir, '/template/template.html'),
@@ -35,16 +44,21 @@ var options = {
 	walkerOptions: {
 		followLinks: false
 	},
-	markedOptions: {
-		gfm: true
-	},
 	customVars: {
 		sampleVar: 'Hello from customVars!'
 	},
-	jqFile: path.join(moduleDir, '/template/jquery.js')
+	jqFile: path.join(moduleDir, '/template/jquery.js'),
+	sortSections: true,
+	markedOptions: {
+		renderer: renderer,
+		gfm: true,
+		breaks: true
+	}
 };
 
 var sgUniqueIdentifier = 'sg-by-emiloberg';
+var developmentTitle = 'development';
+var developmentIdentifier = sgUniqueIdentifier+developmentTitle;
 
 var args = process.argv.slice(2);
 
@@ -65,6 +79,9 @@ if(args.length > 0) {
 			console.log('Edit that file, or delete it and run \'init\' again if you want to create a new configuration file.');
 		}
 		process.exit(0);
+	} else if(curArg === 'no-lf'){ //Turn off file listing
+		filelist = false;
+
 	} else { // Show help
 		console.log('');
 		console.log(chalk.blue('     _____ _         _                  _     _      '));
@@ -78,6 +95,7 @@ if(args.length > 0) {
 		console.log('');
 		console.log('   ' + info('styleguide') + '         Generate styleguide');
 		console.log('   ' + info('styleguide init') + '    Create a new configuration file in the current directory');
+		console.log('   ' + info('styleguide no-lf') + '   Stop "reading [filename]" console output' );
 		console.log('   ' + info('styleguide help') + '    Show this so called help ');
 		console.log('');
 		console.log('   More help at');
@@ -142,29 +160,118 @@ try {
 
 /**
  * Custom renderer for marked.
+ * Converts headings to special main-section/sub-section classes for later placement
  */
-var renderer = new marked.Renderer();
 
 renderer.heading = function (string, number) {
 	if (number === 1) {
 		var header = string.split('/', 2);
-		var out = '<h1 class="main-section-' + sgUniqueIdentifier + '">' + header[0] + '</h1>\n';
-		if (header.length > 1) {
-			out += '<h1 class="sub-section-' + sgUniqueIdentifier + '">' + header[1] + '</h1>\n';
-		} else {
-			out += '<h1 class="sub-section-' + sgUniqueIdentifier + '"></h1>\n';
+		var sectionIdentifier = sgUniqueIdentifier;
+
+		//Check for the devIdentifier
+		//Returns false or the position of the devIdentifier in the array
+		var check_inner = function(heading){
+			if (heading.indexOf(options.devIdentifier) > -1 ||
+				heading[0].indexOf(options.devIdentifier) > -1){
+				return 0;
+			}else if (heading[(heading.length-1)].indexOf(options.devIdentifier) > -1){
+				return (heading.length-1);
+			}else{
+				return false;
+			}
+		};
+
+		var check_dev = check_inner(header);
+
+		if ( check_dev !== false ) {
+			//Change the section class name to dev so we can identify it later
+			sectionIdentifier = developmentIdentifier;
+			//Remove the devIdentifier from the string
+			header[check_dev] = header[check_dev].replace(' '+options.devIdentifier, '');
+			header[check_dev] = header[check_dev].replace(options.devIdentifier, '');
 		}
+
+		var out = '<h1 class="main-section-' + sectionIdentifier + '">' + header[0] + '</h1>\n';
+
+		if (header.length > 1) {
+			for (var i = 1; i < header.length; i++){
+				out += '<h1 class="sub-section-' + sectionIdentifier + '">' + header[i] + '</h1>\n';
+			}
+		} else {
+			out += '<h1 class="sub-section-' + sectionIdentifier + '"></h1>\n';
+		}
+
 		return out;
 	} else {
 		return '<h' + number + ' class="main-section-' + sgUniqueIdentifier + '" id="section-' + makeUrlSafe(string) + '">' + string + '</h' + number + '>\n';
 	}
 };
+
 renderer.code = function (text, lang) {
-	return '\n<code class="sg-code-' + sgUniqueIdentifier + '">\n' + text + '\n</code>\n';
+	if (lang === options.exampleIdentifier){
+		return '\n<code class="sg-code-' + sgUniqueIdentifier + '">\n' + text + '\n</code>\n';
+	}else {
+		var processed_text = "";
+		if (lang) {
+			processed_text = hl.highlight(lang, text).value;
+		}else{
+			processed_text = hl.highlightAuto(text).value;
+		}
+		return '\n<div class="markup hljs">\n<pre><code class="plain_code">' + processed_text + '\n</code></pre></div>\n';
+	}
 };
 
-//Force marked to use custom renderer (preventing user hijacking)
-options.markedOptions.renderer = renderer;
+renderer.codespan = function(text){
+	var varRE = /(\$\$.+)[,\s\n]?/gi;
+	var var_check = varRE.exec(text);
+	var fnRE = /(^(?!@)\S+\(\)$)/gim;
+	var fn_check = fnRE.exec(text);
+	var mixinRE = /(@\S+\(\)$)/gi;
+	var mixin_check = mixinRE.exec(text);
+	var isInArray = function(value, array) {
+		return array.indexOf(value) > -1;
+	};
+
+	var output = '';
+	var modifiedString = '';
+
+	if ( var_check !== null){
+		modifiedString = var_check[0].replace('$$', '$');
+
+		// if (isInArray(modifiedString, codeStore.vars)){
+		// 	output = '<code class="global global_variable" data-code-id="'+modifiedString+'">';
+		// 	output += '<a href="#'+modifiedString+'">'+modifiedString+'</a></code>';
+		// }else{
+			output = '<code id="'+modifiedString+'" class="global global_variable" data-code-id="'+modifiedString+'">'+modifiedString+'</code>';
+		// }
+		codeStore.vars.push(modifiedString);
+
+	}else if (fn_check !== null){
+		// if (isInArray(text, codeStore.funs)){
+		// 	output = '<code class="global global_variable" data-code-id="'+text+'">';
+		// 	output += '<a href="#'+text+'">'+text+'</a></code>';
+		// }else{
+			output = '<code id="'+text+'" class="global global_function" data-code-id="'+text+'">'+text+'</code>';
+		// }
+		codeStore.funs.push(text);
+
+	}else if (mixin_check !== null){
+		modifiedString = mixin_check[0].replace('@', '');
+
+		// if (isInArray(modifiedString, codeStore.mixins)){
+		// 	output = '<code class="global global_variable" data-code-id="'+modifiedString+'">';
+		// 	output += '<a href="#'+modifiedString+'">'+text+'</a></code>';
+		// }else{
+			output = '<code id="'+modifiedString+'" class="global global_variable" data-code-id="'+modifiedString+'">'+text+'</code>';
+		// }
+		codeStore.mixins.push(text);
+
+	}else {
+		output = '<code>'+text+'</code>';
+	}
+
+	return output;
+}
 
 marked.setOptions(options.markedOptions);
 
@@ -182,13 +289,15 @@ walker.on("file", function (root, fileStats, next) {
 	var fileExtension = fileStats.name.substr((~-fileStats.name.lastIndexOf(".") >>> 0) + 2).toLowerCase();
 	if (options.fileExtensions[fileExtension]) {
 		fs.readFile(path.join(root, fileStats.name), 'utf8', function (err, fileContent) {
-			console.log('Reading file: ' + root + ' / ' + info(fileStats.name));
+			if(filelist) {
+				console.log('Reading file: ' + root + ' / ' + info(fileStats.name));
+			}
 			if (err) {
 				console.log(error('ERROR!'));
 				console.dir(err);
 				process.exit(1);
 			}
-			var pattern = new RegExp('/\\* ' + options.sgComment + '([\\s\\S]*?)\\*/', 'gi');
+			var pattern = new RegExp('/\\* ?' + options.sgComment + '([\\s\\S]*?)\\*/', 'gi');
 			var regResp;
 			while ((regResp = pattern.exec(fileContent)) !== null) {
 				scssFilesContent.push(marked(regResp[1]));
@@ -204,6 +313,7 @@ walker.on("errors", function (root, nodeStatsArray, next) {
 	console.dir(nodeStatsArray);
 	process.exit(1);
 });
+//Wrap all comments starting with SG in a section
 walker.on("end", function () {
 	var json = convertHTMLtoJSON('<div class="sg-section-' + sgUniqueIdentifier + '">\n' + scssFilesContent.join('</div>\n<div class="sg-section-' + sgUniqueIdentifier + '">\n') + '</div>');
 	var html = doTemplating(json);
@@ -222,9 +332,9 @@ function saveFile(html) {
 			console.dir(err);
 			process.exit(1);
 		}
-		console.log(good('\n\nAll done!'));
 		console.log('Created file: ' + good(options.outputFile));
 	});
+	fs.outputFile
 }
 
 /**
@@ -254,82 +364,168 @@ function doTemplating(json) {
 function convertHTMLtoJSON(html) {
 	var masterData = {
 		sections: [],
-		menu: [],
-		customVars: options.customVars
+		menus: {
+			sections: [],
+			developmentSections: []
+		},
+		developmentSections: [],
+		customVars: options.customVars,
+		codeRefs: codeStore
 	};
 
 	var $ = cheerio.load(html);
 
 	// Loop each section and turn into javascript object
 	$('div.sg-section-' + sgUniqueIdentifier).each(function (i, elem) {
+
+		var sectionIdentifier = sgUniqueIdentifier;
 		var $section = cheerio.load($(this).html());
 		var curSectionData = {
 			id: '',
+			isSubsection: false,
+			isDevelopment: false,
 			section: '',
 			heading: '',
 			code: '',
+			codeLang: '',
 			markup: '',
-			comment: ''
+			comment: '',
+			globalVars: []
 		};
 
-		$section('h1.main-section-' + sgUniqueIdentifier).each(function (i2, elem2) {
-			curSectionData.section = $section(this).text().replace(/^\s+|\s+$/g, '');
+		//Check if this section is a development section by checking class
+		if($section('h1')[0].attribs.class == 'main-section-'+developmentIdentifier){
+			sectionIdentifier = developmentIdentifier;
+			curSectionData.isDevelopment = true;
+		}
+
+
+		$section('h1.main-section-' + sectionIdentifier).each(function (i2, elem2) {
+			curSectionData.section = $section(this).text().replace(/^\s+|\s+$/g, '').replace(options.devIdentifier, '');
 		});
 
-		$section('h1.sub-section-' + sgUniqueIdentifier).each(function (i2, elem2) {
-			curSectionData.heading = $section(this).text().replace(/^\s+|\s+$/g, '');
+		$section('h1.sub-section-' + sectionIdentifier).each(function (i2, elem2) {
+			if (i2 > 0){
+				curSectionData.heading += '/ ';
+			}
+			curSectionData.heading += $section(this).text().replace(/^\s+|\s+$/g, '').replace(options.devIdentifier, '');
+
+			if (this.children.length > 0){
+				curSectionData.isSubsection = true;
+			}
 		});
 
 		$section('code.sg-code-' + sgUniqueIdentifier).each(function (i2, elem2) {
 			curSectionData.code = $section(this).html().replace(/^\s+|\s+$/g, '');
 		});
 
+		$section('code.global_variable').each(function(i2, elem2){
+			curSectionData.globalVars.push($section(this).text());
+		});
+
 		curSectionData.markup = hl.highlight("html", curSectionData.code).value;
 		curSectionData.id = makeUrlSafe(curSectionData.section  + '-' + curSectionData.heading);
 
-		$section('h1.main-section-' + sgUniqueIdentifier).remove();
-		$section('h1.sub-section-' + sgUniqueIdentifier).remove();
+		$section('h1.main-section-' + sectionIdentifier).remove();
+		$section('h1.sub-section-' + sectionIdentifier).remove();
 		$section('code.sg-code-' + sgUniqueIdentifier).remove();
 		curSectionData.comment = $section.html().replace(/^\s+|\s+$/g, '');
 
-		masterData.sections.push(curSectionData);
-	});
-
-
-	// Sort
-	masterData.sections.sort(function (a, b) {
-		if (a.section === b.section) {
-			if (a.heading > b.heading) {
-				return 1;
-			}
-			if (a.heading < b.heading) {
-				return -1;
-			}
-			return 0;
-		} else {
-			if (a.section > b.section) {
-				return 1;
-			}
-			if (a.section < b.section) {
-				return -1;
-			}
-			return 0;
+		if (curSectionData.isDevelopment){
+			masterData.developmentSections.push(curSectionData);
+		}else{
+			masterData.sections.push(curSectionData);
 		}
 	});
 
+
+
+	if(options.sortSections){
+		//Sort Main Sections
+		masterData.sections.sort(function (a, b) {
+			if (a.section === b.section) {
+				if (a.heading > b.heading) {
+					return 1;
+				}
+				if (a.heading < b.heading) {
+					return -1;
+				}
+				return 0;
+			} else {
+				if (a.section > b.section) {
+					return 1;
+				}
+				if (a.section < b.section) {
+					return -1;
+				}
+				return 0;
+			}
+		});
+
+		//Sort Developer Sections
+		masterData.developmentSections.sort(function (a, b) {
+			if (a.section === b.section) {
+				if (a.heading > b.heading) {
+					return 1;
+				}
+				if (a.heading < b.heading) {
+					return -1;
+				}
+				return 0;
+			} else {
+				if (a.section > b.section) {
+					return 1;
+				}
+				if (a.section < b.section) {
+					return -1;
+				}
+				return 0;
+			}
+		});
+	}
+
 	// Create menu object
 	var menuObj = {};
+	var menuObj2 = {};
+	var menuArr = [];
+	var menuArr2= [];
+
+	//Loop through section arrays
 	masterData.sections.forEach(function (section) {
 		if (!menuObj.hasOwnProperty(section.section)) {
 			menuObj[section.section] = [];
 		}
-		menuObj[section.section].push({id: section.id, name:section.heading});
+		var section_heading = section.heading;
+
+		menuObj[section.section].push({id: section.id, name:section_heading});
+
 	});
-	var menuArr = [];
+
+	masterData.developmentSections.forEach(function (section) {
+		if (!menuObj2.hasOwnProperty(section.section)) {
+			menuObj2[section.section] = [];
+		}
+		var section_heading = section.heading;
+
+		menuObj2[section.section].push({id: section.id, name:section_heading});
+
+	});
+
+
 	Object.keys(menuObj).forEach(function (key) {
 		menuArr.push({name: key, headings: menuObj[key]});
 	});
-	masterData.menu = menuArr;
+
+	Object.keys(menuObj2).forEach(function (key) {
+		menuArr2.push({name: key, headings: menuObj2[key]});
+	});
+	masterData.menus.sections = menuArr;
+	masterData.menus.developmentSections = menuArr2;
+
+	var json_output = options.outputFile.replace('.html', '.json');
+	var raw_json = JSON.stringify(masterData);
+
+	fs.outputFile(json_output, raw_json);
 
 	return masterData;
 }
@@ -460,7 +656,13 @@ function removeDiacritics (str) {
 
 function makeUrlSafe(str) {
 	var ret = str || '';
-	ret = ret.replace(/ /g, '_');
+	ret = ret.toLowerCase().replace(/ /g, '_');
+	ret = ret.replace(/(\")/g,'');
+	ret = ret.replace(/(\')/g,'');
+	ret = ret.replace(/(\()(.*?)(\))/g, '$2');
+	ret = ret.replace(/(\<)(.*?)(\>)/g, '_$2_');
+	ret = ret.replace('/', '_');
+	ret = ret.replace('#', '_');
 	ret = removeDiacritics(ret);
 	return ret;
 }

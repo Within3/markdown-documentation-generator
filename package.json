@@ -1,25 +1,30 @@
 {
-  "name": "markdown-styleguide-generator",
-  "version": "2.0.4",
-  "description": "Will search all your (s)css files for markdown and generate a single page html styleguide",
+  "name": "markdown-documentation-generator",
+  "version": "1.0.0",
+  "description": "A fork of markdown-styleguide-generator. Searches files for markdown and generates a static style/documentation guide.",
   "main": "index.js",
-  "author": "Emil Oberg <emil.oberg@monator.com>",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/emiloberg/markdown-styleguide-generator.git"
+    "url": "https://github.com/UWHealth/markdown-documentation-generator.git"
   },
-  "bugs": {
-    "url": "https://github.com/emiloberg/markdown-styleguide-generator/issues"
-  },
-  "homepage": "https://github.com/emiloberg/markdown-styleguide-generator",
   "keywords": [
-    "styleguide",
     "markdown",
-    "generator",
+    "style",
+    "guide",
+    "css",
     "sass",
-    "md"
+    "documentation"
   ],
-  "license": "GPL",
+  "author": "Chris Lee <clee5@uwhealth.org>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/UWHealth/markdown-documentation-generator/issues"
+  },
+  "homepage": "https://github.com/UWHealth/markdown-documentation-generator#readme",
   "dependencies": {
     "chalk": "^1.0.0",
     "cheerio": "^0.19.0",
@@ -28,8 +33,5 @@
     "highlight.js": "^8.5.0",
     "marked": "^0.3.3",
     "walk": "^2.3.9"
-  },
-  "bin": {
-    "styleguide": "index.js"
   }
 }
