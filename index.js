@@ -663,6 +663,7 @@ function makeUrlSafe(str) {
 	ret = ret.replace(/(\<)(.*?)(\>)/g, '_$2_');
 	ret = ret.replace('/', '_');
 	ret = ret.replace('#', '_');
+	ret = ret.replace('.', '_');
 	ret = removeDiacritics(ret);
 	return ret;
 }
