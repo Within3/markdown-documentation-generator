@@ -50,6 +50,9 @@ var options = {
 	},
 	jqFile: path.join(moduleDir, '/template/jquery.js'),
 	sortSections: true,
+	hbHelpers: {
+
+	},
 	markedOptions: {
 		renderer: renderer,
 		gfm: true,
