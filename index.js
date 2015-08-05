@@ -10,6 +10,7 @@ var marked = require('marked');
 var chalk = require('chalk');
 var hl = require('highlight.js');
 var path = require('path');
+var helpers = require('handlebars-helpers');
 
 var error = chalk.bold.red;
 var good = chalk.green;
@@ -374,6 +375,7 @@ function convertHTMLtoJSON(html) {
 	};
 
 	var $ = cheerio.load(html);
+	var error_log = false;
 
 	// Loop each section and turn into javascript object
 	$('div.sg-section-' + sgUniqueIdentifier).each(function (i, elem) {
@@ -394,9 +396,20 @@ function convertHTMLtoJSON(html) {
 		};
 
 		//Check if this section is a development section by checking class
-		if($section('h1')[0].attribs.class == 'main-section-'+developmentIdentifier){
-			sectionIdentifier = developmentIdentifier;
-			curSectionData.isDevelopment = true;
+		if($section('h1')[0]){
+			if($section('h1')[0].attribs.class == 'main-section-'+developmentIdentifier){
+				sectionIdentifier = developmentIdentifier;
+				curSectionData.isDevelopment = true;
+			}
+		}else{
+
+			var error_section = $section('p').first().text();
+			var error_addendum = '';
+			if (! error_log) {
+				error_addendum = "\n All sections must start with '# Title'."
+			}
+			var error_log = "[Style Guide] " + error_section + " does not have a valid title." + error_addendum;
+			console.log(error_log);
 		}
 
 
@@ -438,50 +451,31 @@ function convertHTMLtoJSON(html) {
 		}
 	});
 
-
+	var sorting = function(a, b) {
+		if (a.section === b.section) {
+			if (a.heading > b.heading) {
+				return 1;
+			}
+			if (a.heading < b.heading) {
+				return -1;
+			}
+			return 0;
+		} else {
+			if (a.section > b.section) {
+				return 1;
+			}
+			if (a.section < b.section) {
+				return -1;
+			}
+			return 0;
+		}
+	};
 
 	if(options.sortSections){
 		//Sort Main Sections
-		masterData.sections.sort(function (a, b) {
-			if (a.section === b.section) {
-				if (a.heading > b.heading) {
-					return 1;
-				}
-				if (a.heading < b.heading) {
-					return -1;
-				}
-				return 0;
-			} else {
-				if (a.section > b.section) {
-					return 1;
-				}
-				if (a.section < b.section) {
-					return -1;
-				}
-				return 0;
-			}
-		});
-
+		masterData.sections.sort(function(a,b){return sorting(a,b);});
 		//Sort Developer Sections
-		masterData.developmentSections.sort(function (a, b) {
-			if (a.section === b.section) {
-				if (a.heading > b.heading) {
-					return 1;
-				}
-				if (a.heading < b.heading) {
-					return -1;
-				}
-				return 0;
-			} else {
-				if (a.section > b.section) {
-					return 1;
-				}
-				if (a.section < b.section) {
-					return -1;
-				}
-				return 0;
-			}
-		});
+		masterData.developmentSections.sort(function(a,b){return sorting(a,b);});
 	}
 
 	// Create menu object
@@ -663,7 +657,6 @@ function makeUrlSafe(str) {
 	ret = ret.replace(/(\<)(.*?)(\>)/g, '_$2_');
 	ret = ret.replace('/', '_');
 	ret = ret.replace('#', '_');
-	ret = ret.replace('.', '_');
 	ret = removeDiacritics(ret);
 	return ret;
 }
