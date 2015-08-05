@@ -6,11 +6,11 @@ var handlebars = require('handlebars');
 var cheerio = require('cheerio');
 var fs = require('fs-extra');
 var walk = require('walk');
-var marked = require('marked');
+var markdown = require('marked');
 var chalk = require('chalk');
 var hl = require('highlight.js');
 var path = require('path');
-var helpers = require('handlebars-helpers');
+var helpers = require('swag');
 
 var error = chalk.bold.red;
 var good = chalk.green;
@@ -23,7 +23,7 @@ var codeStore = {
 };
 
 var moduleDir = path.dirname(process.mainModule.filename);
-var renderer = new marked.Renderer();
+var renderer = new markdown.Renderer();
 
 var options = {
 	sgComment: 'SG',
@@ -277,7 +277,7 @@ renderer.codespan = function(text){
 	return output;
 }
 
-marked.setOptions(options.markedOptions);
+markdown.setOptions(options.markedOptions);
 
 
 /**
@@ -304,7 +304,7 @@ walker.on("file", function (root, fileStats, next) {
 			var pattern = new RegExp('/\\* ?' + options.sgComment + '([\\s\\S]*?)\\*/', 'gi');
 			var regResp;
 			while ((regResp = pattern.exec(fileContent)) !== null) {
-				scssFilesContent.push(marked(regResp[1]));
+				scssFilesContent.push(markdown(regResp[1]));
 			}
 			next();
 		});
@@ -348,6 +348,7 @@ function saveFile(html) {
  * @returns {string} html
  */
 function doTemplating(json) {
+	helpers.registerHelpers(handlebars);
 	// Adding '#styleguide .hljs pre' to highlight css, to override common used styling for 'pre'
 	highlightSource = highlightSource.replace('.hljs {', '#styleguide .hljs pre, .hljs {');
 
