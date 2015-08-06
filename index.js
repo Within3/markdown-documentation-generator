@@ -50,9 +50,6 @@ var options = {
 	},
 	jqFile: path.join(moduleDir, '/template/jquery.js'),
 	sortSections: true,
-	hbHelpers: {
-
-	},
 	markedOptions: {
 		renderer: renderer,
 		gfm: true,
@@ -367,12 +364,13 @@ function doTemplating(json) {
  * @returns {Array} json
  */
 function convertHTMLtoJSON(html) {
+	var sectionNames = options.sectionTitles;
 	var masterData = {
 		sections: [],
-		menus: {
-			sections: [],
-			developmentSections: []
-		},
+		menus: [{
+			styles: [],
+			development: []
+		}],
 		developmentSections: [],
 		customVars: options.customVars,
 		codeRefs: codeStore
@@ -477,48 +475,51 @@ function convertHTMLtoJSON(html) {
 
 	if(options.sortSections){
 		//Sort Main Sections
-		masterData.sections.sort(function(a,b){return sorting(a,b);});
+		masterData.sections.sort(function(a,b){
+			return sorting(a,b);
+		});
 		//Sort Developer Sections
-		masterData.developmentSections.sort(function(a,b){return sorting(a,b);});
+		masterData.developmentSections.sort(function(a,b){
+			return sorting(a,b);
+		});
 	}
 
 	// Create menu object
-	var menuObj = {};
-	var menuObj2 = {};
+	var menuObj = [{}];
+	var menuObj2 = [{}];
 	var menuArr = [];
 	var menuArr2= [];
 
 	//Loop through section arrays
 	masterData.sections.forEach(function (section) {
-		if (!menuObj.hasOwnProperty(section.section)) {
-			menuObj[section.section] = [];
+		if (!menuObj[0].hasOwnProperty(section.section)) {
+			menuObj[0][section.section] = [];
 		}
-		var section_heading = section.heading;
-
-		menuObj[section.section].push({id: section.id, name:section_heading});
+		var section_heading = (section.heading) ? section.heading : section.section;
+		menuObj[0][section.section].push({id: section.id, name:section_heading});
 
 	});
 
 	masterData.developmentSections.forEach(function (section) {
-		if (!menuObj2.hasOwnProperty(section.section)) {
-			menuObj2[section.section] = [];
+		if (!menuObj2[0].hasOwnProperty(section.section)) {
+			menuObj2[0][section.section] = [];
 		}
-		var section_heading = section.heading;
+		var section_heading = (section.heading) ? section.heading : section.section;
 
-		menuObj2[section.section].push({id: section.id, name:section_heading});
+		menuObj2[0][section.section].push({id: section.id, name:section_heading});
 
 	});
 
 
-	Object.keys(menuObj).forEach(function (key) {
-		menuArr.push({name: key, headings: menuObj[key]});
+	Object.keys(menuObj[0]).forEach(function (key) {
+		menuArr.push({name: key, headings: menuObj[0][key]});
 	});
 
-	Object.keys(menuObj2).forEach(function (key) {
-		menuArr2.push({name: key, headings: menuObj2[key]});
+	Object.keys(menuObj2[0]).forEach(function (key) {
+		menuArr2.push({name: key, headings: menuObj2[0][key]});
 	});
-	masterData.menus.sections = menuArr;
-	masterData.menus.developmentSections = menuArr2;
+	masterData.menus[0].styles = menuArr;
+	masterData.menus[0].development = menuArr2;
 
 	var json_output = options.outputFile.replace('.html', '.json');
 	var raw_json = JSON.stringify(masterData);
