@@ -44,5 +44,5 @@
   "gitHead": "058fe1fab36c2957cff03ea43d896ec7f47acddf",
   "_id": "markdown-documentation-generator@1.3.0",
   "_shasum": "3803bbd214de1ddbbb8e1c1c9fac54ce79711d7a",
-  "_from": "markdown-documentation-generator@latest"
+  "_from": "markdown-documentation-generator@>=1.2.0 <2.0.0"
 }
