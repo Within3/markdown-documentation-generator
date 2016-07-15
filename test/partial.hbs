@@ -1,0 +1,22 @@
+<li class="sg-menu_category_item sg-menu_item">
+    {{#if headings.1.name}}
+    <a class="sg-menu_link sg-category_link" href="#{{sanitize headings.0.id}}">
+        {{~name~}}
+    </a>
+    <span class="sg-menu_toggle toggle-active"
+        data-sg-toggle="[data-sg-submenu='{{headings.0.name}}']">&#9662;</span>
+    <ul class="sg-menu_list sg-menu_list-sub" data-sg-submenu="{{headings.0.name}}">
+    {{#each headings}}
+        <li class="sg-menu_item">
+            <a href="#{{sanitize id}}" class="sg-menu_link js-submenu_link">
+                {{~name~}}
+            </a>
+        </li>
+    {{/each}}
+    </ul>
+    {{else}}
+    <a class="sg-menu_link sg-section_link js-menu_showall" href="#{{sanitize headings.0.id}}">
+        {{~name~}}
+    </a>
+    {{/if}}
+</li>

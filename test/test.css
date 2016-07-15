@@ -1,0 +1,411 @@
+
+/* SG
+# Config/Typography Settings [[dev]]
+
+##### `$$base-font-size`
+###### Pixel value
+Font size all other values will use for calculation. Will be converted to `rems`.
+
+##### `$$base-line-height`
+###### Pixel value
+Line-height for base font-size. Will be used to determine the vertical spacing values when `type-space()` is used.
+
+##### `$$font-looseness`
+###### Percentage
+What to base the tightness/looseness of automatically-generated `line-heights`.
+
+##### `$$auto-scale-type`
+###### Boolean
+Uses `$$scale-ratio` to create font sizes for headings starting from the `$$base-font-size`.
+
+##### `$$scale-ratio`
+###### Numeric (float)
+Used for `$$auto-scale-type` and for `modular-scale()`.
+
+##### `$$rem-px-fallback`
+###### Boolean
+Determines whether `rems()` conversion includes a pixel-value fallback for older browsers like IE8.
+
+*/
+
+/* SG
+# Config/Grid Settings [[dev]]
+
+##### `$$max-site-width`
+###### Pixel value
+Maximum desktop width for the site wrapper.
+
+##### `$$grid-columns`
+###### Number
+Base number of grid columns to be generated. Note that any column number will include all fractions of the fewer columns. For instance, a 12-column grid would also include all fractions of 1-12 (including things like three-sevenths).
+
+##### `$$grid-gutter`
+###### Pixel value
+Space between grid items. Also used in `type-space()` for horizontal spacing units.
+*/
+
+
+
+/* SG
+# Lists/Bordered Lists
+
+Creates a list with borders above and below each list item. Appending `list_bordered` with `_short` will make reduce the padding between each item.
+
+```html_example
+<ul class="list_bordered">
+    <li>List Item</li>
+    <li>List Item</li>
+    <li>List Item</li>
+</ul>
+
+<ul class="list_bordered_short">
+    <li>List Item</li>
+    <li>List Item</li>
+    <li>List Item</li>
+</ul>
+```
+*/
+
+ul {
+    margin: 0;
+}
+
+[class*="list_bordered"] {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+  padding-top: 24px;
+  padding-top:  1.5rem;
+  padding-bottom: 24px;
+  padding-bottom:  1.5rem;
+}
+
+[class*="list_bordered"] > li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0;
+}
+
+[class*="list_bordered"] > li {
+  border-top: 1px solid #e4eaf3;
+  padding-top: 24px;
+  padding-top:  1.5rem;
+  padding-bottom: 24px;
+  padding-bottom:  1.5rem;
+  margin-bottom: -1px;
+}
+
+[class*="list_bordered"] > li:first-child {
+  border-top-color: transparent;
+}
+
+.list_bordered_short > li {
+  padding-top: 12px;
+  padding-top:  0.75rem;
+  padding-bottom: 12px;
+  padding-bottom:  0.75rem;
+}
+
+/* SG
+# Lists/Inline Lists
+
+A list where each item is in a row, with spacing to the right of each item
+
+```html_example
+<ul class="list_inline">
+    <li>List Item</li>
+    <li>List Item</li>
+    <li>List Item</li>
+</ul>
+```
+*/
+.list_inline {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.list_inline > li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0;
+}
+
+.list_inline > li {
+  display: inline-block;
+  padding-left: 0;
+  width: auto;
+  vertical-align: middle;
+  padding-right: 16px;
+  padding-right:  1rem;
+}
+
+.list_inline > li:last-child {
+  padding-right: 0;
+}
+
+/* SG
+# Lists/Breadcrumbs
+
+A list where each item is in a row, with a &#x25B8; between each item.
+
+```html_example
+<ul class="breadcrumbs">
+    <li class="breadcrumb">List Item</li>
+    <li class="breadcrumb">List Item</li>
+    <li class="breadcrumb">List Item</li>
+</ul>
+```
+*/
+.breadcrumbs {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+  padding-right: 32px;
+  padding-right:  2rem;
+}
+
+.breadcrumbs > li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0;
+}
+
+.breadcrumbs > li,
+.breadcrumb {
+  display: inline-block;
+  white-space: nowrap;
+  margin-left: 0;
+}
+
+.breadcrumbs > li a,
+.breadcrumb a {
+  display: block;
+}
+
+.breadcrumbs > li:after,
+.breadcrumb:after {
+  content: "\25B8";
+  display: inline-block;
+}
+
+/* SG
+# Own Thing
+
+List where anchor tags fill the space of their containers. Useful as a modifier class. Can be used on any item with multiple child anchors (doesn't have to be an `ol` or `ul`).
+
+```html_example
+<ul class="list_nav">
+    <li>
+        <a href="#">List Item</a>
+    </li>
+    <li>
+        <a href="#">List Item</a>
+    </li>
+    <li>
+        <a href="#">List Item</a>
+    </li>
+</ul>
+```
+*/
+
+/* SG
+# Lists/Navigation List
+
+List where anchor tags fill the space of their containers. Useful as a modifier class. Can be used on any item with multiple child anchors (doesn't have to be an `ol` or `ul`).
+
+```html_example
+<ul class="list_nav">
+    <li>
+        <a href="#">List Item</a>
+    </li>
+    <li>
+        <a href="#">List Item</a>
+    </li>
+    <li>
+        <a href="#">List Item</a>
+    </li>
+</ul>
+```
+*/
+.list_nav {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.list_nav > li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0;
+}
+
+.list_nav a {
+  padding-top: 12px;
+  padding-top:  0.75rem;
+  padding-bottom: 12px;
+  padding-bottom:  0.75rem;
+}
+
+/* SG
+
+# Layout/Isolation object
+
+Isolates an image from text wrapping underneath. Useful for creating an association between an image and text. Often used with an icon or avatar. Adding other classes to the `isolate_body` can create a more stylized version.
+
+```html_example
+<img class="isolate_media" src="http://placehold.it/300x50" alt="placeholder image">
+<p class="isolate_body">
+	Content that sits to the right of the image but will never wrap underneath the image to the left. Etiam porta sem malesuada magna mollis euismod. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+</p>
+
+```
+*/
+.isolate_media, .isolate_body {
+  overflow: hidden;
+  _overflow: visible;
+  zoom: 1;
+}
+
+.isolate_media {
+  float: left;
+}
+
+/* SG
+
+# Layout/Arrangement object
+
+Creates an image-content block that vertically aligns images and text (centered, bottom, or top).
+
+Children of the `.arrange` wrapper can be given four classes:
+* `arrange_fit` or `arrange_media` will create a block that fits the width of its content (useful for images and media).
+* `arrange_fill` will fill the remaining space.
+* `arrange_body` is similar to `arrange_fill` but defaults to middle alignment.
+
+*/
+
+
+.arrange {
+  display: table;
+  table-layout: auto;
+  min-width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.arrange_media img,
+.arrange_fit img {
+  display: block;
+  max-width: none;
+  margin: auto;
+}
+
+.arrange_body {
+    padding-left: 1.5rem;
+}
+
+.arrange_body,
+.arrange_fill {
+    width: 100%;
+}
+
+.arrange_body,
+.arrange_fill,
+.arrange_fit,
+.arrange_media {
+    display: table-cell;
+}
+
+.arrange_media,
+.arrange_body,
+.arrange_fill,
+.arrange_fit {
+  vertical-align: middle;
+}
+
+.arrange_top > .arrange_media,
+.arrange_top > .arrange_body,
+.arrange_top > .arrange_fill,
+.arrange_top > .arrange_fit {
+  vertical-align: top;
+}
+
+.arrange_bottom > .arrange_media,
+.arrange_bottom > .arrange_body,
+.arrange_bottom > .arrange_fill,
+.arrange_bottom > .arrange_fit {
+  vertical-align: bottom;
+}
+
+.arrange_equal {
+  table-layout: fixed;
+}
+
+.arrange_equal > .arrange_fill,
+.arrange_equal > .arrange_fit {
+  width: 1%;
+}
+
+/* SG
+# Layout/Arrangement object
+
+```html_example
+<!-- Default arrangement (using arrange_media and arrange_body) -->
+<div class="arrange">
+	<div class="arrange_media">
+		<img src="http://placehold.it/60x50" alt="placeholder image">
+	</div>
+	<div class="arrange_body">
+		Content that is vertically (middle) aligned with the image.
+	</div>
+</div>
+
+<!-- Bottom Arrangement (using arrange_fit and arrange_fill)-->
+<div class="arrange arrange_bottom">
+	<div class="arrange_fit">
+		<img src="http://placehold.it/60x50" alt="placeholder image">
+	</div>
+	<div class="arrange_fill">
+		Content that is bottom aligned to the image.
+	</div>
+</div>
+
+<!-- Equal width arrangement-->
+<div class="arrange arrange_equal">
+	<div class="arrange_fill">
+		Equal width columns.
+	</div>
+	<div class="arrange_fill arrange_media">
+		<img src="http://placehold.it/120x80" alt="placeholder image">
+	</div>
+	<div class="arrange_fill">
+		Can be as many columns as you want.
+	</div>
+</div>
+
+```
+*/
+
+
+/* SG
+# Colors/Lookup [[dev]]
+
+@file tools/_t-color-functions.scss
+
+
+##### `colors()`
+###### function(`$color-name, $tone: 'base', $opacity: 1`)
+Get a color value from the global `$$base-colors` map. Darker and lighter tones are available by passing a second string.
+
+```scss
+.foo {
+    background-color: colors(links, light));
+}
+```
+
+Passing only a color name will default to the 'base' color.
+
+@alias color()
+@requires `$$base-colors`
+
+[Reference](http://blog.12spokes.com/web-design-development/simple-css-color-management-with-sass/)
+*/
