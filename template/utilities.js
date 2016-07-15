@@ -1,37 +1,39 @@
 $(function() {
+
+    var toggles = "data-sg-toggle",
+        menuLinks = "sg-menu_link"
+        $menu = $("#sg-menu"),
+        $sections = $('#styleguide .sg-section');
+
+    var $toggles = $('['+toggles+']');
+    var $menuLinks = $('.'+menuLinks);
+
     //Sticky menu
-    $('#styleguide-menu-wrap').stick_in_parent();
+    $('#sg-menu_wrap').stick_in_parent();
 
     //Menu toggles
-    $('[data-toggle]').on('toggle', function(e){
+    $toggles.on('toggle', function(e){
         var $this = $(this);
-        var $target = $($this.data('toggle'));
+        var $target = $($this.attr(toggles));
         $this.toggleClass('toggle-active');
         $target.slideToggle('fast').toggleClass('toggle-active');
     });
 
-    $('#styleguide-menu').on('click', '[data-toggle]', function(e){
+    $menu.on('click', $toggles.selector, function(e){
         $(this).trigger('toggle');
     });
 
     // Style Guide-specific functions
     // History/Hash change handling
     var History = window.History;
-    var $menu = $("#styleguide-menu");
-    var $sections = $('#styleguide .sg-section');
     var Title = document.title;
 
     $sections.hide();
 
     var updateMenu = function(state) {
-        var $menuItem = $menu.find('a[href="#'+state+'"]').not('.toggle');
-        $menu.find('a.on').removeClass('on');
-        $menuItem.addClass('on');
-
-        if ($menuItem.hasClass('sub-sub')){
-            $menuItem.closest('.submenu').siblings('.submenulink').addClass('on')
-            .siblings('.submenu_toggle').not('.toggle-active').trigger('toggle');
-        }
+        var $menuItem = $menu.find('a[href="#'+state+'"]').not($toggles.selector);
+        $menu.find('a.active').removeClass('active');
+        $menuItem.addClass('active');
     };
 
     var updateContent = function(state, hash){
@@ -74,7 +76,7 @@ $(function() {
         var winHash = window.location.hash;
         var winState = winHash.replace("#", "");
         var stated = "?section=" + winState;
-        History.pushState(null, Title, stated);
+        try{History.pushState(null, Title, stated);}catch(err){console.dir(err);}
         return false;
     });
 

@@ -9,40 +9,55 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{customVars.pageTitle}}</title>
+    <style>
     {{> theme}}
     {{> highlight}}
+    </style>
     <link rel="stylesheet" href="../test.css" media="screen">
 </head>
 <body class="sg-body">
-<div class="styleguide-wrap">
+<div class="sg-wrap">
     {{!--Menu--}}
-    <nav id="styleguide-menu" class="sg-menu">
-        <div id="styleguide-menu-wrap" class="sg-menu_wrap">
+    <nav id="sg-menu" class="sg-menu">
+        <div id="sg-menu_wrap" class="sg-menu_wrap">
+            <h1 class="sg-logo">
+                <a href="#" class="sg-menu_link js-menu_showall">Project Name</a>
+            </h1>
             {{#each menus~}}
             {{#eachProperty this~}}
-            <ul class="sg-menu_top">
-                <li>
-                    <a href="#{{key}}" class="sectionlink show_all menu_link">{{titleize key}}</a>
-                    <span class="submenu_toggle toggle-active" data-toggle="#sub-{{key}}">&#9662;</span>
+            {{!--Section Start --}}
+            <ul class="sg-menu_list sg-menu_section">
+                <li class="sg-menu_item sg-menu_section_item">
+                    <a href="#{{key}}" class="sg-menu_link sg-section_link js-menu_showall">
+                        {{titleize key}}
+                    </a>
+                    <span class="sg-menu_toggle toggle-active" data-sg-toggle="#sub-{{key}}">&#9662;</span>
                 </li>
             </ul>
-            <ul id="sub-{{key}}" class="menu_body">
+            {{!-- Category list --}}
+            <ul id="sub-{{key}}" class="sg-menu_list sg-menu_category">
                 {{#eachProperty value}}
                 {{#with value}}
-                <li>
-                    {{#if headings.1.name}}
-                    <a class="submenulink menulink_with_subs" href="#{{sanitize headings.0.id}}">{{name}}</a>
-                    <span class="submenu_toggle"
-                        data-toggle="[data-submenu='{{headings.0.name}}']">&#9662;</span>
-                    <ul class="submenu" data-submenu="{{headings.0.name}}">
+                <li class="sg-menu_category_item sg-menu_item">
+                    {{#if headings.1.name}} {{!--Check for sub-menus--}}
+                    <a class="sg-menu_link sg-category_link" href="#{{sanitize headings.0.id}}">
+                        {{~name~}}
+                    </a>
+                    <span class="sg-menu_toggle toggle-active"
+                        data-sg-toggle="[data-sg-submenu='{{headings.0.name}}']">&#9662;</span>
+                    <ul class="sg-menu_list sg-menu_list-sub" data-sg-submenu="{{headings.0.name}}">
                     {{#each headings}}
-                        <li>
-                            <a href="#{{sanitize id}}" class="submenulink sub-sub menu_link">{{name}}</a>
+                        <li class="sg-menu_item">
+                            <a href="#{{sanitize id}}" class="sg-menu_link js-submenu_link">
+                                {{~name~}}
+                            </a>
                         </li>
                     {{/each}}
                     </ul>
                     {{else}}
-                    <a class="sectionlink menu_link" href="#{{sanitize headings.0.id}}">{{name}}</a>
+                    <a class="sg-menu_link sg-category_link" href="#{{sanitize headings.0.id}}">
+                        {{~name~}}
+                    </a>
                     {{/if}}
                 </li>
                 {{/with}}
@@ -50,43 +65,63 @@
             </ul>
             {{/eachProperty}}
             {{/each}}
-            <div class="sg-menu_top">
-                <a href="#" class="sectionlink show_all menu_link">Show All</a>
+            <div class="sg-menu_list sg-menu_section">
+                <a href="#" class="sg-menu_link sg-section_link js-menu_showall">Show All</a>
             </div>
         </div>
     </nav>
-    <main id="styleguide">
-        <div class="wrap">
+    <main id="styleguide" {{!-- Required ID --}} class="sg-main">
+        <div class="sg-main_wrap">
         {{#each sections}}
-            <section id="{{@key}}" class="sg-section {{@key}}-section" data-section="{{@key}}">
-                <h1 class="sg-heading sg-heading-section">{{titleize @key}}</h1>
+            <section id="{{@key}}" class="sg-section" data-sg-section="{{@key}}">
+                <div class="sg-article sg-section_head">
+                    <h1 class="sg-heading sg-heading-section">{{titleize @key}}</h1>
+                </div>
                 {{#each this}}
-                <article class="sg-article" id="{{sanitize id}}" data-section="{{sanitize category}}" data-heading="{{sanitize heading}}">
-                    <header class="sg-article_header">
-                        {{#unless isSubcategory}}
-                            <h1 class="sg-heading sg-heading-article">{{category}}</h1>
+
+                    <div class="sg-category">
+                        {{#if articles.[1]}} {{!--Check for more than one article --}}
+                        <header class="sg-category_head" data-sg-section="{{sanitize name}}">
+                            <h3 class="sg-heading-category">
+                                {{name}}
+                            </h3>
+                        </header>
                         {{else}}
-                            <h2 class="sg-heading sg-heading-group">{{category}}</h1>
-                            <h3 class="sg-heading sg-heading-article">{{heading}}</h2>
-                        {{/unless}}
-                    </header>
-                    <div class="sg-article_comment">
-                        {{{comment}}}
-                    </div>
-                    {{#if code}}
-                    <div class="sg-article_example">
-                        <div class="result">
-                            {{{code}}}
+                        {{/if}}
+                    {{#each articles}}
+                    <article class="sg-article" id="{{sanitize id}}" data-sg-section="{{category}}" data-sg-heading="{{heading}}">
+                        <header class="sg-article_head {{#unless heading}}sg-category_head{{/unless}}">
+                            <h4 class="sg-heading sg-heading-article">
+                                {{~#if heading~}}
+                                    {{heading}}
+                                {{else}}
+                                    {{category}}
+                                {{~/if~}}
+                            </h4>
+                            {{~#if section.development~}}{{#if fileLocation}}
+                                <code class="sg-codespan">{{fileLocation}}</code>
+                            {{/if}}{{/if~}}
+                        </header>
+
+                        <div class="sg-article_comment">
+                            {{{comment}}}
                         </div>
-                    {{/if}}
-                    {{#if markup}}
-                        <div class="sg-article_markup hljs">
-                            <pre class="sg-markup-wrap"><code>{{{markup}}}</code></pre>
+                        {{#if code}}
+                        <div class="sg-example">
+                            <div class="sg-example_wrap">
+                                {{{code}}}
+                            </div>
+                            {{#each markup}}
+                            <div class="sg-markup">
+                                <pre class="sg-markup_wrap"><code class="hljs">{{{this}}}</code></pre>
+                            </div>
+                            {{/each}}
                         </div>
-                    </div>
-                    {{/if}}
-                </article>
-                {{~/each}}
+                        {{/if}}
+                    </article>
+                    {{~/each}}
+                </div>
+                {{/each}}
             </section>
         {{~/each}}
         </div>
@@ -98,11 +133,13 @@
 <![endif]-->
 
 <!--[if gt IE 8]><!-->
-{{> jquery}}
+<script>{{> jquery}}</script>
 <!--<![endif]-->
-{{> hash}}
-{{> sticky}}
+<script>{{> hash}}</script>
+<script>{{> sticky}}</script>
+<script>
 {{> utilities}}
+</script>
 <!-- {{#each customVars.scripts}}
     <script src="{{this}}"></script>
 {{/each}} -->
