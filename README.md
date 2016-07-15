@@ -9,7 +9,7 @@
 The _living_ part means that it uses your **live** css. If you change your css files, the style guide will change as well!
 
 ### What this tool does, short version:
-This tool will search all your style files (your `.css`, `.scss` `_partial.scss`, `.less`, `.whatever`) for comments and creates an html file living style guide.
+This tool will search all your style files (your `.css`, `.scss` `_partial.scss`, `.less`, `.whatever`) for comments and create a html file living style guide for your developers to use!
 
 In contrast to other style guide generators, this tool generates **a single file**, ready to be uploaded to your website/CMS(-like system).
 
