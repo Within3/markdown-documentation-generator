@@ -9,17 +9,21 @@ $(function() {
     var $menuLinks = $('.'+menuLinks);
 
     //Sticky menu
-    $('#sg-menu_wrap').stick_in_parent();
+    $('#sg-menu, #sg-menu_wrap').stick_in_parent();
 
     //Menu toggles
     $toggles.on('toggle', function(e){
         var $this = $(this);
         var $target = $($this.attr(toggles));
         $this.toggleClass('toggle-active');
-        $target.slideToggle('fast').toggleClass('toggle-active');
+        $target.toggleClass('toggle-active');
+
+        if($this.hasClass('sg-menu_toggle')) {
+            $target.slideToggle('fast');
+        }
     });
 
-    $menu.on('click', $toggles.selector, function(e){
+    $('body').on('click', $toggles.selector, function(e){
         $(this).trigger('toggle');
     });
 

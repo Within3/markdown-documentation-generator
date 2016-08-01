@@ -1,64 +1,102 @@
+html {
+    font-family: 'Roboto';
+}
+
+code, pre {
+    font-family: 'Roboto Mono';
+    font-size: .95em;
+}
+
+h1 {
+    font-size: 1.75em;
+    font-weight: normal;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol {
+    margin: 0 0 1.5rem;
+}
+
+p {
+    line-height: 1.5rem;
+}
 
 /* SG
-# Config/Typography Settings [[dev]]
+# Dev:Config/Typography Settings
 
-##### `$$base-font-size`
-###### Pixel value
+## `$$base-font-size` - Pixel
 Font size all other values will use for calculation. Will be converted to `rems`.
 
-##### `$$base-line-height`
-###### Pixel value
+## `$$base-line-height` - Pixel
 Line-height for base font-size. Will be used to determine the vertical spacing values when `type-space()` is used.
 
-##### `$$font-looseness`
-###### Percentage
+## `$$font-looseness` - Percentage
 What to base the tightness/looseness of automatically-generated `line-heights`.
 
-##### `$$auto-scale-type`
-###### Boolean
+## `$$auto-scale-type` - Boolean
 Uses `$$scale-ratio` to create font sizes for headings starting from the `$$base-font-size`.
 
-##### `$$scale-ratio`
-###### Numeric (float)
+## `$$scale-ratio` - Number (float)
 Used for `$$auto-scale-type` and for `modular-scale()`.
 
-##### `$$rem-px-fallback`
-###### Boolean
+## `$$rem-px-fallback` - Boolean
 Determines whether `rems()` conversion includes a pixel-value fallback for older browsers like IE8.
 
 */
 
 /* SG
-# Config/Grid Settings [[dev]]
+# Dev:Config/Grid Settings
 
-##### `$$max-site-width`
-###### Pixel value
+## `$$max-site-width` - Pixel
 Maximum desktop width for the site wrapper.
 
-##### `$$grid-columns`
-###### Number
-Base number of grid columns to be generated. Note that any column number will include all fractions of the fewer columns. For instance, a 12-column grid would also include all fractions of 1-12 (including things like three-sevenths).
-
-##### `$$grid-gutter`
-###### Pixel value
+## `$$grid-gutter` - Pixel
 Space between grid items. Also used in `type-space()` for horizontal spacing units.
 */
 
+/* SG
+
+## `$$max-site-width` - Pixel
+Maximum desktop width for the site wrapper.
+
+## `$$grid-columns` - Number
+Base number of grid columns to be generated. Note that any column number will include all fractions of the fewer columns. For instance, a 12-column grid would also include all fractions of 1-12 (including things like three-sevenths).
+
+## `$$grid-gutter` - Pixel
+Space between grid items. Also used in `type-space()` for horizontal spacing units.
+*/
+
+
+/* SG
+# Lists
+
+@priority first
+
+Variations on list styles
+
+*/
 
 
 /* SG
 # Lists/Bordered Lists
 
-Creates a list with borders above and below each list item. Appending `list_bordered` with `_short` will make reduce the padding between each item.
+@priority last
+
+Creates a list with borders above and below each list item.
 
 ```html_example
 <ul class="list_bordered">
-    <li>List Item</li>
-    <li>List Item</li>
-    <li>List Item</li>
-</ul>
-
-<ul class="list_bordered_short">
     <li>List Item</li>
     <li>List Item</li>
     <li>List Item</li>
@@ -99,6 +137,19 @@ ul {
   border-top-color: transparent;
 }
 
+/* SG
+
+Appending `list_bordered` with `_short` will make reduce the padding between each item.
+
+```html_example
+<ul class="list_bordered_short">
+    <li>List Item</li>
+    <li>List Item</li>
+    <li>List Item</li>
+</ul>
+```
+*/
+
 .list_bordered_short > li {
   padding-top: 12px;
   padding-top:  0.75rem;
@@ -108,6 +159,8 @@ ul {
 
 /* SG
 # Lists/Inline Lists
+
+@priority 1
 
 A list where each item is in a row, with spacing to the right of each item
 
@@ -146,6 +199,8 @@ A list where each item is in a row, with spacing to the right of each item
 
 /* SG
 # Lists/Breadcrumbs
+
+@priority 3
 
 A list where each item is in a row, with a &#x25B8; between each item.
 
@@ -190,27 +245,9 @@ A list where each item is in a row, with a &#x25B8; between each item.
 }
 
 /* SG
-# Own Thing
-
-List where anchor tags fill the space of their containers. Useful as a modifier class. Can be used on any item with multiple child anchors (doesn't have to be an `ol` or `ul`).
-
-```html_example
-<ul class="list_nav">
-    <li>
-        <a href="#">List Item</a>
-    </li>
-    <li>
-        <a href="#">List Item</a>
-    </li>
-    <li>
-        <a href="#">List Item</a>
-    </li>
-</ul>
-```
-*/
-
-/* SG
 # Lists/Navigation List
+
+@priority last
 
 List where anchor tags fill the space of their containers. Useful as a modifier class. Can be used on any item with multiple child anchors (doesn't have to be an `ol` or `ul`).
 
@@ -248,31 +285,34 @@ List where anchor tags fill the space of their containers. Useful as a modifier 
 }
 
 /* SG
-
-# Layout/Isolation object
+# Layout/Media object
 
 Isolates an image from text wrapping underneath. Useful for creating an association between an image and text. Often used with an icon or avatar. Adding other classes to the `isolate_body` can create a more stylized version.
 
 ```html_example
-<img class="isolate_media" src="http://placehold.it/300x50" alt="placeholder image">
-<p class="isolate_body">
+<img class="media_media" src="http://placehold.it/300x50" alt="placeholder image">
+<p class="media_body">
 	Content that sits to the right of the image but will never wrap underneath the image to the left. Etiam porta sem malesuada magna mollis euismod. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
 </p>
 
 ```
 */
-.isolate_media, .isolate_body {
+.media_media,
+.media_body {
   overflow: hidden;
   _overflow: visible;
   zoom: 1;
 }
 
-.isolate_media {
+.media_body {
+    padding-left: 1.5rem;
+}
+
+.media_media {
   float: left;
 }
 
 /* SG
-
 # Layout/Arrangement object
 
 Creates an image-content block that vertically aligns images and text (centered, bottom, or top).
@@ -364,7 +404,7 @@ Children of the `.arrange` wrapper can be given four classes:
 	<div class="arrange_fit">
 		<img src="http://placehold.it/60x50" alt="placeholder image">
 	</div>
-	<div class="arrange_fill">
+	<div class="arrange_fill arrange_body">
 		Content that is bottom aligned to the image.
 	</div>
 </div>
@@ -377,7 +417,7 @@ Children of the `.arrange` wrapper can be given four classes:
 	<div class="arrange_fill arrange_media">
 		<img src="http://placehold.it/120x80" alt="placeholder image">
 	</div>
-	<div class="arrange_fill">
+	<div class="arrange_fill arrange_body">
 		Can be as many columns as you want.
 	</div>
 </div>
@@ -387,13 +427,12 @@ Children of the `.arrange` wrapper can be given four classes:
 
 
 /* SG
-# Colors/Lookup [[dev]]
-
+# Lookup
+@section Colors
 @file tools/_t-color-functions.scss
 
-
-##### `colors()`
-###### function(`$color-name, $tone: 'base', $opacity: 1`)
+## `colors()`
+### function(`$color-name, $tone: 'base', $opacity: 1`)
 Get a color value from the global `$$base-colors` map. Darker and lighter tones are available by passing a second string.
 
 ```scss
@@ -406,6 +445,29 @@ Passing only a color name will default to the 'base' color.
 
 @alias color()
 @requires `$$base-colors`
+@returns `color`
 
 [Reference](http://blog.12spokes.com/web-design-development/simple-css-color-management-with-sass/)
+*/
+
+
+/* SG
+# Manipulation [[colors]]
+
+@file tools/_t-color-functions.scss
+
+## `generate-color-varations()`
+### function(`$map, $functions, $increments, $variations, $blending-colors`)
+
+Takes base color values and generates a full color palette. Used by the `$$base-colors` map to create a project's palette, accessible via `colors()`.
+
+**Arguments:**
+* `$map`: Color map you want to create variations of. Defaults to `$$base-colors`.
+* `$functions`: color functions used to generate variations (e.g. lighten or darken). Can use any `blend` function, provided `$blending-colors` are provided.
+* `$increments`: percentage amount to apply `$function` to each `$variations`.
+* `$variations`: actual names for each color tone when `colors()` used.
+* `$blending-colors`: used when a function is a `blend`. Can be a list or a single color.
+
+@requires `combine-color-maps()`
+
 */

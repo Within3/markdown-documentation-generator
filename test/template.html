@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{customVars.pageTitle}}</title>
+    <style>
+    {{> theme}}
+    {{> highlight}}
+    </style>
+    <link rel="stylesheet" href="../test.css" media="screen">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,400i|Roboto:400,400i,700" rel="stylesheet">
+</head>
+<body class="sg-body">
+<div class="sg-wrap">
+
+    {{!--Menu--}}
+    <nav id="sg-menu" class="sg-menu">
+        <button class="sg-toggle-menu" data-sg-toggle="#sg-menu"><span class="sg-visually-hidden">Toggle Menu</span></button>
+        <div id="sg-menu_wrap" class="sg-menu_wrap">
+            <h1 class="sg-logo">
+                <a href="#" class="sg-menu_link js-menu_showall">Pliny</a>
+            </h1>
+            {{!--Section Start --}}
+            {{~#each menus~}}
+            <ul class="sg-menu_list sg-menu_section">
+                <li class="sg-menu_item sg-menu_section_item">
+                    <a href="#{{sanitize @key}}" class="sg-menu_link sg-section_link js-menu_showall">
+                        {{~titleize @key~}}
+                    </a>
+                    <span class="sg-menu_toggle toggle-active" data-sg-toggle="#sub-{{@key}}">&#9662;</span>
+                </li>
+            </ul>
+            {{!-- Category list --}}
+            <ul id="sub-{{key}}" class="sg-menu_list sg-menu_category">
+                {{#each this}}
+                <li class="sg-menu_category_item sg-menu_item">
+                    <a class="sg-menu_link sg-category_link" href="#{{sanitize headings.0.id}}">
+                        {{~category~}}
+                    </a>
+                </li>
+                {{~/each}}
+            </ul>
+            {{/each}}
+            <div class="sg-menu_list sg-menu_section">
+                <a href="#" class="sg-menu_link sg-section_link js-menu_showall">Back to top</a>
+            </div>
+        </div>
+    </nav>
+    <main id="styleguide" {{!-- Required ID --}} class="sg-main">
+
+    {{#each sections}}
+        <section id="{{sanitize @key}}" class="sg-section" data-sg-section="{{@key}}">
+            <div class="sg-section_head">
+                <h1 class="sg-heading sg-heading-section">{{titleize @key}}</h1>
+            </div>
+
+            {{#each this}}
+                <div class="sg-category">
+                    {{!--Check for more than one article --}}
+                    <header class="sg-category_head" data-sg-section="{{sanitize category}}" {{#unless articles.[1]}}id="{{sanitize articles.[0].id}}"{{/unless}}>
+                        <h2 class="sg-heading-category">
+                            {{category}}
+                        </h2>
+                    </header>
+
+                {{#each articles}}
+                    <article class="sg-article sg-category_article" {{#if ../articles.[1]}}id="{{sanitize id}}"{{/if}} data-sg-section="{{category}}" data-sg-heading="{{heading}}">
+                        {{#if heading}}
+                        <header class="sg-article_head {{#unless heading}}sg-category_head{{/unless}}">
+                            <h2 class="sg-heading sg-heading-article">
+                                {{~heading~}}
+                            </h2>
+                            {{~#if fileLocation}}
+                            <code class="sg-codespan sg-file">{{fileLocation}}</code>
+                            {{~/if~}}
+                        </header>
+                        {{/if}}
+                        <div class="sg-article_comment">
+                            {{{comment}}}
+                        </div>
+                        {{#if code}}
+                        <div class="sg-example">
+                            <div class="sg-example_wrap">
+                                {{#each code}}{{{this}}}{{/each}}
+                            </div>
+                            {{#each markup}}
+                            <div class="sg-markup">
+                                <pre class="sg-markup_wrap"><code class="hljs">
+                                    {{~{this}~}}
+                                </code></pre>
+                            </div>
+                            {{/each}}
+                        </div>
+                        {{/if}}
+                    </article>
+                {{~/each}}
+            </div>
+            {{~/each}}
+        </section>
+    {{~/each}}
+    </main>
+</div>
+<!--JQuery-->
+<!--[if lte IE 8]>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<![endif]-->
+
+<!--[if gt IE 8]><!-->
+<script>{{> jquery}}</script>
+<!--<![endif]-->
+<script>{{> hash}}</script>
+<script>{{> sticky}}</script>
+<script>
+{{> utilities}}
+</script>
+<!-- {{#each customVars.scripts}}
+    <script src="{{this}}"></script>
+{{/each}} -->
+</body>
+</html>

@@ -1,0 +1,343 @@
+{
+  "sections": {
+    "About": [
+      {
+        "category": "Introduction",
+        "id": "category-introduction-",
+        "articles": [
+          {
+            "id": "introduction-",
+            "category": "Introduction",
+            "section": {
+              "name": "About",
+              "About": true
+            },
+            "fileLocation": "",
+            "heading": "",
+            "code": [],
+            "markup": [],
+            "comment": "<p>Some stuff about this style guide can go here.</p>\n<div data-sg-file-location=\"./test/\u001b[33mintro.md\u001b[39m\"></div>",
+            "priority": 50
+          }
+        ]
+      }
+    ],
+    "Patterns": [
+      {
+        "category": "Layout",
+        "id": "category-layout-arrangement_object",
+        "articles": [
+          {
+            "id": "layout-arrangement_object",
+            "category": "Layout",
+            "section": {
+              "name": "Patterns",
+              "Patterns": true
+            },
+            "fileLocation": "",
+            "heading": "Arrangement object",
+            "code": [
+              "<!-- Default arrangement (using arrange_media and arrange_body) -->\n<div class=\"arrange\">\n    <div class=\"arrange_media\">\n        <img src=\"http://placehold.it/60x50\" alt=\"placeholder image\">\n    </div>\n    <div class=\"arrange_body\">\n        Content that is vertically (middle) aligned with the image.\n    </div>\n</div>\n\n<!-- Bottom Arrangement (using arrange_fit and arrange_fill)-->\n<div class=\"arrange arrange_bottom\">\n    <div class=\"arrange_fit\">\n        <img src=\"http://placehold.it/60x50\" alt=\"placeholder image\">\n    </div>\n    <div class=\"arrange_fill arrange_body\">\n        Content that is bottom aligned to the image.\n    </div>\n</div>\n\n<!-- Equal width arrangement-->\n<div class=\"arrange arrange_equal\">\n    <div class=\"arrange_fill\">\n        Equal width columns.\n    </div>\n    <div class=\"arrange_fill arrange_media\">\n        <img src=\"http://placehold.it/120x80\" alt=\"placeholder image\">\n    </div>\n    <div class=\"arrange_fill arrange_body\">\n        Can be as many columns as you want.\n    </div>\n</div>"
+            ],
+            "markup": [
+              "<span class=\"hljs-comment\">&lt;!-- Default arrangement (using arrange_media and arrange_body) --&gt;</span>\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"arrange\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"arrange_media\"</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">img</span> <span class=\"hljs-attr\">src</span>=<span class=\"hljs-string\">\"http://placehold.it/60x50\"</span> <span class=\"hljs-attr\">alt</span>=<span class=\"hljs-string\">\"placeholder image\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"arrange_body\"</span>&gt;</span>\n        Content that is vertically (middle) aligned with the image.\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n\n<span class=\"hljs-comment\">&lt;!-- Bottom Arrangement (using arrange_fit and arrange_fill)--&gt;</span>\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"arrange arrange_bottom\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"arrange_fit\"</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">img</span> <span class=\"hljs-attr\">src</span>=<span class=\"hljs-string\">\"http://placehold.it/60x50\"</span> <span class=\"hljs-attr\">alt</span>=<span class=\"hljs-string\">\"placeholder image\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"arrange_fill arrange_body\"</span>&gt;</span>\n        Content that is bottom aligned to the image.\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n\n<span class=\"hljs-comment\">&lt;!-- Equal width arrangement--&gt;</span>\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"arrange arrange_equal\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"arrange_fill\"</span>&gt;</span>\n        Equal width columns.\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"arrange_fill arrange_media\"</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">img</span> <span class=\"hljs-attr\">src</span>=<span class=\"hljs-string\">\"http://placehold.it/120x80\"</span> <span class=\"hljs-attr\">alt</span>=<span class=\"hljs-string\">\"placeholder image\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"arrange_fill arrange_body\"</span>&gt;</span>\n        Can be as many columns as you want.\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>"
+            ],
+            "comment": "<p>Creates an image-content block that vertically aligns images and text (centered, bottom, or top).</p>\n<p>Children of the <code class=\"sg-code sg-codespan\">.arrange</code> wrapper can be given four classes:</p>\n<ul>\n<li><code class=\"sg-code sg-codespan\">arrange_fit</code> or <code class=\"sg-code sg-codespan\">arrange_media</code> will create a block that fits the width of its content (useful for images and media).</li>\n<li><code class=\"sg-code sg-codespan\">arrange_fill</code> will fill the remaining space.</li>\n<li><code class=\"sg-code sg-codespan\">arrange_body</code> is similar to <code class=\"sg-code sg-codespan\">arrange_fill</code> but defaults to middle alignment.</li>\n</ul>",
+            "priority": 50
+          },
+          {
+            "id": "layout-media_object",
+            "category": "Layout",
+            "section": {
+              "name": "Patterns",
+              "Patterns": true
+            },
+            "fileLocation": "",
+            "heading": "Media object",
+            "code": [
+              "<img class=\"media_media\" src=\"http://placehold.it/300x50\" alt=\"placeholder image\">\n<p class=\"media_body\">\n    Content that sits to the right of the image but will never wrap underneath the image to the left. Etiam porta sem malesuada magna mollis euismod. Cras justo odio, dapibus ac facilisis in, egestas eget quam.\n</p>"
+            ],
+            "markup": [
+              "<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">img</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"media_media\"</span> <span class=\"hljs-attr\">src</span>=<span class=\"hljs-string\">\"http://placehold.it/300x50\"</span> <span class=\"hljs-attr\">alt</span>=<span class=\"hljs-string\">\"placeholder image\"</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">p</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"media_body\"</span>&gt;</span>\n    Content that sits to the right of the image but will never wrap underneath the image to the left. Etiam porta sem malesuada magna mollis euismod. Cras justo odio, dapibus ac facilisis in, egestas eget quam.\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">p</span>&gt;</span>"
+            ],
+            "comment": "<p>Isolates an image from text wrapping underneath. Useful for creating an association between an image and text. Often used with an icon or avatar. Adding other classes to the <code class=\"sg-code sg-codespan\">isolate_body</code> can create a more stylized version.</p>",
+            "priority": 50
+          }
+        ]
+      },
+      {
+        "category": "Lists",
+        "id": "category-lists-",
+        "articles": [
+          {
+            "id": "lists-",
+            "category": "Lists",
+            "section": {
+              "name": "Patterns",
+              "Patterns": true
+            },
+            "fileLocation": "",
+            "heading": "",
+            "code": [],
+            "markup": [],
+            "comment": "<p></p>\n<p>Variations on list styles</p>",
+            "priority": -99
+          },
+          {
+            "id": "lists-inline_lists",
+            "category": "Lists",
+            "section": {
+              "name": "Patterns",
+              "Patterns": true
+            },
+            "fileLocation": "",
+            "heading": "Inline Lists",
+            "code": [
+              "<ul class=\"list_inline\">\n    <li>List Item</li>\n    <li>List Item</li>\n    <li>List Item</li>\n</ul>"
+            ],
+            "markup": [
+              "<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">ul</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"list_inline\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">ul</span>&gt;</span>"
+            ],
+            "comment": "<p></p>\n<p>A list where each item is in a row, with spacing to the right of each item</p>",
+            "priority": 1
+          },
+          {
+            "id": "lists-breadcrumbs",
+            "category": "Lists",
+            "section": {
+              "name": "Patterns",
+              "Patterns": true
+            },
+            "fileLocation": "",
+            "heading": "Breadcrumbs",
+            "code": [
+              "<ul class=\"breadcrumbs\">\n    <li class=\"breadcrumb\">List Item</li>\n    <li class=\"breadcrumb\">List Item</li>\n    <li class=\"breadcrumb\">List Item</li>\n</ul>"
+            ],
+            "markup": [
+              "<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">ul</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"breadcrumbs\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"breadcrumb\"</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"breadcrumb\"</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"breadcrumb\"</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">ul</span>&gt;</span>"
+            ],
+            "comment": "<p></p>\n<p>A list where each item is in a row, with a &#x25B8; between each item.</p>",
+            "priority": 3
+          },
+          {
+            "id": "lists-bordered_lists",
+            "category": "Lists",
+            "section": {
+              "name": "Patterns",
+              "Patterns": true
+            },
+            "fileLocation": "",
+            "heading": "Bordered Lists",
+            "code": [
+              "<ul class=\"list_bordered\">\n    <li>List Item</li>\n    <li>List Item</li>\n    <li>List Item</li>\n</ul>",
+              "<ul class=\"list_bordered_short\">\n    <li>List Item</li>\n    <li>List Item</li>\n    <li>List Item</li>\n</ul>"
+            ],
+            "markup": [
+              "<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">ul</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"list_bordered\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">ul</span>&gt;</span>",
+              "<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">ul</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"list_bordered_short\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">ul</span>&gt;</span>"
+            ],
+            "comment": "<p></p>\n<p>Creates a list with borders above and below each list item.</p><p>Appending <code class=\"sg-code sg-codespan\">list_bordered</code> with <code class=\"sg-code sg-codespan\">_short</code> will make reduce the padding between each item.</p>",
+            "priority": 99
+          },
+          {
+            "id": "lists-navigation_list",
+            "category": "Lists",
+            "section": {
+              "name": "Patterns",
+              "Patterns": true
+            },
+            "fileLocation": "",
+            "heading": "Navigation List",
+            "code": [
+              "<ul class=\"list_nav\">\n    <li>\n        <a href=\"#\">List Item</a>\n    </li>\n    <li>\n        <a href=\"#\">List Item</a>\n    </li>\n    <li>\n        <a href=\"#\">List Item</a>\n    </li>\n</ul>"
+            ],
+            "markup": [
+              "<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">ul</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"list_nav\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">a</span> <span class=\"hljs-attr\">href</span>=<span class=\"hljs-string\">\"#\"</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">a</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">a</span> <span class=\"hljs-attr\">href</span>=<span class=\"hljs-string\">\"#\"</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">a</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">a</span> <span class=\"hljs-attr\">href</span>=<span class=\"hljs-string\">\"#\"</span>&gt;</span>List Item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">a</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">ul</span>&gt;</span>"
+            ],
+            "comment": "<p></p>\n<p>List where anchor tags fill the space of their containers. Useful as a modifier class. Can be used on any item with multiple child anchors (doesn&apos;t have to be an <code class=\"sg-code sg-codespan\">ol</code> or <code class=\"sg-code sg-codespan\">ul</code>).</p>",
+            "priority": 99
+          }
+        ]
+      }
+    ],
+    "Colors": [
+      {
+        "category": "Lookup",
+        "id": "category-lookup-",
+        "articles": [
+          {
+            "id": "lookup-",
+            "category": "Lookup",
+            "section": {
+              "name": "Colors",
+              "Colors": true
+            },
+            "fileLocation": " tools/_t-color-functions.scss",
+            "heading": "",
+            "code": [],
+            "markup": [],
+            "comment": "<p>\n<br>\n</p>\n<h2 class=\"sg-heading sg-heading-2\" id=\"heading--3ccode-20id--22fn-colors--22-20class--22global_function-20sg-code-20sg-codespan-20sg-global-22-20data-code-id--22colors-22-3ecolors--3c-code-3e\"><code id=\"fn-colors()\" class=\"global_function sg-code sg-codespan sg-global\" data-code-id=\"colors\">colors()</code></h2>\n<h3 class=\"sg-heading sg-heading-3\" id=\"heading-function--3ccode-20class--22sg-code-20sg-codespan-22-3e-color-name--20-tone--20-39-base-39--20-opacity--201-3c-code-3e-\">function(<code class=\"sg-code sg-codespan\">$color-name, $tone: &apos;base&apos;, $opacity: 1</code>)</h3>\n<p>Get a color value from the global <code id=\"var-base-colors\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"base-colors\">$base-colors</code> map. Darker and lighter tones are available by passing a second string.</p>\n\n<div class=\"sg-markup sg-codeblock\">\n<pre class=\"sg-markup_wrap\"><code class=\"hljs sg-code\"><span class=\"hljs-selector-class\">.foo</span> {\n    <span class=\"hljs-attribute\">background-color</span>: colors(links, light));\n}\n</code></pre></div>\n<p>Passing only a color name will default to the &apos;base&apos; color.</p>\n<p><dl class=\"sg-code-meta-block\"><dt class=\"sg-alias sg-code-meta sg-code-meta-type\">alias<dd class=\"sg-alias sg-code-meta sg-code-meta-value\"><span class=\"sg-codespan sg-code-example\" data-code-tag=\"alias\"><code id=\"fn- color()\" class=\"global_function sg-code sg-codespan sg-global\" data-code-id=\"-color\"> color()</code></span></dd>\n<br>\n<dl class=\"sg-code-meta-block\"><dt class=\"sg-requires sg-code-meta sg-code-meta-type\">requires<dd class=\"sg-requires sg-code-meta sg-code-meta-value\"><span class=\"sg-codespan sg-code-example\" data-code-tag=\"requires\"><code class=\"sg-code sg-codespan\"> <code id=\"var-base-colors\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"base-colors\">$base-colors</code></code></span></dd>\n<br>\n<dl class=\"sg-code-meta-block\"><dt class=\"sg-returns sg-code-meta sg-code-meta-type\">returns<dd class=\"sg-returns sg-code-meta sg-code-meta-value\"><code class=\"sg-codespan sg-code-example\" data-code-tag=\"returns\"> <code class=\"sg-code sg-codespan\">color</code></code></dd></dt></dl></dt></dl></dt></dl></p>\n<p><a href=\"http://blog.12spokes.com/web-design-development/simple-css-color-management-with-sass/\">Reference</a></p>",
+            "priority": 50
+          }
+        ]
+      },
+      {
+        "category": "Manipulation",
+        "id": "category-manipulation-",
+        "articles": [
+          {
+            "id": "manipulation-",
+            "category": "Manipulation",
+            "section": {
+              "name": "Colors",
+              "Colors": true
+            },
+            "fileLocation": " tools/_t-color-functions.scss",
+            "heading": "",
+            "code": [],
+            "markup": [],
+            "comment": "<p></p>\n<h2 class=\"sg-heading sg-heading-2\" id=\"heading--3ccode-20id--22fn-generate-color-varations--22-20class--22global_function-20sg-code-20sg-codespan-20sg-global-22-20data-code-id--22generate-color-varations-22-3egenerate-color-varations--3c-code-3e\"><code id=\"fn-generate-color-varations()\" class=\"global_function sg-code sg-codespan sg-global\" data-code-id=\"generate-color-varations\">generate-color-varations()</code></h2>\n<h3 class=\"sg-heading sg-heading-3\" id=\"heading-function--3ccode-20class--22sg-code-20sg-codespan-22-3e-map--20-functions--20-increments--20-variations--20-blending-colors-3c-code-3e-\">function(<code class=\"sg-code sg-codespan\">$map, $functions, $increments, $variations, $blending-colors</code>)</h3>\n<p>Takes base color values and generates a full color palette. Used by the <code id=\"var-base-colors\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"base-colors\">$base-colors</code> map to create a project&apos;s palette, accessible via <code id=\"fn-colors()\" class=\"global_function sg-code sg-codespan sg-global\" data-code-id=\"colors\">colors()</code>.</p>\n<p><strong>Arguments:</strong></p>\n<ul>\n<li><code class=\"sg-code sg-codespan\">$map</code>: Color map you want to create variations of. Defaults to <code id=\"var-base-colors\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"base-colors\">$base-colors</code>.</li>\n<li><code class=\"sg-code sg-codespan\">$functions</code>: color functions used to generate variations (e.g. lighten or darken). Can use any <code class=\"sg-code sg-codespan\">blend</code> function, provided <code class=\"sg-code sg-codespan\">$blending-colors</code> are provided.</li>\n<li><code class=\"sg-code sg-codespan\">$increments</code>: percentage amount to apply <code class=\"sg-code sg-codespan\">$function</code> to each <code class=\"sg-code sg-codespan\">$variations</code>.</li>\n<li><code class=\"sg-code sg-codespan\">$variations</code>: actual names for each color tone when <code id=\"fn-colors()\" class=\"global_function sg-code sg-codespan sg-global\" data-code-id=\"colors\">colors()</code> used.</li>\n<li><code class=\"sg-code sg-codespan\">$blending-colors</code>: used when a function is a <code class=\"sg-code sg-codespan\">blend</code>. Can be a list or a single color.</li>\n</ul>\n<p><dl class=\"sg-code-meta-block\"><dt class=\"sg-requires sg-code-meta sg-code-meta-type\">requires<dd class=\"sg-requires sg-code-meta sg-code-meta-value\"><span class=\"sg-codespan sg-code-example\" data-code-tag=\"requires\"><code class=\"sg-code sg-codespan\"> <code id=\"fn-combine-color-maps()\" class=\"global_function sg-code sg-codespan sg-global\" data-code-id=\"combine-color-maps\">combine-color-maps()</code></code></span></dd></dt></dl></p>",
+            "priority": 50
+          }
+        ]
+      }
+    ],
+    "Sass": [
+      {
+        "category": "Config",
+        "id": "category-config-grid_settings",
+        "articles": [
+          {
+            "id": "config-grid_settings",
+            "category": "Config",
+            "section": {
+              "name": "Sass",
+              "Sass": true
+            },
+            "fileLocation": "",
+            "heading": "Grid Settings",
+            "code": [],
+            "markup": [],
+            "comment": "<h2 class=\"sg-heading sg-heading-2\" id=\"heading--3ccode-20id--22var-max-site-width-22-20class--22global_variable-20sg-code-20sg-codespan-20sg-global-22-20data-code-id--22max-site-width-22-3e-max-site-width-3c-code-3e-20--20pixel\"><code id=\"var-max-site-width\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"max-site-width\">$max-site-width</code> - Pixel</h2>\n<p>Maximum desktop width for the site wrapper.</p>\n<h2 class=\"sg-heading sg-heading-2\" id=\"heading--3ccode-20id--22var-grid-gutter-22-20class--22global_variable-20sg-code-20sg-codespan-20sg-global-22-20data-code-id--22grid-gutter-22-3e-grid-gutter-3c-code-3e-20--20pixel\"><code id=\"var-grid-gutter\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"grid-gutter\">$grid-gutter</code> - Pixel</h2>\n<p>Space between grid items. Also used in <code id=\"fn-type-space()\" class=\"global_function sg-code sg-codespan sg-global\" data-code-id=\"type-space\">type-space()</code> for horizontal spacing units.</p><h2 class=\"sg-heading sg-heading-2\" id=\"heading--3ccode-20id--22var-max-site-width-22-20class--22global_variable-20sg-code-20sg-codespan-20sg-global-22-20data-code-id--22max-site-width-22-3e-max-site-width-3c-code-3e-20--20pixel\"><code id=\"var-max-site-width\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"max-site-width\">$max-site-width</code> - Pixel</h2>\n<p>Maximum desktop width for the site wrapper.</p>\n<h2 class=\"sg-heading sg-heading-2\" id=\"heading--3ccode-20id--22var-grid-columns-22-20class--22global_variable-20sg-code-20sg-codespan-20sg-global-22-20data-code-id--22grid-columns-22-3e-grid-columns-3c-code-3e-20--20number\"><code id=\"var-grid-columns\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"grid-columns\">$grid-columns</code> - Number</h2>\n<p>Base number of grid columns to be generated. Note that any column number will include all fractions of the fewer columns. For instance, a 12-column grid would also include all fractions of 1-12 (including things like three-sevenths).</p>\n<h2 class=\"sg-heading sg-heading-2\" id=\"heading--3ccode-20id--22var-grid-gutter-22-20class--22global_variable-20sg-code-20sg-codespan-20sg-global-22-20data-code-id--22grid-gutter-22-3e-grid-gutter-3c-code-3e-20--20pixel\"><code id=\"var-grid-gutter\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"grid-gutter\">$grid-gutter</code> - Pixel</h2>\n<p>Space between grid items. Also used in <code id=\"fn-type-space()\" class=\"global_function sg-code sg-codespan sg-global\" data-code-id=\"type-space\">type-space()</code> for horizontal spacing units.</p>",
+            "priority": 50
+          },
+          {
+            "id": "config-typography_settings",
+            "category": "Config",
+            "section": {
+              "name": "Sass",
+              "Sass": true
+            },
+            "fileLocation": "",
+            "heading": "Typography Settings",
+            "code": [],
+            "markup": [],
+            "comment": "<h2 class=\"sg-heading sg-heading-2\" id=\"heading--3ccode-20id--22var-base-font-size-22-20class--22global_variable-20sg-code-20sg-codespan-20sg-global-22-20data-code-id--22base-font-size-22-3e-base-font-size-3c-code-3e-20--20pixel\"><code id=\"var-base-font-size\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"base-font-size\">$base-font-size</code> - Pixel</h2>\n<p>Font size all other values will use for calculation. Will be converted to <code class=\"sg-code sg-codespan\">rems</code>.</p>\n<h2 class=\"sg-heading sg-heading-2\" id=\"heading--3ccode-20id--22var-base-line-height-22-20class--22global_variable-20sg-code-20sg-codespan-20sg-global-22-20data-code-id--22base-line-height-22-3e-base-line-height-3c-code-3e-20--20pixel\"><code id=\"var-base-line-height\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"base-line-height\">$base-line-height</code> - Pixel</h2>\n<p>Line-height for base font-size. Will be used to determine the vertical spacing values when <code id=\"fn-type-space()\" class=\"global_function sg-code sg-codespan sg-global\" data-code-id=\"type-space\">type-space()</code> is used.</p>\n<h2 class=\"sg-heading sg-heading-2\" id=\"heading--3ccode-20id--22var-font-looseness-22-20class--22global_variable-20sg-code-20sg-codespan-20sg-global-22-20data-code-id--22font-looseness-22-3e-font-looseness-3c-code-3e-20--20percentage\"><code id=\"var-font-looseness\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"font-looseness\">$font-looseness</code> - Percentage</h2>\n<p>What to base the tightness/looseness of automatically-generated <code class=\"sg-code sg-codespan\">line-heights</code>.</p>\n<h2 class=\"sg-heading sg-heading-2\" id=\"heading--3ccode-20id--22var-auto-scale-type-22-20class--22global_variable-20sg-code-20sg-codespan-20sg-global-22-20data-code-id--22auto-scale-type-22-3e-auto-scale-type-3c-code-3e-20--20boolean\"><code id=\"var-auto-scale-type\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"auto-scale-type\">$auto-scale-type</code> - Boolean</h2>\n<p>Uses <code id=\"var-scale-ratio\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"scale-ratio\">$scale-ratio</code> to create font sizes for headings starting from the <code id=\"var-base-font-size\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"base-font-size\">$base-font-size</code>.</p>\n<h2 class=\"sg-heading sg-heading-2\" id=\"heading--3ccode-20id--22var-scale-ratio-22-20class--22global_variable-20sg-code-20sg-codespan-20sg-global-22-20data-code-id--22scale-ratio-22-3e-scale-ratio-3c-code-3e-20--20number-20-float-\"><code id=\"var-scale-ratio\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"scale-ratio\">$scale-ratio</code> - Number (float)</h2>\n<p>Used for <code id=\"var-auto-scale-type\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"auto-scale-type\">$auto-scale-type</code> and for <code id=\"fn-modular-scale()\" class=\"global_function sg-code sg-codespan sg-global\" data-code-id=\"modular-scale\">modular-scale()</code>.</p>\n<h2 class=\"sg-heading sg-heading-2\" id=\"heading--3ccode-20id--22var-rem-px-fallback-22-20class--22global_variable-20sg-code-20sg-codespan-20sg-global-22-20data-code-id--22rem-px-fallback-22-3e-rem-px-fallback-3c-code-3e-20--20boolean\"><code id=\"var-rem-px-fallback\" class=\"global_variable sg-code sg-codespan sg-global\" data-code-id=\"rem-px-fallback\">$rem-px-fallback</code> - Boolean</h2>\n<p>Determines whether <code id=\"fn-rems()\" class=\"global_function sg-code sg-codespan sg-global\" data-code-id=\"rems\">rems()</code> conversion includes a pixel-value fallback for older browsers like IE8.</p>",
+            "priority": 50
+          }
+        ]
+      }
+    ]
+  },
+  "menus": {
+    "About": [
+      {
+        "category": "Introduction",
+        "id": "category-introduction-",
+        "headings": [
+          {
+            "id": "introduction-",
+            "name": "Introduction"
+          }
+        ]
+      }
+    ],
+    "Patterns": [
+      {
+        "category": "Layout",
+        "id": "category-layout-arrangement_object",
+        "headings": [
+          {
+            "id": "layout-arrangement_object",
+            "name": "Arrangement object"
+          },
+          {
+            "id": "layout-media_object",
+            "name": "Media object"
+          }
+        ]
+      },
+      {
+        "category": "Lists",
+        "id": "category-lists-",
+        "headings": [
+          {
+            "id": "lists-",
+            "name": "Lists"
+          },
+          {
+            "id": "lists-inline_lists",
+            "name": "Inline Lists"
+          },
+          {
+            "id": "lists-breadcrumbs",
+            "name": "Breadcrumbs"
+          },
+          {
+            "id": "lists-bordered_lists",
+            "name": "Bordered Lists"
+          },
+          {
+            "id": "lists-navigation_list",
+            "name": "Navigation List"
+          }
+        ]
+      }
+    ],
+    "Colors": [
+      {
+        "category": "Lookup",
+        "id": "category-lookup-",
+        "headings": [
+          {
+            "id": "lookup-",
+            "name": "Lookup"
+          }
+        ]
+      },
+      {
+        "category": "Manipulation",
+        "id": "category-manipulation-",
+        "headings": [
+          {
+            "id": "manipulation-",
+            "name": "Manipulation"
+          }
+        ]
+      }
+    ],
+    "Sass": [
+      {
+        "category": "Config",
+        "id": "category-config-grid_settings",
+        "headings": [
+          {
+            "id": "config-grid_settings",
+            "name": "Grid Settings"
+          },
+          {
+            "id": "config-typography_settings",
+            "name": "Typography Settings"
+          }
+        ]
+      }
+    ]
+  },
+  "colors": {},
+  "customVariables": {
+    "scripts": [
+      "",
+      ""
+    ]
+  }
+}
