@@ -13,7 +13,6 @@
     {{> theme}}
     {{> highlight}}
     </style>
-    <link rel="stylesheet" href="../test.css" media="screen">
 </head>
 <body class="sg-body">
 <div class="sg-wrap">
@@ -24,46 +23,42 @@
                 <a href="#" class="sg-menu_link js-menu_showall">Project Name</a>
             </h1>
             {{#each menus~}}
-            {{#eachProperty this~}}
-            {{!--Section Start --}}
+            {{~!--Section Start --~}}
             <ul class="sg-menu_list sg-menu_section">
                 <li class="sg-menu_item sg-menu_section_item">
-                    <a href="#{{key}}" class="sg-menu_link sg-section_link js-menu_showall">
-                        {{titleize key}}
+                    <a href="#{{@key}}" class="sg-menu_link sg-section_link js-menu_showall">
+                        {{titleize @key}}
                     </a>
-                    <span class="sg-menu_toggle toggle-active" data-sg-toggle="#sub-{{key}}">&#9662;</span>
+                    <span class="sg-menu_toggle toggle-active" data-sg-toggle="#sub-{{@key}}">&#9662;</span>
                 </li>
             </ul>
             {{!-- Category list --}}
-            <ul id="sub-{{key}}" class="sg-menu_list sg-menu_category">
-                {{#eachProperty value}}
-                {{#with value}}
+            <ul id="sub-{{@key}}" class="sg-menu_list sg-menu_category">
+            {{#each this}}
                 <li class="sg-menu_category_item sg-menu_item">
                     {{#if headings.1.name}} {{!--Check for sub-menus--}}
-                    <a class="sg-menu_link sg-category_link" href="#{{sanitize headings.0.id}}">
-                        {{~name~}}
+                    <a class="sg-menu_link sg-category_link" href="#{{sanitize id}}">
+                        {{~category~}}
                     </a>
                     <span class="sg-menu_toggle toggle-active"
                         data-sg-toggle="[data-sg-submenu='{{headings.0.name}}']">&#9662;</span>
                     <ul class="sg-menu_list sg-menu_list-sub" data-sg-submenu="{{headings.0.name}}">
-                    {{#each headings}}
+                    {{#if headings}}{{#each headings}}
                         <li class="sg-menu_item">
                             <a href="#{{sanitize id}}" class="sg-menu_link js-submenu_link">
                                 {{~name~}}
                             </a>
                         </li>
-                    {{/each}}
+                    {{/each}}{{/if}}
                     </ul>
                     {{else}}
-                    <a class="sg-menu_link sg-category_link" href="#{{sanitize headings.0.id}}">
-                        {{~name~}}
+                    <a class="sg-menu_link sg-category_link" href="#{{sanitize id}}">
+                        {{~category~}}
                     </a>
                     {{/if}}
                 </li>
-                {{/with}}
-                {{/eachProperty}}
+            {{/each}}
             </ul>
-            {{/eachProperty}}
             {{/each}}
             <div class="sg-menu_list sg-menu_section">
                 <a href="#" class="sg-menu_link sg-section_link js-menu_showall">Show All</a>
@@ -71,45 +66,40 @@
         </div>
     </nav>
     <main id="styleguide" {{!-- Required ID --}} class="sg-main">
-        <div class="sg-main_wrap">
-        {{#each sections}}
-            <section id="{{@key}}" class="sg-section" data-sg-section="{{@key}}">
-                <div class="sg-article sg-section_head">
-                    <h1 class="sg-heading sg-heading-section">{{titleize @key}}</h1>
-                </div>
-                {{#each this}}
+    {{#each sections}}
+        <section id="{{@key}}" class="sg-section" data-sg-section="{{@key}}">
+            <div class="sg-section_head">
+                <h1 class="sg-heading sg-heading-section">{{titleize @key}}</h1>
+            </div>
 
-                    <div class="sg-category">
-                        {{#if articles.[1]}} {{!--Check for more than one article --}}
-                        <header class="sg-category_head" data-sg-section="{{sanitize name}}">
-                            <h3 class="sg-heading-category">
-                                {{name}}
-                            </h3>
-                        </header>
-                        {{else}}
-                        {{/if}}
-                    {{#each articles}}
+            {{#each this}}
+                <div class="sg-category" id="{{sanitize id}}">
+                    {{!--Check for more than one article --}}
+                    <header class="sg-category_head" data-sg-section="{{sanitize category}}">
+                        <h2 class="sg-heading-category">
+                            {{category}}
+                        </h2>
+                    </header>
+
+                {{#each articles}}
                     <article class="sg-article" id="{{sanitize id}}" data-sg-section="{{category}}" data-sg-heading="{{heading}}">
+                        {{#if heading}}
                         <header class="sg-article_head {{#unless heading}}sg-category_head{{/unless}}">
                             <h4 class="sg-heading sg-heading-article">
-                                {{~#if heading~}}
-                                    {{heading}}
-                                {{else}}
-                                    {{category}}
-                                {{~/if~}}
+                                {{heading}}
                             </h4>
-                            {{~#if section.development~}}{{#if fileLocation}}
-                                <code class="sg-codespan">{{fileLocation}}</code>
-                            {{/if}}{{/if~}}
+                            {{~#if fileLocation}}
+                            <code class="sg-codespan sg-file">{{fileLocation}}</code>
+                            {{~/if~}}
                         </header>
-
+                        {{/if}}
                         <div class="sg-article_comment">
                             {{{comment}}}
                         </div>
                         {{#if code}}
                         <div class="sg-example">
                             <div class="sg-example_wrap">
-                                {{{code}}}
+                                {{#each code}}{{{this}}}{{/each}}
                             </div>
                             {{#each markup}}
                             <div class="sg-markup">
@@ -119,12 +109,11 @@
                         </div>
                         {{/if}}
                     </article>
-                    {{~/each}}
+                {{~/each}}
                 </div>
-                {{/each}}
-            </section>
-        {{~/each}}
-        </div>
+            {{/each}}
+        </section>
+    {{~/each}}
     </main>
 </div>
 <!--JQuery-->
