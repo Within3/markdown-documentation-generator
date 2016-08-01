@@ -270,45 +270,46 @@ The Javascript object which you may use in your template file looks like this:
 
 ```javascript
 {
-	sections: [
+  sections: [
     SectionName: [
       category: "Category Name",
       id: "category-name (HTML safe)"
-      articles:
-  		{
-  			id: 'Article ID (HTML safe unique identifier)',
-  			category: 'Parent Category (from the "# **Category**/Heading" Markdown)',
-				section: {
-					name: "Parent Section",
-					ParentSection: true //Useful for template checks
-				},
-				fileLocation: "File path where this article originated",
-  			heading: 'Article Heading (from the "# Category/**Heading**" Markdown)',
-  			code: 'HTML Code',
-  			markup: 'Highlighted HTML Code',
-  			comment: 'Markdown comment converted to HTML',
-				priority: `Article's sorting value`
-  		},
-  		{...}
+      articles: [
+        {
+          id: 'Article ID (HTML safe unique identifier)',
+          category: 'Parent Category (from the "# Category/Heading" Markdown)',
+          section: {
+            name: "Parent Section",
+            ParentSection: true //Useful for template checks
+          },
+          fileLocation: "File path where this article originated",
+          heading: 'Article Heading (from the "# Category/Heading" Markdown)',
+          code: 'HTML Code',
+          markup: 'Highlighted HTML Code',
+          comment: 'Markdown comment converted to HTML',
+          priority: 'Article sorting value' //Number
+        },
+        {...}
+      ],
     ],
     ...
-	],
-	menus: [
+  ],
+  menus: [
     SectionName: [
-			{
-				category: 'Category Name (one per unique "# Category")',
-				id: 'Category ID (HTML-safe unique identifier)',
-				headings: [
-					{
-						id: 'Article ID (HTML-safe unique identifier)',
-						name: 'Heading Name'
-					},
-					{...}
-				]
-			},
-			{...}
-		]
-	]
+      {
+        category: 'Category Name (one per unique "# Category")',
+        id: 'Category ID (HTML-safe unique identifier)',
+        headings: [
+          {
+            id: 'Article ID (HTML-safe unique identifier)',
+            name: 'Heading Name'
+          },
+          {...}
+        ]
+      },
+      {...}
+    ]
+  ]
 }
 ```
 
