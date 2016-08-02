@@ -271,7 +271,7 @@ The Javascript object which you may use in your template file looks like this:
 ```javascript
 {
   sections: [
-    SectionName: [
+    SectionName: {
       category: "Category Name",
       id: "category-name (HTML safe)"
       articles: [
@@ -291,7 +291,7 @@ The Javascript object which you may use in your template file looks like this:
         },
         {...}
       ],
-    ],
+    },
     ...
   ],
   menus: [

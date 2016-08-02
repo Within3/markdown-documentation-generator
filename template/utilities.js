@@ -51,10 +51,11 @@ $(function() {
                 $(dataSection).show();
 
                 //Handle section containers
-                $section.children($sections).show()
-                    $('html, body').animate({
-                        scrollTop: $section.offset().top
-                    }, 200);
+                $section.children($sections).show();
+
+                $('html, body').animate({
+                    scrollTop: $section.offset().top
+                }, 200);
 
         }catch(err){
             //Just show all sections if section doesn't exist
@@ -95,10 +96,10 @@ $(function() {
     //Wrap code references in links
     $('.global').each(function(i){
       if (!($(this).parent().hasClass('sg-heading'))){
-    	  var id = $(this).data('code-id');
-    		  id = "_"+id+"_";
-    	  var aWrapper = '<a class="sg-code-reference" href="#heading-'+id+'"></a>';
-    	  $(this).wrap(aWrapper);
+          var id = $(this).data('code-id');
+              id = "_"+id+"_";
+          var aWrapper = '<a class="sg-code-reference" href="#heading-'+id+'"></a>';
+          $(this).wrap(aWrapper);
       }
     });
 });

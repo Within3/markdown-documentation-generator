@@ -21,7 +21,7 @@ var _          = require('lodash');
 //Default options
 var options = {
     sgComment: 'SG',
-	exampleIdentifier: 'html_example',
+    exampleIdentifier: 'html_example',
     sortCategories: true,
     sections: {
         "styles": '',
@@ -30,12 +30,12 @@ var options = {
     srcFolder: process.cwd(),
     excludeDirs: ['target', 'node_modules'],
     fileExtensions: {
-		scss: true,
-		sass: true,
-		css: false,
-		less: true,
+        scss: true,
+        sass: true,
+        css: false,
+        less: true,
         md: true
-	},
+    },
     templateFile: path.join(_v.moduleDir, '/template/template.html'),
     themeFile: path.join(_v.moduleDir, '/template/theme.css'),
     outputFile: path.join(process.cwd(), '/styleguide/styleguide.html'),
@@ -44,18 +44,18 @@ var options = {
         utilities: path.join(_v.moduleDir, '/template/utilities.js'),
         jquery: path.join(_v.moduleDir, '/template/jquery.js'),
     },
-	highlightStyle: 'arduino-light',
+    highlightStyle: 'arduino-light',
     highlightFolder: path.join(_v.hljsDir, '../styles/'),
     customVariables: {
         scripts: ['','']
-	},
+    },
     markedOptions: {
-		gfm: true,
-		breaks: true
-	},
+        gfm: true,
+        breaks: true
+    },
     walkerOptions: {
-		followLinks: false
-	}
+        followLinks: false
+    }
 };
 
 
@@ -71,84 +71,89 @@ var templateSource,
     existingConfig,
     walker;
 
+
+/**
+ * Initialize
+ *
+ * @param {String} html
+ */
+
 function init(args) {
 
-    /**
-     * Custom renderer for Marked
-     */
+    //Custom markdown renderer before we merge our custom options
     var renderer = new markdown.Renderer();
-    //Add custom formatters
+    //Add custom markdown formatters
     renderer = formatters.register(renderer, options);
 
     if(args.length > 0) {
-    	var curArg = args[0].toLowerCase();
+        var curArg = args[0].toLowerCase();
 
         if(curArg === 'init') { // Let user create a new configuration file.
-    		configFilePath = path.join(process.cwd(), '.styleguide');
+            configFilePath = path.join(process.cwd(), '.styleguide');
 
-    		try {
-    			existingConfig = fs.readFileSync(configFilePath, 'utf8');
-    		} catch(err) {
-    			fs.writeFileSync(configFilePath, JSON.stringify(options,null,'\t'));
-    			console.log(_v.logPre + _v.good('\nAll done!'));
-    			console.log(_v.logPre + 'Created configuration file: ' + _v.good(configFilePath));
-    		}
-    		if(existingConfig !== undefined) {
-    			console.log(_v.logPre + _v.error('\nConfiguration file \'.styleguide\' already exists in this directory!'));
-    			console.log(_v.logPre + 'Edit that file, or delete it and run \'init\' again if you want to create a new configuration file.');
-    		}
-    		process.exit(0);
-    	}
-        else if(curArg === 'lf'){ //Turn on file listing ('reading file')
-    		_v.fileList = true;
-    	}
-        else { // Show help
-    		console.log('');
-            if (curArg !== 'help'){
-                console.log( _v.logPre + curArg + ' not recognized. Showing help instead.');
+            try {
+                existingConfig = fs.readFileSync(configFilePath, 'utf8');
+            } catch(err) {
+                fs.writeFileSync(configFilePath, JSON.stringify(options,null,'\t'));
+                console.info(_v.logPre + _v.good('\nAll done!'));
+                console.info(_v.logPre + 'Created configuration file: ' + _v.good(configFilePath));
             }
-    		console.log(chalk.blue('     _____ _         _                  _     _      '));
-    		console.log(chalk.blue('    / ____| |       | |                (_)   | |     '));
-    		console.log(chalk.blue('   | (___ | |_ _   _| | ___  __ _ _   _ _  __| | ___ '));
-    		console.log(chalk.blue('    \\___ \\| __| | | | |/ _ \\/ _` | | | | |/ _` |/ _ \\'));
-    		console.log(chalk.blue('    ____) | |_| |_| | |  __/ (_| | |_| | | (_| |  __/'));
-    		console.log(chalk.blue('   |_____/ \\__|\\__, |_|\\___|\\__, |\\__,_|_|\\__,_|\\___|'));
-    		console.log(chalk.blue('                __/ |        __/ |                   '));
-    		console.log(chalk.blue('               |___/        |___/                    '));
-    		console.log('');
-    		console.log('   ' + _v.info('md_documentation') + '         Generate styleguide');
-    		console.log('   ' + _v.info('md_documentation init') + '    Create a new configuration file in the current directory');
-    		console.log('   ' + _v.info('md_documentation lf') + '      Show "Reading [filename]" console output' );
-    		console.log('   ' + _v.info('md_documentation help') + '    Show this');
-    		console.log('');
-    		console.log('   More help at');
-    		console.log('   https://github.com/UWHealth/markdown-documentation-generator');
-    		console.log('');
-    		process.exit(0);
-    	}
+            if(existingConfig !== undefined) {
+                console.error(_v.logPre + _v.error('\nConfiguration file \'.styleguide\' already exists in this directory!'));
+                console.warn(_v.logPre + 'Edit that file, or delete it and run \'init\' again if you want to create a new configuration file.');
+            }
+            process.exit(0);
+        }
+        else if(curArg === 'lf'){ //Turn on file listing ('reading file')
+            _v.fileList = true;
+        }
+        else { // Show help
+            console.info('');
+            if (curArg !== 'help'){
+                console.info( _v.logPre + curArg + ' not recognized. Showing help instead.');
+            }
+            console.info(chalk.blue('     _____ _         _                  _     _      '));
+            console.info(chalk.blue('    / ____| |       | |                (_)   | |     '));
+            console.info(chalk.blue('   | (___ | |_ _   _| | ___  __ _ _   _ _  __| | ___ '));
+            console.info(chalk.blue('    \\___ \\| __| | | | |/ _ \\/ _` | | | | |/ _` |/ _ \\'));
+            console.info(chalk.blue('    ____) | |_| |_| | |  __/ (_| | |_| | | (_| |  __/'));
+            console.info(chalk.blue('   |_____/ \\__|\\__, |_|\\___|\\__, |\\__,_|_|\\__,_|\\___|'));
+            console.info(chalk.blue('                __/ |        __/ |                   '));
+            console.info(chalk.blue('               |___/        |___/                    '));
+            console.info('');
+            console.info('   ' + _v.info('md_documentation') + '         Generate styleguide');
+            console.info('   ' + _v.info('md_documentation init') + '    Create a new configuration file in the current directory');
+            console.info('   ' + _v.info('md_documentation lf') + '      Show "Reading [filename]" console output' );
+            console.info('   ' + _v.info('md_documentation help') + '    Show this');
+            console.info('');
+            console.info('   More help at');
+            console.info('   https://github.com/UWHealth/markdown-documentation-generator');
+            console.info('');
+            process.exit(0);
+        }
     }
 
     /**
      * Read configuration
      */
     try {
-    	customOptions = fs.readFileSync('.styleguide', 'utf8');
+        customOptions = fs.readFileSync('.styleguide', 'utf8');
     } catch(err) {
-    	console.log(_v.logPre + 'No ".styleguide" configuration file found in current directory, using defaults');
+        console.info(_v.logPre + 'No ".styleguide" configuration file found in current directory, using defaults');
     }
     if (customOptions !== undefined) {
-    	try {
+        try {
             if(_v.fileList) {
-                console.log(_v.logPre + 'Reading ' + _v.info('.styleguide'));
+                console.info(_v.logPre + 'Reading ' + _v.info('.styleguide'));
             }
 
             customOptions = JSON.parse(customOptions);
-    	}
+        }
         catch(err) {
-    		console.log(_v.error(_v.logPre + 'Found ".styleguide", but could not read - is it valid json?'));
-    		console.dir(err);
-    		process.exit(1);
-    	}
+            console.info(_v.error(_v.logPre + 'Found ".styleguide", but could not read - is it valid json?'));
+            console.dir(err);
+            process.exit(1);
+        }
 
         //Overwrite default sections with custom ones if they exist
         if (customOptions.sections !== undefined) {
@@ -163,34 +168,34 @@ function init(args) {
     }
     // Add walker exclude directories if set
     if(Object.prototype.toString.call(options.excludeDirs) === '[object Array]') {
-    	options.walkerOptions.filters = options.excludeDirs;
+        options.walkerOptions.filters = options.excludeDirs;
     }
 
     /**
      * Read template/theme/highlight files.
      */
     try {
-    	_v.templateSource = fs.readFileSync(options.templateFile, 'utf8');
+        _v.templateSource = fs.readFileSync(options.templateFile, 'utf8');
     }
     catch(err) {
-    	console.log(_v.logPre + _v.error('Could not read template file: ' + options.templateFile));
-    	process.exit(1);
+        console.error(_v.logPre + _v.error('Could not read template file: ' + options.templateFile));
+        process.exit(1);
     }
 
     try {
-    	_v.themeSource = fs.readFileSync(options.themeFile, 'utf8');
+        _v.themeSource = fs.readFileSync(options.themeFile, 'utf8');
     }
     catch(err) {
-    	console.log(_v.logPre + _v.error('Could not read theme file: ' + options.themeFile));
-    	process.exit(1);
+        console.error(_v.logPre + _v.error('Could not read theme file: ' + options.themeFile));
+        process.exit(1);
     }
 
     try {
-    	_v.highlightSource = fs.readFileSync(path.join(options.highlightFolder, options.highlightStyle + '.css'), 'utf8');
+        _v.highlightSource = fs.readFileSync(path.join(options.highlightFolder, options.highlightStyle + '.css'), 'utf8');
     }
     catch(err) {
-    	console.log(_v.logPre + _v.error('Could not read highlight file: ' + path.join(options.highlightFolder, options.highlightStyle + '.css')));
-    	process.exit(1);
+        console.error(_v.logPre + _v.error('Could not read highlight file: ' + path.join(options.highlightFolder, options.highlightStyle + '.css')));
+        process.exit(1);
     }
 
     //Set markdown options and
@@ -202,6 +207,8 @@ function init(args) {
      * Walk the file tree
      */
     walker = walk.walk(options.srcFolder, options.walkerOptions);
+
+    readFiles(walker);
 }
 
 /**
@@ -214,79 +221,81 @@ if(!module.parent) {
 /**
  * Read valid files (default: scss/css), get the Styleguide comments and put into an array
  */
-var fileContents = [],
-    pattern;
+function readFiles(walker) {
+    var fileContents = [],
+        pattern;
 
-walker.on("file", function (root, fileStats, next) {
-	var fileExtension = fileStats.name.substr((~-fileStats.name.lastIndexOf(".") >>> 0) + 2).toLowerCase();
+    walker.on("file", function (root, fileStats, next) {
+        var fileExtension = fileStats.name.substr((~-fileStats.name.lastIndexOf(".") >>> 0) + 2).toLowerCase();
 
-    if (options.fileExtensions[fileExtension]) {
-		fs.readFile(path.join(root, fileStats.name), 'utf8', function (err, fileContent) {
+        if (options.fileExtensions[fileExtension]) {
+            fs.readFile(path.join(root, fileStats.name), 'utf8', function (err, fileContent) {
 
-            var regEsp;
-            var filePath = './' + path.join(root, _v.info(fileStats.name));
+                var regEsp;
+                var filePath = './' + path.join(root, _v.info(fileStats.name));
 
-			if (_v.fileList) {
-				console.log(_v.logPre + 'Reading file: ' + filePath);
-			}
+                if (_v.fileList) {
+                    console.info(_v.logPre + 'Reading file: ' + filePath);
+                }
 
-			if (err) {
-				console.log(_v.logPre + _v.error('File Error:'));
-				console.dir(err);
-				process.exit(1);
-			}
+                if (err) {
+                    console.error(_v.logPre + _v.error('File Error:'));
+                    console.dir(err);
+                    process.exit(1);
+                }
 
-            // Use <SG></SG> for markdown files
-            if (fileExtension === "md" || fileExtension === "markdown" || fileExtension === "mdown") {
-                pattern = new RegExp('\\< ?' + options.sgComment + '>([\\s\\S]*?)\\< ?\\/' + options.sgComment + ' ?\\>', 'gi');
-            }
-            else {
-                pattern = new RegExp('/\\* ?' + options.sgComment + '([\\s\\S]*?)\\*/', 'gi');
-            }
+                // Use <SG></SG> for markdown files
+                if (fileExtension === "md" || fileExtension === "markdown" || fileExtension === "mdown") {
+                    pattern = new RegExp('\\< ?' + options.sgComment + '>([\\s\\S]*?)\\< ?\\/' + options.sgComment + ' ?\\>', 'gi');
+                }
+                else {
+                    pattern = new RegExp('/\\* ?' + options.sgComment + '([\\s\\S]*?)\\*/', 'gi');
+                }
 
-			while ((regEsp = pattern.exec(fileContent)) !== null) {
-                //If reading anything other than css, create a reference div we'll use later
-                var fileLocation = (fileExtension !== "css") ? '<div data-sg-file-location="'+filePath+'"></div>': '';
-                //Convert markdown to html
-				fileContents.push(markdown(regEsp[1]) + fileLocation);
-			}
+                while ((regEsp = pattern.exec(fileContent)) !== null) {
+                    //If reading anything other than css, create a reference div we'll use later
+                    var fileLocation = (fileExtension !== "css") ? '<div data-sg-file-location="'+filePath+'"></div>': '';
+                    //Convert markdown to html
+                    fileContents.push(markdown(regEsp[1]) + fileLocation);
+                }
 
-			next();
-		});
-	}
-    else {
-		next();
-	}
-});
+                next();
+            });
+        }
+        else {
+            next();
+        }
+    });
 
-walker.on("errors", function (root, nodeStatsArray, next) {
-	console.log(_v.logPre + _v.error('Error'));
-	console.dir(nodeStatsArray);
-	process.exit(1);
-});
+    walker.on("errors", function (root, nodeStatsArray, next) {
+        console.error(_v.logPre + _v.error('Error'));
+        console.dir(nodeStatsArray);
+        process.exit(1);
+    });
 
 
-//Wrap all comments starting with SG in a section
-walker.on("end", function () {
-	var json = convertHTMLtoJSON('<div class="sg-section-' + _v.sgUniqueIdentifier + '">\n' + fileContents.join('</div>\n<div class="sg-section-' + _v.sgUniqueIdentifier + '">\n') + '</div>');
-	var html = template(json, options);
+    //Wrap all comments starting with SG in a section
+    walker.on("end", function () {
+        var json = convertHTMLtoJSON('<div class="sg-section-' + _v.sgUniqueIdentifier + '">\n' + fileContents.join('</div>\n<div class="sg-section-' + _v.sgUniqueIdentifier + '">\n') + '</div>');
+        var html = template(json, options);
 
-	saveFile(html, json);
-});
+        saveFile(html, json);
+    });
+}
 
 /**
  * Save html to file
  *
- * @param html
+ * @param {String} html
  */
 function saveFile(html, json) {
-	fs.outputFile(options.outputFile, html, function(err, data) {
-		if (err) {
-			console.error(_v.logPre + err);
-			process.exit(1);
-		}
-		console.log(_v.logPre + 'Created file: ' + _v.good(options.outputFile));
-	});
+    fs.outputFile(options.outputFile, html, function(err, data) {
+        if (err) {
+            console.error(_v.logPre + err);
+            process.exit(1);
+        }
+        console.info(_v.logPre + 'Created file: ' + _v.good(options.outputFile));
+    });
 }
 
 
@@ -295,7 +304,7 @@ function saveFile(html, json) {
 /**
  * Take HTML and create JSON object to be parsed by Handlebars
  *
- * @param html
+ * @param {String} html
  * @returns {Array} json
  */
 function convertHTMLtoJSON(html) {
@@ -322,10 +331,10 @@ function convertHTMLtoJSON(html) {
     var $ = cheerio.load(html);
     cheerioWrapAll($); //Add wrapAll method to cheerio
 
-	// Loop each section and turn into javascript object
-	$('.sg-section-' + _v.sgUniqueIdentifier).each(function (i, elem) {
-		var sectionIdentifier = _v.sgUniqueIdentifier;
-		var $category = cheerio.load($(this).html());
+    // Loop each section and turn into javascript object
+    $('.sg-section-' + _v.sgUniqueIdentifier).each(function (i, elem) {
+        var sectionIdentifier = _v.sgUniqueIdentifier;
+        var $category = cheerio.load($(this).html());
 
         var categoryData = {
             id: '',
@@ -336,14 +345,14 @@ function convertHTMLtoJSON(html) {
             },
             fileLocation: $category('filelocation').text(),
             heading: '',
-			code: [],
+            code: [],
             markup: [],
             comment: '',
             priority: 50
-		};
+        };
 
-		//Check if this section is a development section by checking class
-		if ($category('mainsection')[0]) {
+        //Check if this section is a development section by checking class
+        if ($category('mainsection')[0]) {
             var headerText = $category('mainsection').slice(0, 1).text();
             headerText += $category('subsection').text();
 
@@ -353,7 +362,7 @@ function convertHTMLtoJSON(html) {
                 if(headerText.indexOf(currentIdentifier) > -1 && currentIdentifier !== ''){
                     categoryData.currentSection = sectionName;
                     break;
-    			}
+                }
             }
 
             if (categoryData.currentSection === null){
@@ -371,42 +380,42 @@ function convertHTMLtoJSON(html) {
                 }
             }
 
-		}
+        }
         else if(previousCategory !== undefined) {
             categoryData.id = previousCategory.id;
             categoryData.category = previousCategory.category;
             categoryData.heading = previousCategory.heading;
             categoryData.currentSection = previousCategory.section.name;
-		}
+        }
 
-		$category('mainsection').each(function (i2, elem2) {
+        $category('mainsection').each(function (i2, elem2) {
             if (categoryData.category === ''){
-			    categoryData.category = $(this).text().replace(/^\s+|\s+$/g, '').replace(currentIdentifier, '').trim();
+                categoryData.category = $(this).text().replace(/^\s+|\s+$/g, '').replace(currentIdentifier, '').trim();
             }
             else {
                 var content = renderer.heading.call(renderer, $(this).html(), 1.5);
                 $(this).replaceWith($(content));
             }
 
-		});
+        });
 
-		$category('subsection').each(function (i2, elem2) {
-			if (i2 > 0){
+        $category('subsection').each(function (i2, elem2) {
+            if (i2 > 0){
                 //Make sure sub-section headings have a slash
-				categoryData.heading += '/ ';
-			}
+                categoryData.heading += '/ ';
+            }
             //Remove dev identifier and extra spaces
-			categoryData.heading += $(this).text().replace(/^\s+|\s+$/g, '').replace(currentIdentifier, '').trim();
+            categoryData.heading += $(this).text().replace(/^\s+|\s+$/g, '').replace(currentIdentifier, '').trim();
 
-		});
+        });
 
         //Store code examples and markup
-		$category('examplecode').each(function (i2, elem2) {
+        $category('examplecode').each(function (i2, elem2) {
             var categoryCode = $(this).html().replace(/^\s+|\s+$/g, '');
             categoryData.code.push(categoryCode);
             //Run markup through highlight.js
-    		categoryData.markup.push(hl.highlight("html", categoryCode).value);
-		});
+            categoryData.markup.push(hl.highlight("html", categoryCode).value);
+        });
 
         //Wrap dd/dt inside <dl>s
         $category('dt').each(function (i2, elem2) {
@@ -429,18 +438,18 @@ function convertHTMLtoJSON(html) {
         }
 
         //Give category an ID
-		categoryData.id = sanitize.makeUrlSafe(categoryData.category  + '-' + categoryData.heading);
+        categoryData.id = sanitize.makeUrlSafe(categoryData.category  + '-' + categoryData.heading);
 
         //Remove unnecessary data from core html
         $category('filelocation, priority').remove();
-		$category('mainsection, subsection, sectionmark, examplecode').remove();
+        $category('mainsection, subsection, sectionmark, examplecode').remove();
 
         //Save sanitized comment html
         categoryData.comment = $category.html().replace(/^\s+|\s+$/g, '');
 
         //Move category data to master
         saveToMaster(categoryData);
-	});
+    });
 
     /*
      * Combine repeat categories
@@ -506,11 +515,11 @@ function convertHTMLtoJSON(html) {
      */
 
     if (options.sortCategories){
-		//Sort Sections
+        //Sort Sections
         for (var category in masterData.sections){
             masterData.sections[category] = sorting(masterData.sections[category]);
         }
-	}
+    }
 
     function formatMasterData(sectionName, isMenu) {
         var menuObj = [{}];
@@ -519,13 +528,13 @@ function convertHTMLtoJSON(html) {
         var sectionArr = [];
         var sectionHeading;
 
-    	masterData.sections[sectionName].forEach(function(section) {
+        masterData.sections[sectionName].forEach(function(section) {
 
             //New categories: Create a new array to push objects into
             if (menuObj[0].hasOwnProperty(section.category) === false) {
-    			menuObj[0][section.category] = [];
+                menuObj[0][section.category] = [];
                 sectionObj[0][section.category] = [];
-    		}
+            }
 
             menuObj[0][section.category].push({
                 id: section.id,
@@ -533,10 +542,10 @@ function convertHTMLtoJSON(html) {
             });
 
             sectionObj[0][section.category].push(section);
-    	});
+        });
 
         Object.keys(menuObj[0]).forEach(function(key) {
-    		menuArr.push({
+            menuArr.push({
                 category: key,
                 id: 'category-'+menuObj[0][key][0].id,
                 headings: menuObj[0][key]
@@ -547,7 +556,7 @@ function convertHTMLtoJSON(html) {
                 id: 'category-'+menuObj[0][key][0].id,
                 articles: sectionObj[0][key]
             });
-    	});
+        });
 
         //Wasteful but simple
         return isMenu ? menuArr : sectionArr;
@@ -563,11 +572,11 @@ function convertHTMLtoJSON(html) {
     if (options.jsonOutput) {
         fs.outputFile(options.jsonOutput, JSON.stringify(masterData, null, '  '), function(err) {
             if(err){
-                console.log(_v.logPre + 'Error: Cannot write ' + options.jsonOutput);
+                console.error(_v.logPre + 'Error: Cannot write ' + options.jsonOutput);
                 console.error(err);
             }
             else {
-                console.log(_v.logPre + 'Created file: ' + _v.good(options.jsonOutput));
+                console.info(_v.logPre + 'Created file: ' + _v.good(options.jsonOutput));
             }
         });
 
@@ -575,25 +584,25 @@ function convertHTMLtoJSON(html) {
 
     module.exports.data = masterData;
 
-	return masterData;
+    return masterData;
 }
 
 /**
  * Merge Objects
  */
 function mergeObjects(obj1, obj2) {
-	for (var p in obj2) {
-		try {
-			if ( obj2[p].constructor == Object ) {
-				obj1[p] = mergeObjects(obj1[p], obj2[p]);
-			} else {
-				obj1[p] = obj2[p];
-			}
-		} catch(e) {
-			obj1[p] = obj2[p];
-		}
-	}
-	return obj1;
+    for (var p in obj2) {
+        try {
+            if ( obj2[p].constructor == Object ) {
+                obj1[p] = mergeObjects(obj1[p], obj2[p]);
+            } else {
+                obj1[p] = obj2[p];
+            }
+        } catch(e) {
+            obj1[p] = obj2[p];
+        }
+    }
+    return obj1;
 }
 
 /**
@@ -632,7 +641,7 @@ function cheerioWrapAll($) {
 }
 
 module.exports = function(args){
-    this.init = function(args) {
+    return this.init = function(args) {
         init(args);
     }
 };
