@@ -1,7 +1,7 @@
 $(function() {
 
     var toggles = "data-sg-toggle",
-        menuLinks = "sg-menu_link"
+        menuLinks = "sg-menu_link",
         $menu = $("#sg-menu"),
         $sections = $('#styleguide .sg-section');
 

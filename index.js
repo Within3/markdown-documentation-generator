@@ -9,7 +9,6 @@ var sorting    = require('./lib/sorts');
 var template   = require('./lib/templating');
 var masterData = require('./lib/data-store');
 var cheerio    = require('cheerio');
-var cssnano    = require('cssnano');
 var fs         = require('fs-extra');
 var walk       = require('walk');
 var markdown   = require('marked');
@@ -85,7 +84,7 @@ function init(args) {
     //Add custom markdown formatters
     renderer = formatters.register(renderer, options);
 
-    if(args.length > 0) {
+    if (args.length > 0) {
         var curArg = args[0].toLowerCase();
 
         if(curArg === 'init') { // Let user create a new configuration file.
@@ -98,13 +97,13 @@ function init(args) {
                 console.info(_v.logPre + _v.good('\nAll done!'));
                 console.info(_v.logPre + 'Created configuration file: ' + _v.good(configFilePath));
             }
-            if(existingConfig !== undefined) {
+            if (existingConfig !== undefined) {
                 console.error(_v.logPre + _v.error('\nConfiguration file \'.styleguide\' already exists in this directory!'));
                 console.warn(_v.logPre + 'Edit that file, or delete it and run \'init\' again if you want to create a new configuration file.');
             }
             process.exit(0);
         }
-        else if(curArg === 'lf'){ //Turn on file listing ('reading file')
+        else if (curArg === 'lf'){ //Turn on file listing ('reading file')
             _v.fileList = true;
         }
         else { // Show help
@@ -143,15 +142,12 @@ function init(args) {
     }
     if (customOptions !== undefined) {
         try {
-            if(_v.fileList) {
-                console.info(_v.logPre + 'Reading ' + _v.info('.styleguide'));
-            }
-
+            listFiles('.styleguide');
             customOptions = JSON.parse(customOptions);
         }
         catch(err) {
             console.info(_v.error(_v.logPre + 'Found ".styleguide", but could not read - is it valid json?'));
-            console.dir(err);
+            console.error(err);
             process.exit(1);
         }
 
@@ -208,78 +204,13 @@ function init(args) {
      */
     walker = walk.walk(options.srcFolder, options.walkerOptions);
 
-    readFiles(walker);
+    walkFiles(walker);
 }
 
-/**
- * Initialize automatically if not being imported
- */
-if(!module.parent) {
-    init(process.argv.slice(2));
-}
-
-/**
- * Read valid files (default: scss/css), get the Styleguide comments and put into an array
- */
-function readFiles(walker) {
-    var fileContents = [],
-        pattern;
-
-    walker.on("file", function (root, fileStats, next) {
-        var fileExtension = fileStats.name.substr((~-fileStats.name.lastIndexOf(".") >>> 0) + 2).toLowerCase();
-
-        if (options.fileExtensions[fileExtension]) {
-            fs.readFile(path.join(root, fileStats.name), 'utf8', function (err, fileContent) {
-
-                var regEsp;
-                var filePath = './' + path.join(root, _v.info(fileStats.name));
-
-                if (_v.fileList) {
-                    console.info(_v.logPre + 'Reading file: ' + filePath);
-                }
-
-                if (err) {
-                    console.error(_v.logPre + _v.error('File Error:') + err);
-                    process.exit(1);
-                }
-
-                // Use <SG></SG> for markdown files
-                if (fileExtension === "md" || fileExtension === "markdown" || fileExtension === "mdown") {
-                    pattern = new RegExp('\\< ?' + options.sgComment + '>([\\s\\S]*?)\\< ?\\/' + options.sgComment + ' ?\\>', 'gi');
-                }
-                else {
-                    pattern = new RegExp('/\\* ?' + options.sgComment + '([\\s\\S]*?)\\*/', 'gi');
-                }
-
-                while ((regEsp = pattern.exec(fileContent)) !== null) {
-                    //If reading anything other than css, create a reference div we'll use later
-                    var fileLocation = (fileExtension !== "css") ? '<div data-sg-file-location="'+filePath+'"></div>': '';
-                    //Convert markdown to html
-                    fileContents.push(markdown(regEsp[1]) + fileLocation);
-                }
-
-                next();
-            });
-        }
-        else {
-            next();
-        }
-    });
-
-    walker.on("errors", function (root, nodeStatsArray, next) {
-        console.error(_v.logPre + _v.error('Error'));
-        console.dir(nodeStatsArray);
-        process.exit(1);
-    });
-
-
-    //Wrap all comments starting with SG in a section
-    walker.on("end", function () {
-        var json = convertHTMLtoJSON('<div class="sg-section-' + _v.sgUniqueIdentifier + '">\n' + fileContents.join('</div>\n<div class="sg-section-' + _v.sgUniqueIdentifier + '">\n') + '</div>');
-        var html = template(json, options);
-
-        saveFile(html, json);
-    });
+function listFiles(fileName) {
+    if(_v.fileList){
+        console.info(_v.logPre + 'Reading ' + _v.info(fileName));
+    }
 }
 
 /**
@@ -287,7 +218,7 @@ function readFiles(walker) {
  *
  * @param {String} html
  */
-function saveFile(html, json) {
+function saveFile(html) {
     fs.outputFile(options.outputFile, html, function(err, data) {
         if (err) {
             console.error(_v.logPre + err);
@@ -298,6 +229,28 @@ function saveFile(html, json) {
 }
 
 
+function findSection($article) {
+    var currentSection;
+    var currentIdentifier;
+    var headerText = $article('category').slice(0, 1).text() + $article('article').text();
+
+    //Check headings for identifiers declared in "sections" option
+    for (var sectionName in options.sections){
+        currentIdentifier = options.sections[sectionName];
+
+        if(headerText.indexOf(currentIdentifier) > -1 && currentIdentifier !== ''){
+            currentSection = sectionName;
+            break;
+        }
+    }
+
+    if (currentSection === undefined){
+        currentSection = _v.defaultSection;
+        currentIdentifier = '';
+    }
+
+    return [currentSection, currentIdentifier];
+}
 
 
 /**
@@ -308,12 +261,10 @@ function saveFile(html, json) {
  */
 function convertHTMLtoJSON(html) {
     var sectionObject = {};
-    var defaultSection;
     var error_log = false;
     var idCache = {};
     var currentIdentifier = '';
-    var previousCategory;
-
+    var previousArticle;
 
     //Create section object for data structure, based on user's "sections" option
     for(var name in options.sections) {
@@ -321,7 +272,7 @@ function convertHTMLtoJSON(html) {
 
         //Note the section that requires no demarcation
         if (options.sections[name] === '') {
-            defaultSection = name;
+            _v.defaultSection = name;
         }
     }
 
@@ -331,18 +282,17 @@ function convertHTMLtoJSON(html) {
     cheerioWrapAll($); //Add wrapAll method to cheerio
 
     // Loop each section and turn into javascript object
-    $('.sg-section-' + _v.sgUniqueIdentifier).each(function (i, elem) {
-        var sectionIdentifier = _v.sgUniqueIdentifier;
-        var $category = cheerio.load($(this).html());
+    $('.sg-article-' + _v.sgUniqueIdentifier).each(function (i, elem) {
+        var $article = cheerio.load($(this).html());
 
-        var categoryData = {
+        var articleData = {
             id: '',
             category: '',
             currentSection: null,
             section: {
                 name: ''
             },
-            fileLocation: $category('filelocation').text(),
+            fileLocation: $article('filelocation').text(),
             heading: '',
             code: [],
             markup: [],
@@ -350,104 +300,91 @@ function convertHTMLtoJSON(html) {
             priority: 50
         };
 
-        //Check if this section is a development section by checking class
-        if ($category('mainsection')[0]) {
-            var headerText = $category('mainsection').slice(0, 1).text();
-            headerText += $category('subsection').text();
-
-            for (var sectionName in options.sections){
-                currentIdentifier = options.sections[sectionName];
-
-                if(headerText.indexOf(currentIdentifier) > -1 && currentIdentifier !== ''){
-                    categoryData.currentSection = sectionName;
-                    break;
-                }
-            }
-
-            if (categoryData.currentSection === null){
-                categoryData.currentSection = defaultSection;
-                currentIdentifier = '';
-            }
-
-            if ($category('sectionmark')[0]) {
-                categoryData.currentSection = $category('sectionmark').text().trim();
-                currentIdentifier = options.sections[categoryData.currentSection];
-
-                if(currentIdentifier === undefined) {
-                    console.error(_v.logPre + _v.error("Error: '" + categoryData.currentSection + "' is not a registered 'section' in your .styleguide file."));
-                    process.exit(1);
-                }
-            }
-
+        //Check for mainsection headings
+        if ($article('category')[0]) {
+            articleData.currentSection = findSection($article)[0];
+            currentIdentifier = findSection($article)[1];
         }
-        else if(previousCategory !== undefined) {
-            categoryData.id = previousCategory.id;
-            categoryData.category = previousCategory.category;
-            categoryData.heading = previousCategory.heading;
-            categoryData.currentSection = previousCategory.section.name;
+        else if(previousArticle !== undefined) {
+            //Without a heading, assume it should be concatenated with the previous category
+            articleData.id = previousArticle.id;
+            articleData.category = previousArticle.category;
+            articleData.heading = previousArticle.heading;
+            articleData.currentSection = previousArticle.section.name;
         }
 
-        $category('mainsection').each(function (i2, elem2) {
-            if (categoryData.category === ''){
-                categoryData.category = $(this).text().replace(/^\s+|\s+$/g, '').replace(currentIdentifier, '').trim();
+        $article('category').each(function (i2, elem2) {
+            if (articleData.category === ''){
+                articleData.category = $(this).text().replace(/^\s+|\s+$/g, '').replace(currentIdentifier, '').trim();
             }
             else {
                 var content = renderer.heading.call(renderer, $(this).html(), 1.5);
                 $(this).replaceWith($(content));
             }
 
-        });
+        }).remove();
 
-        $category('subsection').each(function (i2, elem2) {
+        $article('sectionmark').each(function (i2, elem2) {
+            articleData.currentSection = $(this).text().trim();
+            currentIdentifier = options.sections[articleData.currentSection];
+
+            if(currentIdentifier === undefined) {
+                console.error(_v.logPre + _v.error("Error: '" + articleData.currentSection + "' in file '" + articleData.fileLocation + "' is not a registered 'section' in your .styleguide file."));
+                process.exit(1);
+            }
+        }).remove();
+
+        $article('category-article').each(function (i2, elem2) {
             if (i2 > 0){
                 //Make sure sub-section headings have a slash
-                categoryData.heading += '/ ';
+                articleData.heading += '/ ';
             }
             //Remove dev identifier and extra spaces
-            categoryData.heading += $(this).text().replace(/^\s+|\s+$/g, '').replace(currentIdentifier, '').trim();
+            articleData.heading += $(this).text().replace(/^\s+|\s+$/g, '').replace(currentIdentifier, '').trim();
 
-        });
+        }).remove();
 
         //Store code examples and markup
-        $category('examplecode').each(function (i2, elem2) {
+        $article('examplecode').each(function (i2, elem2) {
             var categoryCode = $(this).html().replace(/^\s+|\s+$/g, '');
-            categoryData.code.push(categoryCode);
+            articleData.code.push(categoryCode);
             //Run markup through highlight.js
-            categoryData.markup.push(hl.highlight("html", categoryCode).value);
-        });
+            articleData.markup.push(hl.highlight("html", categoryCode).value);
+
+        }).remove();
 
         //Wrap dd/dt inside <dl>s
-        $category('dt').each(function (i2, elem2) {
-            $(this).nextUntil(":not(dd, dt)").addBack().wrapAll('<dl class="sg-code-meta-block"></dl>');
-        });
+        $article('.sg-code-meta-type').each(function (i2, elem2) {
+            var $dddt = $(this).nextUntil(":not(dd, dt)").addBack();
+            $dddt.filter('dd, dt').wrapAll('<dl class="sg-code-meta-block"></dl>');
+            $article('.sg-code-meta-block').find('br').remove();
+
+        }).remove();
 
         //Grab priority tag data and convert them to meaningful values
-        if($category('priority')[0]) {
-            var priorityNumber = $category('priority').slice(0, 1).text().trim();
+        $article('priority').each(function(i2, elem2) {
+            var priorityNumber = $article('priority').slice(0, 1).text().trim();
 
             if ( priorityNumber == 'last') {
-                categoryData.priority = 99;
+                articleData.priority = 99;
             }
             else if ( priorityNumber == 'first') {
-                categoryData.priority = -99;
+                articleData.priority = -99;
             }
             else {
-                categoryData.priority = Number(priorityNumber);
+                articleData.priority = Number(priorityNumber);
             }
-        }
+
+        }).remove();
 
         //Give category an ID
-        categoryData.id = sanitize.makeUrlSafe(categoryData.category  + '-' + categoryData.heading);
-
-        //Remove unnecessary data from core html
-        $category('filelocation, priority').remove();
-        $category('mainsection, subsection, sectionmark, examplecode').remove();
+        articleData.id = sanitize.makeUrlSafe(articleData.category  + '-' + articleData.heading);
 
         //Save sanitized comment html
-        categoryData.comment = $category.html().replace(/^\s+|\s+$/g, '');
+        articleData.comment = $article.html().replace(/^\s+|\s+$/g, '');
 
         //Move category data to master
-        saveToMaster(categoryData);
+        saveToMaster(articleData);
     });
 
     /*
@@ -459,9 +396,9 @@ function convertHTMLtoJSON(html) {
      * {ID:[section, category-index]}
      *
     **/
-    function saveToMaster(categoryData) {
+    function saveToMaster(articleData) {
 
-        var currentSection = categoryData.currentSection;
+        var currentSection = articleData.currentSection;
 
         //Bail out for un-categorized comments
         if (currentSection === null) {
@@ -470,23 +407,23 @@ function convertHTMLtoJSON(html) {
 
         //If the section's ID has already been cached,
         // just append its data to the previous object
-        if (idCache.hasOwnProperty(categoryData.id)) {
+        if (idCache.hasOwnProperty(articleData.id)) {
 
             //Grab the index
-            var currentIndex = idCache[categoryData.id][1];
+            var currentIndex = idCache[articleData.id][1];
 
             //Select the matched section from the masterData
             var selectedSection = masterData.sections[currentSection][currentIndex];
 
             //Append the new data to the matched section
-            selectedSection.comment += categoryData.comment;
+            selectedSection.comment += articleData.comment;
 
-            if (categoryData.markup.length > 0) {
-                selectedSection.markup.push(categoryData.markup);
+            if (articleData.markup.length > 0) {
+                selectedSection.markup.push(articleData.markup);
                 selectedSection.markup = sanitize.unnest(selectedSection.markup);
             }
-            if (categoryData.code.length > 0) {
-                selectedSection.code.push(categoryData.code);
+            if (articleData.code.length > 0) {
+                selectedSection.code.push(articleData.code);
                 selectedSection.code = sanitize.unnest(selectedSection.code);
             }
         }
@@ -495,16 +432,16 @@ function convertHTMLtoJSON(html) {
             var catIndex = masterData.sections[currentSection].length;
 
             //Cache the ID and its index within its section
-            idCache[categoryData.id] = [currentSection, catIndex];
-            categoryData.section[currentSection] = true;
+            idCache[articleData.id] = [currentSection, catIndex];
+            articleData.section[currentSection] = true;
 
-            categoryData.section.name = categoryData.currentSection;
-            delete categoryData.currentSection;
+            articleData.section.name = articleData.currentSection;
+            delete articleData.currentSection;
 
             //Append new section to master data
-            objectPush(masterData.sections[currentSection], categoryData);
+            objectPush(masterData.sections[currentSection], articleData);
 
-            previousCategory = categoryData;
+            previousArticle = articleData;
 
         }
     }
@@ -586,6 +523,76 @@ function convertHTMLtoJSON(html) {
     return masterData;
 }
 
+
+function readFile(fileExtension, root, fileStats, fileContents) {
+
+    fs.readFile(path.join(root, fileStats.name), 'utf8', function (err, fileContent) {
+        var regEsp;
+        var filePath = './' + path.join(root, _v.info(fileStats.name));
+
+        listFiles(filePath)
+
+        if (err) {
+            console.error(_v.logPre + _v.error('File Error:') + err);
+            process.exit(1);
+        }
+
+        // Use <SG></SG> for markdown files
+        if (fileExtension === "md" || fileExtension === "markdown" || fileExtension === "mdown") {
+            var pattern = new RegExp('\\< ?' + options.sgComment + '>([\\s\\S]*?)\\< ?\\/' + options.sgComment + ' ?\\>', 'gi');
+        }
+        else {
+            var pattern = new RegExp('/\\* ?' + options.sgComment + '([\\s\\S]*?)\\*/', 'gi');
+        }
+
+        while ((regEsp = pattern.exec(fileContent)) !== null) {
+            //If reading anything other than css, create a file-location reference we'll use later
+            var fileLocation = (fileExtension !== "css") ? '<filelocation>'+filePath+'</filelocation>': '';
+            //Convert markdown to html
+            fileContents.push(markdown(regEsp[1]) + fileLocation);
+        }
+    });
+}
+
+/**
+ * Read valid files (default: scss/css), get the Styleguide comments and put into an array
+ *
+ * @param {Object} walker object
+ */
+function walkFiles(walker) {
+    var fileContents = [];
+
+    walker.on("file", function (root, fileStats, next) {
+        var fileExtension = fileStats.name.substr((~-fileStats.name.lastIndexOf(".") >>> 0) + 2).toLowerCase();
+
+        if (options.fileExtensions[fileExtension]) {
+            readFile(fileExtension, root, fileStats, fileContents);
+            next();
+        }
+        else {
+            next();
+        }
+    });
+
+    walker.on("errors", function (root, nodeStatsArray, next) {
+        console.error(_v.logPre + _v.error('Error'));
+        console.dir(nodeStatsArray);
+        process.exit(1);
+    });
+
+
+    //Wrap all comments starting with SG in a section
+    walker.on("end", function () {
+        fileContents = fileContents.join('</div>\n<div class="sg-article-' + _v.sgUniqueIdentifier + '">\n');
+
+        var json = convertHTMLtoJSON('<div class="sg-article-' + _v.sgUniqueIdentifier + '">\n' + fileContents + '</div>');
+
+        var html = template(json, options);
+
+        saveFile(html);
+    });
+}
+
 /**
  * Merge Objects
  */
@@ -638,6 +645,14 @@ function cheerioWrapAll($) {
         },
     });
 }
+
+/**
+ * Initialize automatically if not being imported
+ */
+if(!module.parent) {
+    init(process.argv.slice(2));
+}
+
 
 module.exports = function(args){
     return this.init = function(args) {

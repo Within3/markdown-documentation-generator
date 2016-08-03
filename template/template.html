@@ -76,7 +76,7 @@
                 <div class="sg-category" id="{{sanitize id}}">
                     {{!--Check for more than one article --}}
                     <header class="sg-category_head" data-sg-section="{{sanitize category}}">
-                        <h2 class="sg-heading-category">
+                        <h2 class="sg-heading sg-heading-category">
                             {{category}}
                         </h2>
                     </header>
@@ -85,9 +85,9 @@
                     <article class="sg-article" id="{{sanitize id}}" data-sg-section="{{category}}" data-sg-heading="{{heading}}">
                         {{#if heading}}
                         <header class="sg-article_head {{#unless heading}}sg-category_head{{/unless}}">
-                            <h4 class="sg-heading sg-heading-article">
+                            <h3 class="sg-heading sg-heading-article">
                                 {{heading}}
-                            </h4>
+                            </h3>
                             {{~#if fileLocation}}
                             <code class="sg-codespan sg-file">{{fileLocation}}</code>
                             {{~/if~}}
