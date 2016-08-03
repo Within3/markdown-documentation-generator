@@ -239,8 +239,7 @@ function readFiles(walker) {
                 }
 
                 if (err) {
-                    console.error(_v.logPre + _v.error('File Error:'));
-                    console.dir(err);
+                    console.error(_v.logPre + _v.error('File Error:') + err);
                     process.exit(1);
                 }
 
