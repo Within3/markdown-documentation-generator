@@ -155,7 +155,7 @@ function readConfig() {
             customOptions = JSON.parse(customOptions);
         }
         catch(err) {
-            console.info(_v.error(_v.logPre + 'Found ".styleguide", but could not read - is it valid json?'));
+            console.error(_v.error(_v.logPre + 'Found ".styleguide", but could not read - is it valid json?'));
             console.error(err);
             process.exit(1);
         }
@@ -183,101 +183,15 @@ function readConfig() {
 function readTheme() {
     try {
         _v.templateSource = fs.readFileSync(options.templateFile, 'utf8');
-    }
-    catch(err) {
+        _v.themeSource = fs.readFileSync(options.themeFile, 'utf8');
+        _v.highlightSource = fs.readFileSync(path.join(options.highlightFolder, options.highlightStyle + '.css'), 'utf8');
         console.error(_v.logPre + _v.error('Could not read template file: ' + options.templateFile));
         process.exit(1);
     }
-
-    try {
-        _v.themeSource = fs.readFileSync(options.themeFile, 'utf8');
-    }
     catch(err) {
-        console.error(_v.logPre + _v.error('Could not read theme file: ' + options.themeFile));
+        console.error(_v.logPre + _v.error('Could not read file: ' + err.path));
         process.exit(1);
     }
-
-    try {
-        _v.highlightSource = fs.readFileSync(path.join(options.highlightFolder, options.highlightStyle + '.css'), 'utf8');
-    }
-    catch(err) {
-        console.error(_v.logPre + _v.error('Could not read highlight file: ' + path.join(options.highlightFolder, options.highlightStyle + '.css')));
-        process.exit(1);
-    }
-}
-
-/**
- * Read valid files (default: scss/css), get the Styleguide comments and put into an array
- *
- * @param {Object} walker
- */
-function readSGFile(fileExtension, root, fileStats, fileContents) {
-
-    fs.readFile(path.join(root, fileStats.name), 'utf8', function (err, content) {
-        var regEsp;
-        var filePath = './' + path.join(root, _v.info(fileStats.name));
-
-        listFiles(filePath);
-
-        if (err) {
-            console.error(_v.logPre + _v.error('File Error:') + err);
-            process.exit(1);
-        }
-
-        // Use <SG></SG> for markdown files
-        if (fileExtension === "md" || fileExtension === "markdown" || fileExtension === "mdown") {
-            var pattern = new RegExp('\\< ?' + options.sgComment + '>([\\s\\S]*?)\\< ?\\/' + options.sgComment + ' ?\\>', 'gi');
-        }
-        else {
-            var pattern = new RegExp('/\\* ?' + options.sgComment + '([\\s\\S]*?)\\*/', 'gi');
-        }
-
-        while ((regEsp = pattern.exec(content)) !== null) {
-            //If reading anything other than css, create a file-location reference we'll use later
-            var fileLocation = (fileExtension !== "css") ? '<filelocation>'+filePath+'</filelocation>': '';
-            //Convert markdown to html
-            fileContents.push(markdown(regEsp[1]) + fileLocation);
-        }
-    });
-}
-
-/**
- * Walk the file tree, and save files
- *
- * @param {Object} walker
- */
-function walkFiles(walker) {
-    var fileContents = [];
-
-    walker.on("file", function (root, fileStats, next) {
-        var fileExtension = fileStats.name.substr((~-fileStats.name.lastIndexOf(".") >>> 0) + 2).toLowerCase();
-
-        if (options.fileExtensions[fileExtension]) {
-            readSGFile(fileExtension, root, fileStats, fileContents);
-            next();
-        }
-        else {
-            next();
-        }
-    });
-
-    walker.on("errors", function (root, nodeStatsArray, next) {
-        console.error(_v.logPre + _v.error('Error'));
-        console.dir(nodeStatsArray);
-        process.exit(1);
-    });
-
-
-    //Wrap all comments starting with SG in a section
-    walker.on("end", function () {
-        fileContents = fileContents.join('</div>\n<div class="sg-article-' + _v.sgUniqueIdentifier + '">\n');
-
-        var json = convertHTMLtoJSON('<div class="sg-article-' + _v.sgUniqueIdentifier + '">\n' + fileContents + '</div>');
-
-        var html = template(json, options);
-
-        saveFile(html);
-    });
 }
 
 /**
@@ -492,7 +406,7 @@ function convertHTMLtoJSON(html) {
                 selectedSection.code = _.flatten(selectedSection.code);
             }
         }
-        else if(masterData.sections[currentSection]) {
+        else if (masterData.sections[currentSection]) {
 
             var catIndex = masterData.sections[currentSection].length;
 
@@ -588,6 +502,81 @@ function convertHTMLtoJSON(html) {
     return masterData;
 }
 
+/**
+ * Read valid files (default: scss/css), get the Styleguide comments and put into an array
+ *
+ * @param {string} root
+ * @param {String} fileExtension
+ * @param {Object} fileStats
+ * @param {Array} fileContents
+ *
+ */
+function readSGFile(fileExtension, root, fileStats, fileContents) {
+
+    fs.readFile(path.join(root, fileStats.name), 'utf8', function (err, content) {
+        var regEsp,
+            filePath = './' + path.join(root, _v.info(fileStats.name)),
+            pattern = new RegExp('/\\* ?' + options.sgComment + '([\\s\\S]*?)\\*/', 'gi');
+
+        // Use <SG></SG> for markdown files
+        if (fileExtension === "md" || fileExtension === "markdown" || fileExtension === "mdown") {
+            pattern = new RegExp('\\< ?' + options.sgComment + '>([\\s\\S]*?)\\< ?\\/' + options.sgComment + ' ?\\>', 'gi');
+        }
+
+        listFiles(filePath);
+
+        if (err) {
+            console.error(_v.logPre + _v.error('File Error:') + err);
+            process.exit(1);
+        }
+
+        while ((regEsp = pattern.exec(content)) !== null) {
+            //If reading anything other than css, create a file-location reference we'll use later
+            var fileLocation = (fileExtension !== "css") ? '<filelocation>'+filePath+'</filelocation>': '';
+            //Convert markdown to html
+            fileContents.push(markdown(regEsp[1]) + fileLocation);
+        }
+    });
+}
+
+/**
+ * Walk the file tree, and save files
+ *
+ * @param {Object} walker
+ */
+function walkFiles(walker) {
+    var fileContents = [];
+
+    walker.on("file", function (root, fileStats, next) {
+        var fileExtension = fileStats.name.substr((~-fileStats.name.lastIndexOf(".") >>> 0) + 2).toLowerCase();
+
+        if (options.fileExtensions[fileExtension]) {
+            readSGFile(fileExtension, root, fileStats, fileContents);
+            next();
+        }
+        else {
+            next();
+        }
+    });
+
+    walker.on("errors", function (root, nodeStatsArray, next) {
+        console.error(_v.logPre + _v.error('Error'));
+        console.dir(nodeStatsArray);
+        process.exit(1);
+    });
+
+
+    //Wrap all comments starting with SG in a section
+    walker.on("end", function () {
+        fileContents = fileContents.join('</div>\n<div class="sg-article-' + _v.sgUniqueIdentifier + '">\n');
+
+        var json = convertHTMLtoJSON('<div class="sg-article-' + _v.sgUniqueIdentifier + '">\n' + fileContents + '</div>');
+
+        var html = template(json, options);
+
+        saveFile(html);
+    });
+}
 
 /**
  * Add wrapAll functionality to cheerio
