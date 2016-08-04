@@ -68,21 +68,26 @@ var templateSource,
     customOptions,
     configFilePath,
     existingConfig,
-    walker;
+    walker,
+    renderer;
 
+/**
+ * Generic file list console output
+ *
+ * @param {String} Arguments
+ */
+function listFiles(fileName) {
+    if(_v.fileList){
+        console.info(_v.logPre + 'Reading ' + _v.info(fileName));
+    }
+}
 
 /**
  * Initialize
  *
- * @param {String} html
+ * @param {Array} arguments
  */
-
-function init(args) {
-
-    //Custom markdown renderer before we merge our custom options
-    var renderer = new markdown.Renderer();
-    //Add custom markdown formatters
-    renderer = formatters.register(renderer, options);
+function readArgs(args) {
 
     if (args.length > 0) {
         var curArg = args[0].toLowerCase();
@@ -132,9 +137,13 @@ function init(args) {
         }
     }
 
-    /**
-     * Read configuration
-     */
+}
+
+/**
+ * Read configuration
+ */
+
+function readConfig() {
     try {
         customOptions = fs.readFileSync('.styleguide', 'utf8');
     } catch(err) {
@@ -152,24 +161,26 @@ function init(args) {
         }
 
         //Overwrite default sections with custom ones if they exist
-        if (customOptions.sections !== undefined) {
-            options.sections = customOptions.sections;
-        }
+        options.sections = customOptions.sections;
 
-        options = mergeObjects(options, customOptions);
+        options = _.merge(options, customOptions);
 
         //Move customVariables options to JSON output
         masterData.customVariables = options.customVariables;
 
     }
+
     // Add walker exclude directories if set
     if(Object.prototype.toString.call(options.excludeDirs) === '[object Array]') {
         options.walkerOptions.filters = options.excludeDirs;
     }
+}
 
-    /**
-     * Read template/theme/highlight files.
-     */
+/**
+ * Read template/theme/highlight files
+ *
+ */
+function readTheme() {
     try {
         _v.templateSource = fs.readFileSync(options.templateFile, 'utf8');
     }
@@ -193,24 +204,80 @@ function init(args) {
         console.error(_v.logPre + _v.error('Could not read highlight file: ' + path.join(options.highlightFolder, options.highlightStyle + '.css')));
         process.exit(1);
     }
-
-    //Set markdown options and
-    //set renderer to the custom one defined here
-    options.markedOptions.renderer = renderer;
-    markdown.setOptions(options.markedOptions);
-
-    /**
-     * Walk the file tree
-     */
-    walker = walk.walk(options.srcFolder, options.walkerOptions);
-
-    walkFiles(walker);
 }
 
-function listFiles(fileName) {
-    if(_v.fileList){
-        console.info(_v.logPre + 'Reading ' + _v.info(fileName));
-    }
+/**
+ * Read valid files (default: scss/css), get the Styleguide comments and put into an array
+ *
+ * @param {Object} walker
+ */
+function readSGFile(fileExtension, root, fileStats, fileContents) {
+
+    fs.readFile(path.join(root, fileStats.name), 'utf8', function (err, content) {
+        var regEsp;
+        var filePath = './' + path.join(root, _v.info(fileStats.name));
+
+        listFiles(filePath);
+
+        if (err) {
+            console.error(_v.logPre + _v.error('File Error:') + err);
+            process.exit(1);
+        }
+
+        // Use <SG></SG> for markdown files
+        if (fileExtension === "md" || fileExtension === "markdown" || fileExtension === "mdown") {
+            var pattern = new RegExp('\\< ?' + options.sgComment + '>([\\s\\S]*?)\\< ?\\/' + options.sgComment + ' ?\\>', 'gi');
+        }
+        else {
+            var pattern = new RegExp('/\\* ?' + options.sgComment + '([\\s\\S]*?)\\*/', 'gi');
+        }
+
+        while ((regEsp = pattern.exec(content)) !== null) {
+            //If reading anything other than css, create a file-location reference we'll use later
+            var fileLocation = (fileExtension !== "css") ? '<filelocation>'+filePath+'</filelocation>': '';
+            //Convert markdown to html
+            fileContents.push(markdown(regEsp[1]) + fileLocation);
+        }
+    });
+}
+
+/**
+ * Walk the file tree, and save files
+ *
+ * @param {Object} walker
+ */
+function walkFiles(walker) {
+    var fileContents = [];
+
+    walker.on("file", function (root, fileStats, next) {
+        var fileExtension = fileStats.name.substr((~-fileStats.name.lastIndexOf(".") >>> 0) + 2).toLowerCase();
+
+        if (options.fileExtensions[fileExtension]) {
+            readSGFile(fileExtension, root, fileStats, fileContents);
+            next();
+        }
+        else {
+            next();
+        }
+    });
+
+    walker.on("errors", function (root, nodeStatsArray, next) {
+        console.error(_v.logPre + _v.error('Error'));
+        console.dir(nodeStatsArray);
+        process.exit(1);
+    });
+
+
+    //Wrap all comments starting with SG in a section
+    walker.on("end", function () {
+        fileContents = fileContents.join('</div>\n<div class="sg-article-' + _v.sgUniqueIdentifier + '">\n');
+
+        var json = convertHTMLtoJSON('<div class="sg-article-' + _v.sgUniqueIdentifier + '">\n' + fileContents + '</div>');
+
+        var html = template(json, options);
+
+        saveFile(html);
+    });
 }
 
 /**
@@ -335,10 +402,6 @@ function convertHTMLtoJSON(html) {
         }).remove();
 
         $article('category-article').each(function (i2, elem2) {
-            if (i2 > 0){
-                //Make sure sub-section headings have a slash
-                articleData.heading += '/ ';
-            }
             //Remove dev identifier and extra spaces
             articleData.heading += $(this).text().replace(/^\s+|\s+$/g, '').replace(currentIdentifier, '').trim();
 
@@ -348,6 +411,7 @@ function convertHTMLtoJSON(html) {
         $article('examplecode').each(function (i2, elem2) {
             var categoryCode = $(this).html().replace(/^\s+|\s+$/g, '');
             articleData.code.push(categoryCode);
+
             //Run markup through highlight.js
             articleData.markup.push(hl.highlight("html", categoryCode).value);
 
@@ -363,7 +427,7 @@ function convertHTMLtoJSON(html) {
 
         //Grab priority tag data and convert them to meaningful values
         $article('priority').each(function(i2, elem2) {
-            var priorityNumber = $article('priority').slice(0, 1).text().trim();
+            var priorityNumber = $(this).text().trim();
 
             if ( priorityNumber == 'last') {
                 articleData.priority = 99;
@@ -387,22 +451,23 @@ function convertHTMLtoJSON(html) {
         saveToMaster(articleData);
     });
 
-    /*
-     * Combine repeat categories
-     * by checking with the ID cache
-     * ---------------------------------
+    /**
+     * Combine repeat categories by checking with the ID cache
      * ID Cache format:
      * {1: ["development", 5]}
      * {ID:[section, category-index]}
      *
+     * @param {object} articleData - data parsed by DOM objects
+     *
     **/
+
     function saveToMaster(articleData) {
 
         var currentSection = articleData.currentSection;
 
         //Bail out for un-categorized comments
         if (currentSection === null) {
-            return false;
+            return;
         }
 
         //If the section's ID has already been cached,
@@ -420,11 +485,11 @@ function convertHTMLtoJSON(html) {
 
             if (articleData.markup.length > 0) {
                 selectedSection.markup.push(articleData.markup);
-                selectedSection.markup = sanitize.unnest(selectedSection.markup);
+                selectedSection.markup = _.flatten(selectedSection.markup);
             }
             if (articleData.code.length > 0) {
                 selectedSection.code.push(articleData.code);
-                selectedSection.code = sanitize.unnest(selectedSection.code);
+                selectedSection.code = _.flatten(selectedSection.code);
             }
         }
         else if(masterData.sections[currentSection]) {
@@ -439,7 +504,7 @@ function convertHTMLtoJSON(html) {
             delete articleData.currentSection;
 
             //Append new section to master data
-            objectPush(masterData.sections[currentSection], articleData);
+            sanitize.objectPush(masterData.sections[currentSection], articleData);
 
             previousArticle = articleData;
 
@@ -524,100 +589,6 @@ function convertHTMLtoJSON(html) {
 }
 
 
-function readFile(fileExtension, root, fileStats, fileContents) {
-
-    fs.readFile(path.join(root, fileStats.name), 'utf8', function (err, fileContent) {
-        var regEsp;
-        var filePath = './' + path.join(root, _v.info(fileStats.name));
-
-        listFiles(filePath)
-
-        if (err) {
-            console.error(_v.logPre + _v.error('File Error:') + err);
-            process.exit(1);
-        }
-
-        // Use <SG></SG> for markdown files
-        if (fileExtension === "md" || fileExtension === "markdown" || fileExtension === "mdown") {
-            var pattern = new RegExp('\\< ?' + options.sgComment + '>([\\s\\S]*?)\\< ?\\/' + options.sgComment + ' ?\\>', 'gi');
-        }
-        else {
-            var pattern = new RegExp('/\\* ?' + options.sgComment + '([\\s\\S]*?)\\*/', 'gi');
-        }
-
-        while ((regEsp = pattern.exec(fileContent)) !== null) {
-            //If reading anything other than css, create a file-location reference we'll use later
-            var fileLocation = (fileExtension !== "css") ? '<filelocation>'+filePath+'</filelocation>': '';
-            //Convert markdown to html
-            fileContents.push(markdown(regEsp[1]) + fileLocation);
-        }
-    });
-}
-
-/**
- * Read valid files (default: scss/css), get the Styleguide comments and put into an array
- *
- * @param {Object} walker object
- */
-function walkFiles(walker) {
-    var fileContents = [];
-
-    walker.on("file", function (root, fileStats, next) {
-        var fileExtension = fileStats.name.substr((~-fileStats.name.lastIndexOf(".") >>> 0) + 2).toLowerCase();
-
-        if (options.fileExtensions[fileExtension]) {
-            readFile(fileExtension, root, fileStats, fileContents);
-            next();
-        }
-        else {
-            next();
-        }
-    });
-
-    walker.on("errors", function (root, nodeStatsArray, next) {
-        console.error(_v.logPre + _v.error('Error'));
-        console.dir(nodeStatsArray);
-        process.exit(1);
-    });
-
-
-    //Wrap all comments starting with SG in a section
-    walker.on("end", function () {
-        fileContents = fileContents.join('</div>\n<div class="sg-article-' + _v.sgUniqueIdentifier + '">\n');
-
-        var json = convertHTMLtoJSON('<div class="sg-article-' + _v.sgUniqueIdentifier + '">\n' + fileContents + '</div>');
-
-        var html = template(json, options);
-
-        saveFile(html);
-    });
-}
-
-/**
- * Merge Objects
- */
-function mergeObjects(obj1, obj2) {
-    for (var p in obj2) {
-        try {
-            if ( obj2[p].constructor == Object ) {
-                obj1[p] = mergeObjects(obj1[p], obj2[p]);
-            } else {
-                obj1[p] = obj2[p];
-            }
-        } catch(e) {
-            obj1[p] = obj2[p];
-        }
-    }
-    return obj1;
-}
-
-/**
- * Allow Objects to to use array-like push
- */
-function objectPush(obj, elem) {
-    [].push.call(obj, elem);
-}
-
 /**
  * Add wrapAll functionality to cheerio
  */
@@ -644,6 +615,35 @@ function cheerioWrapAll($) {
             return section;                 // This is what jQuery would return, IIRC.
         },
     });
+}
+
+
+function init(args) {
+    //Instantiate the markdown renderer before we merge our custom options
+    renderer = new markdown.Renderer();
+    //Add custom markdown rendering formatters
+    renderer = formatters.register(renderer, options);
+
+    //Set up stuff based on arguments
+    readArgs(args);
+
+    //Read and Merge default options with custom ones
+    readConfig();
+
+    //Make sure theme files exist and save their contents globally
+    readTheme();
+
+    //Set markdown options and set renderer to the custom one defined here
+    options.markedOptions.renderer = renderer;
+
+    markdown.setOptions(options.markedOptions);
+
+    /**
+     * Walk the file tree
+     */
+    walker = walk.walk(options.srcFolder, options.walkerOptions);
+
+    walkFiles(walker);
 }
 
 /**
