@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{customVars.pageTitle}}</title>
+    <title>{{customVariables.pageTitle}}</title>
     <style>
     {{> theme}}
     {{> highlight}}
@@ -16,111 +16,141 @@
     <link rel="stylesheet" href="../test.css" media="screen">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,400i|Roboto:400,400i,700" rel="stylesheet">
 </head>
-<body class="sg-body">
-<div class="sg-wrap">
+<body class="sg-body" id="styleguide">{{!-- Required ID --}}
 
-    {{!--Menu--}}
-    <nav id="sg-menu" class="sg-menu">
-        <button class="sg-toggle-menu" data-sg-toggle="#sg-menu"><span class="sg-visually-hidden">Toggle Menu</span></button>
-        <div id="sg-menu_wrap" class="sg-menu_wrap">
-            <h1 class="sg-logo">
-                <a href="#" class="sg-menu_link js-menu_showall">Pliny</a>
-            </h1>
-            {{!--Section Start --}}
-            {{~#each menus~}}
-            <ul class="sg-menu_list sg-menu_section">
-                <li class="sg-menu_item sg-menu_section_item">
-                    <a href="#{{sanitize @key}}" class="sg-menu_link sg-section_link js-menu_showall">
-                        {{~titleize @key~}}
-                    </a>
-                    <span class="sg-menu_toggle toggle-active" data-sg-toggle="#sub-{{@key}}">&#9662;</span>
-                </li>
-            </ul>
-            {{!-- Category list --}}
-            <ul id="sub-{{key}}" class="sg-menu_list sg-menu_category">
-                {{#each this}}
-                <li class="sg-menu_category_item sg-menu_item">
-                    <a class="sg-menu_link sg-category_link" href="#{{sanitize headings.0.id}}">
-                        {{~category~}}
-                    </a>
-                </li>
-                {{~/each}}
-            </ul>
-            {{/each}}
-            <div class="sg-menu_list sg-menu_section">
-                <a href="#" class="sg-menu_link sg-section_link js-menu_showall">Back to top</a>
-            </div>
+{{!--Menu--}}
+<nav id="sg-menu" class="sg-menu">
+{{#if customVariables.tocMenu ~}}
+    <h1 class="sg-logo">
+        <a href="#" class="sg-menu_link js-menu_showall">Style Guide</a>
+    </h1>
+    <div id="sg-menu_wrap"></div>
+{{~else}}
+    {{> menu}}
+{{/if}}
+</nav>
+<main id="sg-main" class="sg-main">
+
+{{~#each sections}}
+    <section id="{{sanitize @key}}" class="sg-section" data-sg-section="{{@key}}">
+        <div class="sg-section_head">
+            <h1 class="sg-heading sg-heading-section">{{titleize @key}}</h1>
         </div>
-    </nav>
-    <main id="styleguide" {{!-- Required ID --}} class="sg-main">
 
-    {{#each sections}}
-        <section id="{{sanitize @key}}" class="sg-section" data-sg-section="{{@key}}">
-            <div class="sg-section_head">
-                <h1 class="sg-heading sg-heading-section">{{titleize @key}}</h1>
-            </div>
+        {{#each this}} {{!--Looping through Categories --}}
+            <div class="sg-category">
+            {{#if category~}}
+                <header class="sg-category_head" data-sg-section="{{sanitize category}}" {{#unless articles.[1]}}id="{{sanitize articles.[0].id}}"{{/unless}}>
+                    <h2 class="sg-heading-category">
+                        {{category}}
+                    </h2>
+                </header>
+            {{~/if}}
 
-            {{#each this}}
-                <div class="sg-category">
-                    {{!--Check for more than one article --}}
-                    <header class="sg-category_head" data-sg-section="{{sanitize category}}" {{#unless articles.[1]}}id="{{sanitize articles.[0].id}}"{{/unless}}>
-                        <h2 class="sg-heading-category">
-                            {{category}}
-                        </h2>
+            {{#each articles}}
+                <article class="sg-article sg-category_article" {{#if ../articles.[1]}}id="{{sanitize id}}"{{/if}} data-sg-section="{{category}}" data-sg-heading="{{heading}}">
+                {{#if heading}}
+                    <header class="sg-article_head {{#unless heading}}sg-category_head{{/unless}}">
+                        <h3 class="sg-heading sg-heading-article">
+                            {{~heading~}}
+                        </h3>
+                        {{~#if fileLocation}}
+                        <code class="sg-codespan sg-file">
+                            {{~fileLocation~}}
+                        </code>
+                        {{~/if~}}
                     </header>
-
-                {{#each articles}}
-                    <article class="sg-article sg-category_article" {{#if ../articles.[1]}}id="{{sanitize id}}"{{/if}} data-sg-section="{{category}}" data-sg-heading="{{heading}}">
-                        {{#if heading}}
-                        <header class="sg-article_head {{#unless heading}}sg-category_head{{/unless}}">
-                            <h2 class="sg-heading sg-heading-article">
-                                {{~heading~}}
-                            </h2>
-                            {{~#if fileLocation}}
-                            <code class="sg-codespan sg-file">{{fileLocation}}</code>
-                            {{~/if~}}
-                        </header>
-                        {{/if}}
-                        <div class="sg-article_comment">
-                            {{{comment}}}
+                {{/if}}
+                    <div class="sg-article_comment">
+                        {{{comment}}}
+                    </div>
+                {{#if code}}
+                    <div class="sg-example">
+                        <div class="sg-example_wrap">
+                            {{#each code}}{{{this}}}{{/each}}
                         </div>
-                        {{#if code}}
-                        <div class="sg-example">
-                            <div class="sg-example_wrap">
-                                {{#each code}}{{{this}}}{{/each}}
-                            </div>
-                            {{#each markup}}
-                            <div class="sg-markup">
-                                <pre class="sg-markup_wrap"><code class="hljs">
-                                    {{~{this}~}}
-                                </code></pre>
-                            </div>
-                            {{/each}}
+                        {{#each markup}}
+                        <div class="sg-markup">
+                            <pre class="sg-markup_wrap"><code class="hljs">
+                                {{~{this}~}}
+                            </code></pre>
                         </div>
-                        {{/if}}
-                    </article>
-                {{~/each}}
-            </div>
+                        {{/each}}
+                    </div>
+                {{/if}}
+                </article>
             {{~/each}}
-        </section>
-    {{~/each}}
-    </main>
-</div>
+        </div>
+        {{~/each}}
+    </section>
+{{~/each}}
+</main>
 <!--JQuery-->
 <!--[if lte IE 8]>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 <![endif]-->
+<!--[if gt IE 8]><!--><script>{{> jquery}}</script><!--<![endif]-->
 
-<!--[if gt IE 8]><!-->
-<script>{{> jquery}}</script>
-<!--<![endif]-->
-<script>{{> hash}}</script>
-<script>{{> sticky}}</script>
 <script>
+{{> toc}};
+{{#if customVariables.tocMenu}}
+
+    $('#sg-menu_wrap').toc({
+        'selectors': '.sg-heading-section,.sg-heading-category,.sg-heading-article', //elements to use as headings
+        'container': '#sg-main', //element to find all selectors in
+        'smoothScrolling': function(target, options, callback) { //enable or disable smooth scrolling on click
+            $(target).smoothScroller({
+              offset: 50,
+              speed: 200
+            }).on('smoothScrollerComplete', function() {
+              callback();
+            });
+        },
+        'listType': '<ul class="sg-menu_list"></ul>',
+        'prefix': 'sg-toc', //prefix for anchor tags and class names
+        'onHighlight': function(el) {
+            var $el = $(el);
+            $el.parent('.sg-menu_category').addClass('sg-category-active')
+            $('.sg-category-active').not($el.parent('.sg-menu_category')).removeClass('sg-category-active');
+            expandCategory($el);
+        }, //called when a new section is highlighted
+        'activeClass': 'sg-toc-active',
+        'highlightOnScroll': true, //add class to heading that is currently in focus
+        'highlightOffset': 50, //offset to trigger the next headline
+        'anchorName': function(i, heading, prefix) { //custom function for anchor name
+            return prefix+i;
+        },
+        'headerText': function(i, heading, $heading) { //custom function building the header-item text
+            return $heading.text();
+        },
+        'itemClass': function(i, heading, $heading, prefix) { // custom function for item class
+            return $heading.attr('class').replace('sg-heading-', 'sg-menu_').replace('sg-heading ', ' ') + ' sg-menu_item';
+        }
+    });
+
+    function expandCategory($el) {
+        if($el.hasClass('sg-menu_category')){
+            $('.sg-category-active').removeClass('sg-category-active');
+            $el.addClass('sg-category-active');
+        }
+    }
+
+    $("#sg-menu_wrap").find('a').addClass('sg-menu_link').on('click', function(el){
+        expandCategory($(el));
+    });
+
+    $('.sg-menu_article').each(function(i, el){
+        var category = $(el).prevAll('.sg-menu_category')[0];
+        $(el).appendTo(category);
+    })
+
+    $('.sg-menu_category').each(function(i, el){
+        var section = $(el).prevAll('.sg-menu_section')[0];
+        $(el).appendTo(section);
+    })
+{{else}}
 {{> utilities}}
+{{/if}}
 </script>
-<!-- {{#each customVars.scripts}}
-    <script src="{{this}}"></script>
-{{/each}} -->
 </body>
 </html>

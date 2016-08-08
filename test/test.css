@@ -33,7 +33,7 @@ p {
 }
 
 /* SG
-# Dev:Config/Typography Settings
+# Sass:Config/Typography Settings
 
 ## `$$base-font-size` - Pixel
 Font size all other values will use for calculation. Will be converted to `rems`.
@@ -56,7 +56,7 @@ Determines whether `rems()` conversion includes a pixel-value fallback for older
 */
 
 /* SG
-# Dev:Config/Grid Settings
+# Sass:Config/Grid Settings
 
 ## `$$max-site-width` - Pixel
 Maximum desktop width for the site wrapper.
@@ -83,7 +83,7 @@ Space between grid items. Also used in `type-space()` for horizontal spacing uni
 
 @priority first
 
-Variations on list styles
+Variations on list styles.
 
 */
 
@@ -425,14 +425,51 @@ Children of the `.arrange` wrapper can be given four classes:
 ```
 */
 
+/* SG
+# Sass:Colors
+
+Colors can be defined in the `$$base-colors` variable and referenced via the `colors()` function.
+
+*/
 
 /* SG
-# Lookup
-@section Colors
+# Sass:Colors/Definition
+
+## `$$base-colors`
+### Map (key : color value)
+Sets up consistent color names to be used for color-palette. Dark and light values will be automatically generated. Key values should be accessed through `colors()`.
+`type`, `links`, and `bg` key values are required for some starter styles. If you choose not to use them, just replace their references in the appropriate files.
+
+Supports a nested map style like the following:
+```scss
+$base-colors: (
+    'type': (
+        'base': #020202,
+        'light': #232323,
+        'dark': #000
+    ),
+    'links': (
+        'base': blue,
+        'light': sky,
+        'dark': navy
+    ),
+    'bg': (
+        'base': #fff,
+        'dark': #ddd
+    )
+);
+```
+
+*/
+
+/* SG
+# Colors/Lookup
+
+@section Sass
 @file tools/_t-color-functions.scss
 
 ## `colors()`
-### function(`$color-name, $tone: 'base', $opacity: 1`)
+### function( `$color-name, $tone: 'base', $opacity: 1` )
 Get a color value from the global `$$base-colors` map. Darker and lighter tones are available by passing a second string.
 
 ```scss
@@ -444,20 +481,20 @@ Get a color value from the global `$$base-colors` map. Darker and lighter tones 
 Passing only a color name will default to the 'base' color.
 
 @alias color()
-@requires `$$base-colors`
-@returns `color`
+@requires $$base-colors
+@returns color
 
 [Reference](http://blog.12spokes.com/web-design-development/simple-css-color-management-with-sass/)
 */
 
 
 /* SG
-# Manipulation [[colors]]
+# Sass:Colors/Manipulation
 
 @file tools/_t-color-functions.scss
 
 ## `generate-color-varations()`
-### function(`$map, $functions, $increments, $variations, $blending-colors`)
+### function( `$map, $functions, $increments, $variations, $blending-colors` )
 
 Takes base color values and generates a full color palette. Used by the `$$base-colors` map to create a project's palette, accessible via `colors()`.
 

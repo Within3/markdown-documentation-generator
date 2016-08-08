@@ -1,0 +1,30 @@
+<button class="sg-toggle-menu" data-sg-toggle="#sg-menu"><span class="sg-visually-hidden">Toggle Menu</span></button>
+<div id="sg-menu_wrap" class="sg-menu_wrap">
+    <h1 class="sg-logo">
+        <a href="#" class="sg-menu_link js-menu_showall">Pliny</a>
+    </h1>
+    {{!--Section Start --}}
+    {{~#each menus~}}
+    <ul class="sg-menu_list sg-menu_section">
+        <li class="sg-menu_item sg-menu_section_item">
+            <a href="#{{sanitize @key}}" class="sg-menu_link sg-section_link js-menu_showall">
+                {{~titleize @key~}}
+            </a>
+            <span class="sg-menu_toggle toggle-active" data-sg-toggle="#sub-{{@key}}">&#9662;</span>
+        </li>
+    </ul>
+    {{!-- Category list --}}
+    <ul id="sub-{{key}}" class="sg-menu_list sg-menu_category">
+        {{#each this}}
+        <li class="sg-menu_category_item sg-menu_item">
+            <a class="sg-menu_link sg-category_link" href="#{{sanitize headings.0.id}}">
+                {{~category~}}
+            </a>
+        </li>
+        {{~/each}}
+    </ul>
+    {{/each}}
+    <div class="sg-menu_list sg-menu_section">
+        <a href="#" class="sg-menu_link sg-section_link js-menu_showall">Back to top</a>
+    </div>
+</div>
