@@ -123,7 +123,7 @@ var arg = {
         console.info('');
         process.exit(0);
     }
-}
+};
 
 /**
  * Check arguments against arg object and run that method
@@ -142,7 +142,6 @@ function readArgs(args) {
             console.info( _v.logPre + curArg + ' not recognized. Showing help instead.');
             arg['help']();
         }
-
     }
 }
 
@@ -162,7 +161,7 @@ function readConfig() {
             customOptions = JSON.parse(customOptions);
         }
         catch(err) {
-            console.error(_v.error(_v.logPre + 'Found ".styleguide", but could not read - is it valid json?'));
+            console.error(_v.logPre + _v.error('Found ".styleguide", but could not read - is it valid json?'));
             console.error(err);
             process.exit(1);
         }
@@ -222,11 +221,13 @@ function findSection($article) {
 
     //Check headings for identifiers declared in "sections" option
     for (var sectionName in options.sections){
-        currentIdentifier = options.sections[sectionName];
+        if ({}.hasOwnProperty.call(options.sections, sectionName)) {
+            currentIdentifier = options.sections[sectionName];
 
-        if(headerText.indexOf(currentIdentifier) > -1 && currentIdentifier !== ''){
-            currentSection = sectionName;
-            break;
+            if(headerText.indexOf(currentIdentifier) > -1 && currentIdentifier !== ''){
+                currentSection = sectionName;
+                break;
+            }
         }
     }
 
@@ -305,20 +306,19 @@ function getMetaData($article, articleData, currentIdentifier) {
 
     //Grab priority tag data and convert them to meaningful values
     $article('priority').each(function(i2, elem2) {
-        var priorityNumber = $article(this).text().trim();
-
-        if ( priorityNumber == 'last') {
-            articleData.priority = 99;
-            return false;
-        }
-        if ( priorityNumber == 'first') {
-            articleData.priority = -99;
-            return false;
+        var priorityNumber = $article(elem2).text().trim();
+        var priorities = {
+            'first': -999,
+            'last': 999
         }
 
-        articleData.priority = Number(priorityNumber);
+        articleData.priority = (priorities[priorityNumber]) ? priorities[priorityNumber] : Number(priorityNumber);
 
     }).remove();
+
+    if(articleData.heading === '') {
+        articleData.priority = -1000;
+    }
 }
 
 
@@ -346,13 +346,13 @@ function convertHTMLtoJSON(html) {
 
         var articleData = {
             id: '',
-            category: '',
             currentSection: null,
             section: {
                 name: ''
             },
-            fileLocation: '',
+            category: '',
             heading: '',
+            fileLocation: '',
             code: [],
             markup: [],
             comment: '',
@@ -437,8 +437,11 @@ function convertHTMLtoJSON(html) {
                 selectedSection.code.push(articleData.code);
                 selectedSection.code = _.flatten(selectedSection.code);
             }
+
+            return;
         }
-        else if (masterData.sections[currentSection]) {
+
+        if (masterData.sections[currentSection]) {
 
             var catIndex = masterData.sections[currentSection].length;
 
@@ -480,7 +483,7 @@ function convertHTMLtoJSON(html) {
         masterData.sections[sectionName].forEach(function(section) {
 
             //New categories: Create a new array to push objects into
-            if (menuObj[0].hasOwnProperty(section.category) === false) {
+            if (_.has(menuObj[0], section.category) === false) {
                 menuObj[0][section.category] = [];
                 sectionObj[0][section.category] = [];
             }
@@ -537,6 +540,26 @@ function convertHTMLtoJSON(html) {
 }
 
 /**
+ * Based on the fileExtension, return a regular expression based on the user-defined sgComment
+ *
+ * @param {String} fileExtension
+ * @returns {RegExp} pattern for either /* or <SG>
+ *
+ */
+
+function patternType(fileExtension) {
+    var sgComment = _.escapeRegExp(options.sgComment);
+
+    if (["md", "markdown", "mdown"].indexOf(fileExtension) !== -1) {
+        // Use <SG>...</SG> for markdown files
+        return new RegExp('\\<' + sgComment + '>([\\s\\S]*?)\\<\\/' + sgComment + '\\>', 'gi');
+    }
+    // Use /*SG ... */ for everything else
+    return new RegExp('/\\* ?' + sgComment + '([\\s\\S]*?)\\*/', 'gi');
+}
+
+
+/**
  * Read valid files (default: scss/css), get the Styleguide comments and put into an array
  *
  * @param {string} root
@@ -550,12 +573,7 @@ function readSGFile(fileExtension, root, fileStats, fileContents) {
     fs.readFile(path.join(root, fileStats.name), 'utf8', function (err, content) {
         var regEsp,
             filePath = './' + path.join(root, _v.info(fileStats.name)),
-            pattern = new RegExp('/\\* ?' + options.sgComment + '([\\s\\S]*?)\\*/', 'gi');
-
-        // Use <SG></SG> for markdown files
-        if (fileExtension === "md" || fileExtension === "markdown" || fileExtension === "mdown") {
-            pattern = new RegExp('\\< ?' + options.sgComment + '>([\\s\\S]*?)\\< ?\\/' + options.sgComment + ' ?\\>', 'gi');
-        }
+            pattern = patternType(fileExtension);
 
         listFiles(filePath);
 
@@ -574,9 +592,11 @@ function readSGFile(fileExtension, root, fileStats, fileContents) {
 }
 
 /**
- * Walk the file tree, and save files
+ * Walk the file tree, and return templated html
  *
  * @param {Object} walker
+ * @returns {Promise<String>} the file contents wrapped in divs
+ *
  */
 function walkFiles(walker) {
     var fileContents = [];
@@ -593,24 +613,23 @@ function walkFiles(walker) {
         }
     });
 
-    walker.on("errors", function (root, nodeStatsArray, next) {
-        console.error(_v.logPre + _v.error('Error'));
-        console.dir(nodeStatsArray);
-        process.exit(1);
-    });
+    //Send back file contents once walker has reached its end
+    return new Promise(
+        function(resolve, reject) {
+            walker.on("errors", function (root, nodeStatsArray, next) {
+                console.error(_v.logPre + _v.error('Error'));
+                console.dir(nodeStatsArray);
+                process.exit(1);
+            });
 
-
-    //Wrap all comments starting with SG in a section
-    walker.on("end", function () {
-        fileContents = fileContents.join('</div>\n<div class="sg-article-' + _v.sgUniqueIdentifier + '">\n');
-
-        var json = convertHTMLtoJSON('<div class="sg-article-' + _v.sgUniqueIdentifier + '">\n' + fileContents + '</div>');
-
-        var html = template(json, options);
-
-        saveFile(html);
-    });
+            //Wrap all comments starting with SG in a section
+            walker.on("end", function () {
+                resolve(fileContents.join('</div>\n<div class="sg-article-' + _v.sgUniqueIdentifier + '">\n'));
+            });
+        }
+    );
 }
+
 
 function init(args) {
     //Instantiate the markdown renderer before we merge our custom options
@@ -632,12 +651,14 @@ function init(args) {
 
     markdown.setOptions(options.markedOptions);
 
-    /**
-     * Walk the file tree
-     */
-    walker = walk.walk(options.srcFolder, options.walkerOptions);
-
-    walkFiles(walker);
+    //Walk the file tree
+    walkFiles(walk.walk(options.srcFolder, options.walkerOptions)).then(
+        //Convert the html string
+        function(fileContents){
+            var json = convertHTMLtoJSON('<div class="sg-article-' + _v.sgUniqueIdentifier + '">\n' + fileContents + '</div>');
+            saveFile(template(json, options));
+        }
+    )
 }
 
 /**
@@ -648,8 +669,6 @@ if(!module.parent) {
 }
 
 
-module.exports = function(args){
-    return this.init = function(args) {
-        init(args);
-    }
+module.exports.init = function(args) {
+    init(args);
 };

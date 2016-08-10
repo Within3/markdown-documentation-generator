@@ -8,7 +8,7 @@ $(function() {
     var $toggles = $('['+toggles+']');
     var $menuLinks = $('.'+menuLinks);
 
-    Sticky menu
+    // Sticky menu
     $('#sg-menu_wrap').stick_in_parent();
 
     //Menu toggles
