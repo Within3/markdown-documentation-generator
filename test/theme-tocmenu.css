@@ -1,6 +1,6 @@
 /******Base Layout******/
 body {
-    background-color: #F0F2F3;
+    background-color: #fafbfc;
 }
 
 .sg-body {
@@ -31,13 +31,23 @@ body {
 }
 
 .sg-section > * {
-    max-width: 58em;
+    max-width: 55em; /* Should be wider for universal box-sizing: border-box */
     margin: auto;
-    padding-left: 2em;
-    padding-right: 2em;
+    padding-left: 8%;
+    padding-right: 8%;
 }
 
-@media only screen and (max-width: 1000px) {
+.sg-example {
+    width: 116%;
+    margin-left: -8%;
+}
+
+@media only screen and (max-width: 1100px) {
+    .sg-example {
+        width: 115%;
+        margin-left: -7.5%;
+    }
+
     .sg-menu {
         width: 10em;
     }
@@ -49,7 +59,7 @@ body {
 
 @media only screen and (max-width: 700px) {
     .sg-menu {
-        display: none;
+        width: 0;
     }
 
     .sg-main {
@@ -58,18 +68,10 @@ body {
 }
 
 
-
 /******Menu******/
 .sg-menu {
-    box-sizing: border-box;
     transition: all .2s ease-out;
     overflow: auto;
-}
-
-.sg-menu *,
-.sg-menu *:before,
-.sg-menu *:after {
-    box-sizing: inherit;
 }
 
 .sg_menu_list,
@@ -82,11 +84,10 @@ body {
 .sg-menu_list {
     list-style: none;
     padding: 0;
-    color: rgba(210,227,228,.08);
+    color: rgba(29, 234, 216, 0.15); /* Used for border colors */
 }
 
 .sg-menu_section {
-    margin-top: .75em;
     border-top: 1px solid;
 }
 
@@ -96,7 +97,6 @@ body {
 
 .sg-category-active {
     background: rgba(142,204,210,.04);
-    margin-bottom: -1px;
 }
 
 /* Menu links */
@@ -120,35 +120,42 @@ body {
     color: #0ED2C0;
 }
 
-.sg-menu_article {
-    display: none;
-}
-
 .sg-menu_article .sg-menu_link {
     padding-left: 2.5rem;
     padding-right: 2rem;
 }
 
-.sg-category-active .sg-menu_article {
-    display: block;
+.sg-menu_article {
+    display: none;
 }
 
+.sg-category-active .sg-menu_article,
 .sg-menu_article.sg-toc-active {
     display: block;
 }
 
+.sg-category-active > .sg-menu_link {
+    border-left: 2px solid #18d2c0;
+    text-indent: -2px;
+}
 
 /******Project Logo******/
 
 .sg-logo {
     font-weight: normal;
     background-color: #18d2c0;
-    margin: 0 0 .25em;
+    color: #fff;
+    margin: 0;
     font-size: 1.5em;
 }
 
+.sg-logo:hover {
+    background-color: #14E9D5;
+    color: #ECFCFB;
+}
+
 .sg-logo .sg-menu_link {
-    color: #fff;
+    color: inherit;
     padding-bottom: .75em;
 }
 
@@ -172,11 +179,12 @@ body {
     font-weight: normal;
 }
 
+
 /******Section, Category & Article Layout******/
 
 .sg-section:nth-child(even) {
     padding-bottom: 1.5em;
-    background-color: rgba(0,0,0,.035);
+    background-color: rgba(0,0,0,.025);
 }
 
 /* Article spacing */
@@ -277,7 +285,7 @@ body {
 
 /* Custom background color to match nav. Overwrites highlight.js default */
 #styleguide .hljs {
-    background-color: #f7f7f8;
+    background-color: #fff;
 }
 #styleguide .hljs-comment {
     color: #8aaeb7;

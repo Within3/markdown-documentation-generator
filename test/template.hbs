@@ -29,26 +29,26 @@
     {{> menu}}
 {{/if}}
 </nav>
-<main id="sg-main" class="sg-main">
 
+<main id="sg-main" class="sg-main">
 {{~#each sections}}
-    <section id="{{sanitize @key}}" class="sg-section" data-sg-section="{{@key}}">
+    <section id="{{sanitize @key}}" class="sg-section sg-section-{{sanitize @key}}" data-sg-section="{{@key}}">
         <div class="sg-section_head">
             <h1 class="sg-heading sg-heading-section">{{titleize @key}}</h1>
         </div>
 
         {{#each this}} {{!--Looping through Categories --}}
             <div class="sg-category">
-            {{#if category~}}
+            {{#if category}}
                 <header class="sg-category_head" data-sg-section="{{sanitize category}}" {{#unless articles.[1]}}id="{{sanitize articles.[0].id}}"{{/unless}}>
                     <h2 class="sg-heading-category">
-                        {{category}}
+                        {{~category~}}
                     </h2>
                 </header>
             {{~/if}}
 
-            {{#each articles}}
-                <article class="sg-article sg-category_article" {{#if ../articles.[1]}}id="{{sanitize id}}"{{/if}} data-sg-section="{{category}}" data-sg-heading="{{heading}}">
+            {{~#each articles}}
+                <article class="sg-article" {{#if ../articles.[1]}}id="{{sanitize id}}"{{/if}} data-sg-section="{{category}}" data-sg-heading="{{heading}}">
                 {{#if heading}}
                     <header class="sg-article_head {{#unless heading}}sg-category_head{{/unless}}">
                         <h3 class="sg-heading sg-heading-article">
@@ -69,13 +69,15 @@
                         <div class="sg-example_wrap">
                             {{#each code}}{{{this}}}{{/each}}
                         </div>
+                        <div class="sg-example_markup">
                         {{#each markup}}
-                        <div class="sg-markup">
-                            <pre class="sg-markup_wrap"><code class="hljs">
-                                {{~{this}~}}
-                            </code></pre>
-                        </div>
+                            <div class="sg-markup">
+                                <pre class="sg-markup_wrap"><code class="hljs">
+                                    {{~{this}~}}
+                                </code></pre>
+                            </div>
                         {{/each}}
+                        </div>
                     </div>
                 {{/if}}
                 </article>
@@ -89,11 +91,13 @@
 <!--[if lte IE 8]>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 <![endif]-->
-<!--[if gt IE 8]><!--><script>{{> jquery}}</script><!--<![endif]-->
+<!--[if gt IE 8]><!-->
+<script>{{> jquery}}</script>
+<!--<![endif]-->
 
 <script>
-{{> toc}};
 {{#if customVariables.tocMenu}}
+    {{> toc}};
 
     $('#sg-menu_wrap').toc({
         'selectors': '.sg-heading-section,.sg-heading-category,.sg-heading-article', //elements to use as headings
@@ -101,29 +105,27 @@
         'smoothScrolling': function(target, options, callback) { //enable or disable smooth scrolling on click
             $(target).smoothScroller({
               offset: 50,
-              speed: 200
+              speed: 10
             }).on('smoothScrollerComplete', function() {
               callback();
             });
         },
         'listType': '<ul class="sg-menu_list"></ul>',
-        'prefix': 'sg-toc', //prefix for anchor tags and class names
+        'prefix': 'sg', //prefix for anchor tags and class names
         'onHighlight': function(el) {
             var $el = $(el);
-            $el.parent('.sg-menu_category').addClass('sg-category-active')
-            $('.sg-category-active').not($el.parent('.sg-menu_category')).removeClass('sg-category-active');
+            $el.closest('.sg-menu_category').addClass('sg-category-active')
+            $('.sg-category-active').not($el.closest('.sg-menu_category')).removeClass('sg-category-active');
             expandCategory($el);
         }, //called when a new section is highlighted
         'activeClass': 'sg-toc-active',
         'highlightOnScroll': true, //add class to heading that is currently in focus
         'highlightOffset': 50, //offset to trigger the next headline
-        'anchorName': function(i, heading, prefix) { //custom function for anchor name
-            return prefix+i;
-        },
         'headerText': function(i, heading, $heading) { //custom function building the header-item text
             return $heading.text();
         },
         'itemClass': function(i, heading, $heading, prefix) { // custom function for item class
+            //List items class="sg-menu_[section,category,article] sg-menu_item"
             return $heading.attr('class').replace('sg-heading-', 'sg-menu_').replace('sg-heading ', ' ') + ' sg-menu_item';
         }
     });
@@ -142,15 +144,21 @@
     $('.sg-menu_article').each(function(i, el){
         var category = $(el).prevAll('.sg-menu_category')[0];
         $(el).appendTo(category);
-    })
+    });
 
     $('.sg-menu_category').each(function(i, el){
         var section = $(el).prevAll('.sg-menu_section')[0];
         $(el).appendTo(section);
-    })
+    }).each(function(i, el){
+        $(this).find('.sg-menu_article').wrapAll('<ul class="sg-menu_list"></ul>');
+    });
+
+
+
 {{else}}
-{{> utilities}}
+    {{> utilities}}
 {{/if}}
 </script>
+
 </body>
 </html>

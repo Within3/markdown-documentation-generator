@@ -1,3 +1,4 @@
+
 html {
     font-family: 'Roboto';
 }
@@ -81,9 +82,19 @@ Space between grid items. Also used in `type-space()` for horizontal spacing uni
 /* SG
 # Lists
 
-@priority first
+A list without a class is rendered normally. All lists can be given a class that will modify how its children will be styled.
 
-Variations on list styles.
+```html_example
+<ul>
+    <li>List Item
+        <ul>
+            <li>Nested List Item</li>
+        </ul>
+    </li>
+    <li>List Item</li>
+    <li>List Item</li>
+</ul>
+```
 
 */
 
@@ -112,10 +123,14 @@ ul {
   list-style: none;
   margin-left: 0;
   padding-left: 0;
-  padding-top: 24px;
-  padding-top:  1.5rem;
-  padding-bottom: 24px;
-  padding-bottom:  1.5rem;
+  margin-bottom: .75rem;
+}
+
+.list_bordered {
+    padding-top: 24px;
+    padding-top:  1.5rem;
+    padding-bottom: 24px;
+    padding-bottom:  1.5rem;
 }
 
 [class*="list_bordered"] > li {
@@ -139,10 +154,10 @@ ul {
 
 /* SG
 
-Appending `list_bordered` with `_short` will make reduce the padding between each item.
+Appending `list_bordered` with `--short` will reduce the padding between each item.
 
 ```html_example
-<ul class="list_bordered_short">
+<ul class="list_bordered--short">
     <li>List Item</li>
     <li>List Item</li>
     <li>List Item</li>
@@ -150,7 +165,7 @@ Appending `list_bordered` with `_short` will make reduce the padding between eac
 ```
 */
 
-.list_bordered_short > li {
+.list_bordered--short > li {
   padding-top: 12px;
   padding-top:  0.75rem;
   padding-bottom: 12px;
@@ -162,7 +177,7 @@ Appending `list_bordered` with `_short` will make reduce the padding between eac
 
 @priority 1
 
-A list where each item is in a row, with spacing to the right of each item
+A list where each item is in a row, with spacing to the right of each item.
 
 ```html_example
 <ul class="list_inline">
@@ -285,30 +300,38 @@ List where anchor tags fill the space of their containers. Useful as a modifier 
 }
 
 /* SG
-# Layout/Media object
+# Layout
+
+@title Media Object
 
 Isolates an image from text wrapping underneath. Useful for creating an association between an image and text. Often used with an icon or avatar. Adding other classes to the `isolate_body` can create a more stylized version.
 
 ```html_example
-<img class="media_media" src="http://placehold.it/300x50" alt="placeholder image">
-<p class="media_body">
-	Content that sits to the right of the image but will never wrap underneath the image to the left. Etiam porta sem malesuada magna mollis euismod. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-</p>
-
+<div class="media">
+    <img class="media__media" src="http://placehold.it/155x75" alt="placeholder image">
+    <p class="media__body">
+    	Content that sits to the right of the image but will never wrap underneath the image to the left. Etiam porta sem malesuada magna mollis euismod. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+    </p>
+</div>
 ```
 */
-.media_media,
-.media_body {
+
+.media {
+    overflow: hidden;
+}
+
+.media__media,
+.media__body {
   overflow: hidden;
   _overflow: visible;
   zoom: 1;
 }
 
-.media_body {
+.media__body {
     padding-left: 1.5rem;
 }
 
-.media_media {
+.media__media {
   float: left;
 }
 
@@ -317,11 +340,22 @@ Isolates an image from text wrapping underneath. Useful for creating an associat
 
 Creates an image-content block that vertically aligns images and text (centered, bottom, or top).
 
-Children of the `.arrange` wrapper can be given four classes:
-* `arrange_fit` or `arrange_media` will create a block that fits the width of its content (useful for images and media).
-* `arrange_fill` will fill the remaining space.
-* `arrange_body` is similar to `arrange_fill` but defaults to middle alignment.
+**Children of the `arrange` wrapper can be given four classes:**
+* `arrange__fit` or `arrange__media` will create a block that fits the width of its content (useful for images and media).
+* `arrange__fill` will fill the remaining space.
+* `arrange__body` is similar to `arrange__fill` but defaults to middle alignment.
 
+```html_example
+<!-- Default arrangement (using arrange__media and arrange__body) -->
+<div class="arrange">
+	<div class="arrange__media">
+		<img src="http://placehold.it/60x50" alt="placeholder image">
+	</div>
+	<div class="arrange__body">
+		Content that is vertically (middle) aligned with the image.
+	</div>
+</div>
+```
 */
 
 
@@ -332,98 +366,95 @@ Children of the `.arrange` wrapper can be given four classes:
   margin-bottom: 1.5rem;
 }
 
-.arrange_media img,
-.arrange_fit img {
+.arrange__media img,
+.arrange__fit img {
   display: block;
   max-width: none;
   margin: auto;
 }
 
-.arrange_body {
+.arrange__body {
     padding-left: 1.5rem;
 }
 
-.arrange_body,
-.arrange_fill {
+.arrange__body,
+.arrange__fill {
     width: 100%;
 }
 
-.arrange_body,
-.arrange_fill,
-.arrange_fit,
-.arrange_media {
+.arrange__body,
+.arrange__fill,
+.arrange__fit,
+.arrange__media {
     display: table-cell;
 }
 
-.arrange_media,
-.arrange_body,
-.arrange_fill,
-.arrange_fit {
+.arrange__media,
+.arrange__body,
+.arrange__fill,
+.arrange__fit {
   vertical-align: middle;
 }
 
-.arrange_top > .arrange_media,
-.arrange_top > .arrange_body,
-.arrange_top > .arrange_fill,
-.arrange_top > .arrange_fit {
+.arrange__top > .arrange__media,
+.arrange__top > .arrange__body,
+.arrange__top > .arrange__fill,
+.arrange__top > .arrange__fit {
   vertical-align: top;
 }
 
-.arrange_bottom > .arrange_media,
-.arrange_bottom > .arrange_body,
-.arrange_bottom > .arrange_fill,
-.arrange_bottom > .arrange_fit {
-  vertical-align: bottom;
-}
-
-.arrange_equal {
-  table-layout: fixed;
-}
-
-.arrange_equal > .arrange_fill,
-.arrange_equal > .arrange_fit {
-  width: 1%;
-}
-
 /* SG
-# Layout/Arrangement object
 
 ```html_example
-<!-- Default arrangement (using arrange_media and arrange_body) -->
-<div class="arrange">
-	<div class="arrange_media">
+<!-- Bottom Arrangement (using arrange__fit and arrange__fill)-->
+<div class="arrange arrange--bottom">
+	<div class="arrange__fit">
 		<img src="http://placehold.it/60x50" alt="placeholder image">
 	</div>
-	<div class="arrange_body">
-		Content that is vertically (middle) aligned with the image.
-	</div>
-</div>
-
-<!-- Bottom Arrangement (using arrange_fit and arrange_fill)-->
-<div class="arrange arrange_bottom">
-	<div class="arrange_fit">
-		<img src="http://placehold.it/60x50" alt="placeholder image">
-	</div>
-	<div class="arrange_fill arrange_body">
+	<div class="arrange__fill arrange__body">
 		Content that is bottom aligned to the image.
 	</div>
 </div>
+```
+*/
 
+.arrange--bottom > .arrange__media,
+.arrange--bottom > .arrange__body,
+.arrange--bottom > .arrange__fill,
+.arrange--bottom > .arrange__fit {
+  vertical-align: bottom;
+}
+
+/* SG
+
+```html_example
 <!-- Equal width arrangement-->
-<div class="arrange arrange_equal">
-	<div class="arrange_fill">
+<div class="arrange arrange--equal">
+	<div class="arrange__fill">
 		Equal width columns.
 	</div>
-	<div class="arrange_fill arrange_media">
+	<div class="arrange__fill arrange__media">
 		<img src="http://placehold.it/120x80" alt="placeholder image">
 	</div>
-	<div class="arrange_fill arrange_body">
+	<div class="arrange__fill arrange__body">
 		Can be as many columns as you want.
 	</div>
 </div>
 
 ```
 */
+
+
+.arrange--equal {
+  table-layout: fixed;
+}
+
+.arrange--equal > .arrange__fill,
+.arrange--equal > .arrange__fit {
+  width: 1%;
+}
+
+
 
 /* SG
 # Sass:Colors
@@ -438,7 +469,7 @@ Colors can be defined in the `$$base-colors` variable and referenced via the `co
 ## `$$base-colors`
 ### Map (key : color value)
 Sets up consistent color names to be used for color-palette. Dark and light values will be automatically generated. Key values should be accessed through `colors()`.
-`type`, `links`, and `bg` key values are required for some starter styles. If you choose not to use them, just replace their references in the appropriate files.
+`type`, `links`, and `bg` key values are required for some starter styles. If you choose not to use them, you need to replace their references.
 
 Supports a nested map style like the following:
 ```scss
@@ -459,13 +490,12 @@ $base-colors: (
     )
 );
 ```
-
 */
 
 /* SG
 # Colors/Lookup
 
-@section Sass
+@section sass
 @file tools/_t-color-functions.scss
 
 ## `colors()`

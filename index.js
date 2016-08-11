@@ -137,7 +137,8 @@ function readArgs(args) {
         if(_.isUndefined(arg[curArg])) {
             console.info( _sg.logPre + curArg + ' not recognized. Showing help instead.');
             arg.help();
-        }else {
+        }
+        else {
             arg[curArg]();
         }
     }
@@ -153,8 +154,9 @@ function readConfig(customOptions) {
         listFiles('Configuration');
         customOptions = customOptions || fs.readJSONSync('.styleguide', 'utf8');
     }catch(err){
-        console.error(_sg.logPre + _sg.error('Error'));
+        console.error(_sg.logPre + _sg.error('Error with configuration: '));
         console.error(err);
+        process.exit(1);
     }
 
     if (_.isUndefined(customOptions)) {
@@ -163,16 +165,13 @@ function readConfig(customOptions) {
     else {
         //Overwrite default sections with custom ones if they exist
         options.sections = (customOptions.sections) ? customOptions.sections : options.sections;
-
         //Merge custom and defaults
         options = _.merge(options, customOptions);
-
         //Move customVariables options to JSON output
         masterData.customVariables = options.customVariables;
-
     }
 
-    // Add walker exclude directories if set
+    // Add excluded directories to walker options (if set)
     if (Object.prototype.toString.call(options.excludeDirs) === '[object Array]') {
         options.walkerOptions = {
             "filters": options.excludeDirs,
@@ -208,15 +207,15 @@ function readTheme() {
  */
 function findSection($article) {
     var currentSection;
-    var currentIdentifier;
+    var sectionIdentifier;
     var headerText = $article(tags.category).slice(0, 1).text() + $article(tags.article).text();
 
     //Check headings for identifiers declared in "sections" option
     for (var sectionName in options.sections){
         if ({}.hasOwnProperty.call(options.sections, sectionName)) {
-            currentIdentifier = options.sections[sectionName];
+            sectionIdentifier = options.sections[sectionName];
 
-            if(headerText.indexOf(currentIdentifier) > -1 && currentIdentifier !== ''){
+            if(headerText.indexOf(sectionIdentifier) > -1 && sectionIdentifier !== ''){
                 currentSection = sectionName;
                 break;
             }
@@ -225,10 +224,10 @@ function findSection($article) {
 
     if (_.isUndefined(currentSection)){
         currentSection = _sg.defaultSection;
-        currentIdentifier = '';
+        sectionIdentifier = '';
     }
 
-    return [currentSection, currentIdentifier];
+    return [currentSection, sectionIdentifier];
 }
 
 /**
@@ -258,19 +257,21 @@ function createSectionStructure() {
  * Search through <meta> tags for current section identifiers
  *
  * @param {Object} $article - article html loaded by cheerio
+ * @param {Object} articleData - structured data about the loaded article
+ * @param {String} sectionIdentifier - string pattern that tells us the current section
  * @return {Array} Section Name, Section identifier
  */
-function getMetaData($article, articleData, currentIdentifier) {
+function getMetaData($article, articleData, sectionIdentifier) {
 
     $article(tags.section).each(function (i2, elem2) {
         articleData.currentSection = $article(this).text().trim();
-        currentIdentifier = options.sections[articleData.currentSection];
+        sectionIdentifier = options.sections[articleData.currentSection];
 
         //A @section tag is pointing to a non-existant section
-        if(_.isUndefined(currentIdentifier)) {
+        if(_.isUndefined(sectionIdentifier)) {
             console.info(_sg.logPre + _sg.info("Warning: '" + articleData.currentSection +
                 "' is not a registered section in your '.styleguide' file."));
-            currentIdentifier = '';
+            sectionIdentifier = '';
         }
 
     }).remove();
@@ -278,7 +279,7 @@ function getMetaData($article, articleData, currentIdentifier) {
     $article(tags.category).each(function (i2, elem2) {
 
         if (articleData.category === ''){
-            articleData.category = $article(this).text().replace(/^\s+|\s+$/g, '').replace(currentIdentifier, '').trim();
+            articleData.category = $article(this).text().replace(/^\s+|\s+$/g, '').replace(sectionIdentifier, '').trim();
             return false;
         }
 
@@ -289,7 +290,7 @@ function getMetaData($article, articleData, currentIdentifier) {
 
     $article(tags.article).each(function (i2, elem2) {
         //Remove dev identifier and extra spaces
-        articleData.heading += $article(this).text().replace(/^\s+|\s+$/g, '').replace(currentIdentifier, '').trim();
+        articleData.heading += $article(this).text().replace(/^\s+|\s+$/g, '').replace(sectionIdentifier, '').trim();
 
     }).remove();
 
@@ -298,7 +299,7 @@ function getMetaData($article, articleData, currentIdentifier) {
         var categoryCode = $article(this).html().replace(/^\s+|\s+$/g, '');
         articleData.code.push(categoryCode);
 
-        //Run markup through highlight.js
+        //Run example markup through highlight.js
         articleData.markup.push(hl.highlight("html", categoryCode).value);
 
     }).remove();
@@ -312,7 +313,6 @@ function getMetaData($article, articleData, currentIdentifier) {
     //Grab priority tag data and convert them to meaningful values
     $article(tags.priority).each(function(i2, elem2) {
         var priority = $article(elem2).text().trim();
-
         articleData.priority = (_.isNaN(Number(priority))) ? priority : Number(priority);
 
     }).remove();
@@ -333,7 +333,7 @@ function convertHTMLtoJSON(html) {
     var sectionObject = createSectionStructure();
     var errorLog = false;
     var idCache = {};
-    var currentIdentifier = '';
+    var sectionIdentifier = '';
     var previousArticle;
 
     var $ = cheerio.load(html);
@@ -364,7 +364,7 @@ function convertHTMLtoJSON(html) {
         if ($article(tags.category)[0]) {
             var sectionInfo = findSection($article);
             articleData.currentSection = sectionInfo[0];
-            currentIdentifier = sectionInfo[1];
+            sectionIdentifier = sectionInfo[1];
         }
         else if(previousArticle !== undefined) {
             //Without a heading, assume it should be concatenated with the previous category
@@ -372,11 +372,10 @@ function convertHTMLtoJSON(html) {
             articleData.category = previousArticle.category;
             articleData.heading = previousArticle.heading;
             articleData.currentSection = previousArticle.section.name;
-
         }
 
         //Search through specific DOM elements for article meta data
-        getMetaData($article, articleData, currentIdentifier);
+        getMetaData($article, articleData, sectionIdentifier);
 
         //Wrap dd/dt inside <dl>s
         $article('.sg-code-meta-type').each(function (i2, elem2) {
