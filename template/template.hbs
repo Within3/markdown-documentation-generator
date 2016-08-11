@@ -88,8 +88,8 @@
                             <h3 class="sg-heading sg-heading-article">
                                 {{heading}}
                             </h3>
-                            {{~#if fileLocation}}
-                            <code class="sg-codespan sg-file">{{fileLocation}}</code>
+                            {{~#if file}}
+                            <code class="sg-codespan sg-file">{{file}}</code>
                             {{~/if~}}
                         </header>
                         {{/if}}
@@ -116,21 +116,40 @@
     {{~/each}}
     </main>
 </div>
-<!--JQuery-->
-<!--[if lte IE 8]>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-<![endif]-->
-
 <!--[if gt IE 8]><!-->
 <script>{{> jquery}}</script>
-<!--<![endif]-->
-<script>{{> hash}}</script>
-<script>{{> sticky}}</script>
 <script>
-{{> utilities}}
+    $(function() {
+
+        var toggles = "data-sg-toggle",
+            menuLinks = "sg-menu_link",
+            $menu = $("#sg-menu"),
+            $sections = $('#styleguide .sg-section');
+
+        var $toggles = $('['+toggles+']');
+        var $menuLinks = $('.'+menuLinks);
+
+        // Sticky menu
+        $('#sg-menu_wrap').stick_in_parent();
+
+        //Menu toggles
+        $toggles.on('toggle', function(e){
+            var $this = $(this);
+            var $target = $($this.attr(toggles));
+            $this.toggleClass('toggle-active');
+            $target.toggleClass('toggle-active');
+
+            if($this.hasClass('sg-menu_toggle')) {
+                $target.slideToggle('fast');
+            }
+        });
+
+        $('body').on('click', $toggles.selector, function(e){
+            $(this).trigger('toggle');
+        });
+
+    });
 </script>
-<!-- {{#each customVars.scripts}}
-    <script src="{{this}}"></script>
-{{/each}} -->
+<!--<![endif]-->
 </body>
 </html>

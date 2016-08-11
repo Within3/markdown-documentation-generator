@@ -4,7 +4,7 @@
   "description": "A fork of markdown-styleguide-generator. Searches files for markdown and generates a static style/documentation guide.",
   "main": "index.js",
   "scripts": {
-      "test": "nodemon --ignore test/styleguide/ -e js,html,css,styleguide index.js"
+      "test": "nodemon --ignore */styleguide/ -e js,hbs,css,styleguide index.js"
   },
   "repository": {
     "type": "git",

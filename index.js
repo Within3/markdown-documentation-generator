@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* jshint node: true  */
+/* jshint esnext: true*/
 "use strict";
 
 var masterData = require('./lib/data-store');
@@ -33,42 +35,33 @@ var options = {
     fileExtensions: {
         scss: true,
         sass: true,
-        css: false,
+        css: true,
         less: true,
         md: true
     },
-    templateFile: path.join(_sg.moduleDir, '/template/template.hbs'),
-    themeFile: path.join(_sg.moduleDir, '/template/theme.css'),
-    outputFile: path.join(process.cwd(), '/styleguide/styleguide.html'),
+    templateFile: path.join(__dirname, '/template/template.hbs'),
+    themeFile: path.join(__dirname, '/template/theme.css'),
+    htmlOutput: path.join(process.cwd(), '/styleguide/styleguide.html'),
     jsonOutput: false,
     handlebarsPartials: {
-        utilities: path.join(_sg.moduleDir, '/template/utilities.js'),
-        jquery: path.join(_sg.moduleDir, '/template/jquery.js'),
+        "jquery": path.join(__dirname, '/template/jquery.js')
     },
     highlightStyle: 'arduino-light',
     highlightFolder: path.join(_sg.hljsDir, '../styles/'),
     customVariables: {
-        scripts: ['',''],
-        pageTitle: "Style Guide"
+        "pageTitle": "Style Guide"
     },
     markedOptions: {
         gfm: true,
         breaks: true
-    },
-    walkerOptions: {
-        followLinks: false
     }
 };
 
+//Set up renderer variable so we can use it later
+var renderer;
 
 //Set up identifiers
-_sg.sgUniqueIdentifier   = 'md-sg';
-
-//Set up system variables to be defined later
-var customOptions,
-    configFilePath,
-    existingConfig,
-    renderer;
+_sg.sgUniqueIdentifier = 'md-sg';
 
 /**
  * Generic file list console output
@@ -79,10 +72,10 @@ function listFiles(fileName, create) {
 
     if(create) {
         var time = sanitize.getTime();
-        return console.info(_sg.good(_sg.logPre + 'Created File: ' + fileName) + chalk.grey(' ['+time+']'))
+        return console.info(_sg.logPre + 'Created ' + _sg.good(fileName) + chalk.grey(' ['+time+']'));
     }
 
-    if(_sg.fileList){
+    if(_sg.fileList) {
         return console.info(_sg.logPre + 'Reading ' + _sg.info(fileName));
     }
 
@@ -90,15 +83,16 @@ function listFiles(fileName, create) {
 
 var arg = {
     init: function(){
-        configFilePath = path.join(process.cwd(), '.styleguide');
+        var configFilePath = path.join(process.cwd(), '.styleguide'),
+            existingConfig;
 
         try {
-            existingConfig = fs.readFileSync(configFilePath, 'utf8');
+            existingConfig = fs.readJSONSync(configFilePath, 'utf8');
         } catch(err) {
             fs.writeFileSync(configFilePath, JSON.stringify(options,null,'\t'));
             listFiles(configFilePath, true);
         }
-        if (existingConfig !== 'undefined') {
+        if (existingConfig !== undefined) {
             console.error(_sg.logPre + _sg.error(' Configuration file \'.styleguide\' already exists in this directory.'));
             console.warn(_sg.logPre + 'Edit that file, or delete it and run \'init\' again if you want to create a new configuration file.');
         }
@@ -109,14 +103,14 @@ var arg = {
     },
     help: function() {
         console.info('');
-        console.info(chalk.blue('     _____                                         '));
-        console.info(chalk.blue('    / ___/ _        / |                ( )   / |     '));
-        console.info(chalk.blue('   | (___ | |_ _   _| | ___  __ _ _   _ _  __| | ___ '));
-        console.info(chalk.blue('    \\___ \\| __| | | | |/ _ \\/ _` | | | | |/ _` |/ _ \\'));
-        console.info(chalk.blue('    ____) | |_| |_| | |  __/ (_| | |_| | | (_| |  __/'));
-        console.info(chalk.blue('    \\____/ \\___\\__, |_|\\___/\\__, |\\__,_|_|\\__,_|\\___/'));
-        console.info(chalk.blue('                __/ |        __/ |                   '));
-        console.info(chalk.blue('               |___/        |___/                    '));
+        console.info(chalk.cyan('     _____                                         '));
+        console.info(chalk.cyan('    / ___/ _        / |                ( )   / |     '));
+        console.info(chalk.cyan('   | (___ | |_ _   _| | ___  __ _ _   _ _  __| | ___ '));
+        console.info(chalk.cyan('    \\___ \\| __| | | | |/ _ \\/ _` | | | | |/ _` |/ _ \\'));
+        console.info(chalk.cyan('    ____) | |_| |_| | |  __/ (_| | |_| | | (_| |  __/'));
+        console.info(chalk.cyan('    \\____/ \\___\\__, |_|\\___/\\__, |\\__,_|_|\\__,_|\\___/'));
+        console.info(chalk.cyan('                __/ |        __/ |                   '));
+        console.info(chalk.cyan('               |___/        |___/                    '));
         console.info('');
         console.info('   ' + _sg.info('md_documentation') + '         Generate styleguide');
         console.info('   ' + _sg.info('md_documentation init') + '    Create a new configuration file in the current directory');
@@ -140,12 +134,11 @@ function readArgs(args) {
     if (args.length > 0) {
         var curArg = args[0].toLowerCase();
 
-        if(arg[curArg] !== 'undefined') {
-            arg[curArg]();
-
-        }else {
+        if(_.isUndefined(arg[curArg])) {
             console.info( _sg.logPre + curArg + ' not recognized. Showing help instead.');
-            arg['help']();
+            arg.help();
+        }else {
+            arg[curArg]();
         }
     }
 }
@@ -154,26 +147,24 @@ function readArgs(args) {
  * Read configuration
  */
 
-function readConfig() {
+function readConfig(customOptions) {
+
     try {
-        customOptions = fs.readFileSync('.styleguide', 'utf8');
-    } catch(err) {
-        console.info(_sg.logPre + 'No ".styleguide" configuration file found in current directory, using defaults');
+        listFiles('Configuration');
+        customOptions = customOptions || fs.readJSONSync('.styleguide', 'utf8');
+    }catch(err){
+        console.error(_sg.logPre + _sg.error('Error'));
+        console.error(err);
     }
-    if (customOptions !== 'undefined') {
-        try {
-            listFiles('.styleguide');
-            customOptions = JSON.parse(customOptions);
-        }
-        catch(err) {
-            console.error(_sg.logPre + _sg.error('Found ".styleguide", but could not read - is it valid json?'));
-            console.error(err);
-            process.exit(1);
-        }
 
+    if (_.isUndefined(customOptions)) {
+        console.info(_sg.logPre + 'No ".styleguide" configuration file (or options) found, using defaults');
+    }
+    else {
         //Overwrite default sections with custom ones if they exist
-        options.sections = customOptions.sections;
+        options.sections = (customOptions.sections) ? customOptions.sections : options.sections;
 
+        //Merge custom and defaults
         options = _.merge(options, customOptions);
 
         //Move customVariables options to JSON output
@@ -182,8 +173,11 @@ function readConfig() {
     }
 
     // Add walker exclude directories if set
-    if(Object.prototype.toString.call(options.excludeDirs) === '[object Array]') {
-        options.walkerOptions.filters = options.excludeDirs;
+    if (Object.prototype.toString.call(options.excludeDirs) === '[object Array]') {
+        options.walkerOptions = {
+            "filters": options.excludeDirs,
+            "followLinks": false
+        };
     }
 }
 
@@ -193,29 +187,17 @@ function readConfig() {
  */
 function readTheme() {
     try {
+        listFiles('Template: ' + options.templateFile);
         _sg.templateSource = fs.readFileSync(options.templateFile, 'utf8');
+        listFiles('Theme: ' + options.themeFile);
         _sg.themeSource = fs.readFileSync(options.themeFile, 'utf8');
+        listFiles('Highlight Style: ' + path.join(options.highlightFolder, options.highlightStyle + '.css'));
         _sg.highlightSource = fs.readFileSync(path.join(options.highlightFolder, options.highlightStyle + '.css'), 'utf8');
     }
     catch(err) {
         console.error(_sg.logPre + _sg.error('Could not read file: ' + err.path));
         process.exit(1);
     }
-}
-
-/**
- * Save html to file
- *
- * @param {String} html
- */
-function saveFile(html) {
-    fs.outputFile(options.outputFile, html, function(err, data) {
-        if (err) {
-            console.error(_sg.logPre + err);
-            process.exit(1);
-        }
-        listFiles(options.outputFile, true);
-    });
 }
 
 /**
@@ -286,8 +268,9 @@ function getMetaData($article, articleData, currentIdentifier) {
 
         //A @section tag is pointing to a non-existant section
         if(_.isUndefined(currentIdentifier)) {
-            console.error(_sg.logPre + _sg.error("Error: '" + articleData.currentSection + "' is not a registered 'section' in your '.styleguide' file."));
-            process.exit(1);
+            console.info(_sg.logPre + _sg.info("Warning: '" + articleData.currentSection +
+                "' is not a registered section in your '.styleguide' file."));
+            currentIdentifier = '';
         }
 
     }).remove();
@@ -352,11 +335,11 @@ function convertHTMLtoJSON(html) {
     var idCache = {};
     var currentIdentifier = '';
     var previousArticle;
+
     var $ = cheerio.load(html);
+    sanitize.cheerioWrapAll($); //Add wrapAll method to cheerio
 
     masterData.sections = Object.assign(sectionObject);
-
-    sanitize.cheerioWrapAll($); //Add wrapAll method to cheerio
 
     // Loop each section and turn into javascript object
     $('.sg-article-' + _sg.sgUniqueIdentifier).each(function (i, elem) {
@@ -369,8 +352,8 @@ function convertHTMLtoJSON(html) {
                 name: ''
             },
             category: '',
+            file: '',
             heading: '',
-            fileLocation: '',
             code: [],
             markup: [],
             comment: '',
@@ -382,9 +365,8 @@ function convertHTMLtoJSON(html) {
             var sectionInfo = findSection($article);
             articleData.currentSection = sectionInfo[0];
             currentIdentifier = sectionInfo[1];
-
         }
-        else if(previousArticle !== 'undefined') {
+        else if(previousArticle !== undefined) {
             //Without a heading, assume it should be concatenated with the previous category
             articleData.id = previousArticle.id;
             articleData.category = previousArticle.category;
@@ -413,7 +395,7 @@ function convertHTMLtoJSON(html) {
         articleData.comment = $article.html().replace(/^\s+|\s+$/g, '');
 
         //Move category data to master
-        saveToMaster(articleData);
+        checkData(articleData);
     });
 
     /**
@@ -426,8 +408,7 @@ function convertHTMLtoJSON(html) {
      *
     **/
 
-    function saveToMaster(articleData) {
-
+    function checkData(articleData) {
         var currentSection = articleData.currentSection;
 
         //Bail out for un-categorized comments
@@ -481,32 +462,21 @@ function convertHTMLtoJSON(html) {
         }
     }
 
-    masterData = structureData(masterData);
-
-    //Save JSON to file
-    if (options.jsonOutput) {
-        fs.outputFile(options.jsonOutput, JSON.stringify(masterData, null, '  '), function(err) {
-            if(err){
-                console.error(_sg.logPre + 'Error: Cannot write ' + options.jsonOutput);
-                console.error(err);
-            }
-            else {
-                listFiles(options.jsonOutput, true);
-            }
-        });
-
-    }
-
-    module.exports.data = masterData;
+    masterData = saveToMaster(masterData);
 
     return masterData;
 }
 
-function structureData(data) {
-    /*
-     * Sort section data
-     */
-
+/**
+ * Arranges and sorts data into a handlebars-friendly object.
+ * Uses the structure:
+ * {sections:[ {sectionName:{id:... , category:..., articles:[{...},...]} },...]}
+ *
+ * @param {Object} data - unformatted data
+ * @returns {Object} formatted data
+ */
+function saveToMaster(data) {
+    //Sort section data
     if (options.sortCategories){
         //Sort Sections
         Object.keys(data.sections).forEach(function(category){
@@ -597,17 +567,19 @@ function readSGFile(fileExtension, root, fileStats, fileContents) {
 
     fs.readFile(path.join(root, fileStats.name), 'utf8', function (err, content) {
         var regEsp,
-            filePath = './' + path.join(root, _sg.info(fileStats.name)),
-            pattern = patternType(fileExtension);
+            filePath = path.join(root, fileStats.name),
+            pattern  = patternType(fileExtension),
+            noFiles  = true;
 
         listFiles(filePath);
 
         if (err) {
-            console.error(_sg.logPre + _sg.error('File Error:') + err);
+            console.error(_sg.logPre + _sg.error('File Error: ' + filePath) + err);
             process.exit(1);
         }
 
         while ((regEsp = pattern.exec(content)) !== null) {
+            noFiles = false;
             //If reading anything other than css, create a file-location reference we'll use later
             var fileLocation = (fileExtension !== "css") ? '<'+tags.file+'>'+filePath+'</'+tags.file+'>': '';
             //Convert markdown to html
@@ -615,6 +587,40 @@ function readSGFile(fileExtension, root, fileStats, fileContents) {
         }
     });
 }
+
+
+function saveFiles(json){
+
+    var output = {
+        'json': json,
+        'html': template(json, options)
+    };
+
+    try {
+        if (options.htmlOutput && _.isString(options.htmlOutput)) {
+            fs.outputFile(options.htmlOutput, output.html, function(err, data) {
+                if (! err) {
+                    listFiles(options.htmlOutput, true);
+                }
+            });
+        }
+
+        if (options.jsonOutput && _.isString(options.jsonOutput)) {
+            fs.outputFile(options.jsonOutput, JSON.stringify(masterData, null, '  '), function(err) {
+                if(! err){
+                    listFiles(options.jsonOutput, true);
+                }
+            });
+        }
+    }
+    catch(err){
+        console.error(_sg.logPre + _sg.error('Error saving file'));
+        console.error(err);
+    }
+
+    return output;
+}
+
 
 /**
  * Walk the file tree, and return templated html
@@ -642,13 +648,29 @@ function walkFiles(walker) {
     return new Promise(
         function(resolve, reject) {
             walker.on("errors", function (root, nodeStatsArray, next) {
-                console.error(_sg.logPre + _sg.error('Error'));
+                console.error(_sg.logPre + _sg.error('File reading rrror'));
                 console.dir(nodeStatsArray);
                 process.exit(1);
             });
 
-            //Wrap all comments starting with SG in a section
             walker.on("end", function () {
+                //If nothing is found after all files are read, give some info
+                if (fileContents.length <= 0) {
+                    var space = '\n'+_sg.logSpace;
+                    console.info('\n'+
+                        _sg.info(_sg.logPre +
+                        'Could not find anything to document.')+
+                        space + 'Please check the following:'+
+                        space + '  * You\'ve used /*'+options.sgComment+'*/ style comments.'+
+                        space + '  * Your "srcFolder" setting is pointing to the root of your style guide files.' +
+                        space + '  * If you\'re using the default settings, try using the "init" argument.' +
+                        space + 'If you\'re still receiving this error, please check the documentation or file an issue at'+
+                        space + chalk.blue.bold('github.com/UWHealth/markdown-documentation-generator/')
+                    );
+                    reject();
+                }
+
+                //Wrap all comments starting with SG in a section, send it back to the promise
                 resolve(fileContents.join('</div>\n<div class="sg-article-' + _sg.sgUniqueIdentifier + '">\n'));
             });
         }
@@ -656,7 +678,7 @@ function walkFiles(walker) {
 }
 
 
-function init(args) {
+function init(args, customOptions) {
     //Instantiate the markdown renderer before we merge our custom options
     renderer = new markdown.Renderer();
     //Add custom markdown rendering formatters
@@ -666,23 +688,21 @@ function init(args) {
     readArgs(args);
 
     //Read and Merge default options with custom ones
-    readConfig();
+    readConfig(customOptions);
 
     //Make sure theme files exist and save their contents globally
     readTheme();
 
     //Set markdown options and set renderer to the custom one defined here
     options.markedOptions.renderer = renderer;
-
     markdown.setOptions(options.markedOptions);
 
     //Walk the file tree
-    walkFiles(walk.walk(options.srcFolder, options.walkerOptions))
-    .then(function(fileContents){
+    return walkFiles(walk.walk(path.join(_sg.moduleDir, options.srcFolder), options.walkerOptions))
+        .then(function(fileContents) {
             var json = convertHTMLtoJSON('<div class="sg-article-' + _sg.sgUniqueIdentifier + '">\n' + fileContents + '</div>');
-            var html = template(json, options);
-            saveFile(html);
-    });
+            return saveFiles(json);
+        });
 }
 
 /**
@@ -693,6 +713,17 @@ if(!module.parent) {
 }
 
 
-module.exports.init = function(args) {
-    init(args);
+module.exports.create = function(argv, customOptions) {
+    //Assume args is actually customOptions if its an object
+    if(_.isObject(argv)){
+        customOptions = argv;
+    }
+    else if(! _.isArray(argv)){
+        argv = [argv];
+    }
+    return new Promise(
+        function(resolve, reject){
+            return resolve(init(argv, customOptions));
+        }
+    );
 };
