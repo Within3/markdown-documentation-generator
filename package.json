@@ -1,10 +1,10 @@
 {
   "name": "markdown-documentation-generator",
-  "version": "1.3.0",
+  "version": "2.0.0",
   "description": "A fork of markdown-styleguide-generator. Searches files for markdown and generates a static style/documentation guide.",
   "main": "index.js",
   "scripts": {
-      "test": "nodemon --ignore */styleguide/ -e js,hbs,css,styleguide index.js"
+    "test": "nodemon --ignore */styleguide/ -e js,hbs,css,styleguide index.js"
   },
   "repository": {
     "type": "git",
