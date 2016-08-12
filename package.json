@@ -1,6 +1,6 @@
 {
   "name": "markdown-documentation-generator",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "A fork of markdown-styleguide-generator. Searches files for markdown and generates a static style/documentation guide.",
   "main": "index.js",
   "scripts": {
