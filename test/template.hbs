@@ -71,7 +71,7 @@
                         </div>
                         <div class="sg-example_markup">
                         {{#each markup}}
-                            <div class="sg-markup">
+                            <div class="sg-markup sg-markup-block">
                                 <pre class="sg-markup_wrap"><code class="hljs">
                                     {{~{this}~}}
                                 </code></pre>
@@ -112,12 +112,12 @@
         },
         'listType': '<ul class="sg-menu_list"></ul>',
         'prefix': 'sg', //prefix for anchor tags and class names
-        'onHighlight': function(el) {
+        'onHighlight': function(el) { //called when a new section is highlighted
             var $el = $(el);
             $el.closest('.sg-menu_category').addClass('sg-category-active')
             $('.sg-category-active').not($el.closest('.sg-menu_category')).removeClass('sg-category-active');
             expandCategory($el);
-        }, //called when a new section is highlighted
+        },
         'activeClass': 'sg-toc-active',
         'highlightOnScroll': true, //add class to heading that is currently in focus
         'highlightOffset': 50, //offset to trigger the next headline

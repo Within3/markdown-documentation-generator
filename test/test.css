@@ -36,6 +36,7 @@ p {
 /* SG
 # Sass:Config/Typography Settings
 
+
 ## `$$base-font-size` - Pixel
 Font size all other values will use for calculation. Will be converted to `rems`.
 
@@ -300,8 +301,7 @@ List where anchor tags fill the space of their containers. Useful as a modifier 
 }
 
 /* SG
-# Layout
-
+@category Layout
 @title Media Object
 
 Isolates an image from text wrapping underneath. Useful for creating an association between an image and text. Often used with an icon or avatar. Adding other classes to the `isolate_body` can create a more stylized version.
@@ -318,6 +318,7 @@ Isolates an image from text wrapping underneath. Useful for creating an associat
 
 .media {
     overflow: hidden;
+    margin-bottom: 1.5rem;
 }
 
 .media__media,

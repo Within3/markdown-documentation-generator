@@ -241,7 +241,6 @@ body {
 }
 
 /* Clearfix */
-.sg-example_wrap:before,
 .sg-example_wrap:after {
     content: " ";
     display: table;
@@ -255,6 +254,9 @@ body {
 
 .sg-markup_wrap {
     margin: 0;
+}
+
+.sg-markup-block {
     border-top: 1px solid #EFF2F6;
 }
 
