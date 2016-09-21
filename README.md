@@ -49,7 +49,7 @@ To override default configuration and create a `.styleguide` config file in the 
 md_documentation init
 ```
 
-### Node import
+### Node module usage
 
 Using the default settings:
 ```js
@@ -88,9 +88,6 @@ Example:
       <i class="icon-search glyph-2x"></i>
       <i class="icon-search glyph-3x"></i>
     </p>
-    <p>
-      <i class="icon-search glyph-red"></i>
-    </p>
     ```
     */
 
@@ -107,6 +104,14 @@ Example:
       &.glyph-3x { font-size: 3em; }
     }
 
+    /* SG
+    ```html_example
+    <p>
+      <i class="icon-search glyph-red"></i>
+    </p>
+    ```
+    **/
+
     .glyph-red {
       color: $moh-red;
     }
@@ -122,9 +127,10 @@ This will be rendered as:
 
 ### Syntax
 Best described by going through the example above line by line.
+
 ##### Line 1 (Demarcation)
 
-```
+```css
   /* SG
 ```
 
@@ -149,7 +155,7 @@ Every style guide comment must have a heading. `# ` is the Markdown syntax for a
 The comment will be shown in the style guide. Describe your css rules! Feel free to use [Markdown syntax](https://help.github.com/articles/markdown-basics/). The comment is optional but be nice to your developers!
 
 
-##### Line 6-16 (Code example)
+##### Line 6-11 (Code example)
 
     ```html_example
     <p>
@@ -166,16 +172,16 @@ The comment will be shown in the style guide. Describe your css rules! Feel free
 This is where you write some HTML code to describe how to use your css rules. The HTML will be a) Rendered and used as an example, and b) Output with syntax highlighting. The HTML part is optional but most of the time you'll use it. Notice that the code is fenced in triple back ticks (and given a language marker of `html_example`) as per Markdown syntax.
 
 
-##### Line 17 (Comment close)
+##### Line 12 (Comment close)
 
 ```
   */
 ```
 
-Just closing the css comment.
+Closing the css comment.
 
 
-##### Line 18+
+##### Line 13-24
 
 ```
   a [class^="icon-"],
@@ -185,7 +191,21 @@ Just closing the css comment.
   ...
 ```
 
-Ordinary css (scss)!
+Ordinary css (scss)! You could stop here and understand all you need to, but let's continue.
+
+##### Line 24+
+
+    /* SG
+    ```html_example
+    <p>
+      <i class="icon-search glyph-red"></i>
+    </p>
+    ```
+    */
+
+    ...
+
+Additional comments about the previous article. This allows you to break your comments up whenever and they will always become a part of the previous comment (and added to the same article).
 
 ### Markdown files
 
@@ -348,7 +368,9 @@ The Javascript object which you may use in your template file looks like this:
 
 If you'd like to see your own JSON, set a path in the `"jsonOutput"` option in your `.styleguide` file.
 
+
 ## Run with gulp/grunt
+
 If you want to re-create the style guide automatically every time a stylesheet file is changed, you can run it with your favorite task runner. One way of running it with gulp would be using gulp-shell to execute the shell command `md_documentation` when a file is changed.
 
 Sample gulp script:
