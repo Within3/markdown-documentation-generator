@@ -359,7 +359,6 @@ function convertHTMLtoJSON(html) {
                 name: ''
             },
             category: '',
-            file: '',
             heading: '',
             code: [],
             markup: [],
@@ -584,7 +583,7 @@ function readSGFile(fileExtension, root, name, fileContents) {
         while ((match = regex.exec(content)) !== null) {
             noFiles = false;
             //If reading anything other than css, create a file-location reference we'll use later
-            var fileLocation = (fileExtension !== "css") ? '<'+tags.file+'>'+filePath+'</'+tags.file+'>': '';
+            var fileLocation = (fileExtension !== "css") ? '<'+tags.file+'>'+path.relative(options.rootFolder, filePath)+'</'+tags.file+'>': '';
             //Convert markdown to html
             fileContents.push(markdown(match[1]) + fileLocation);
         }
