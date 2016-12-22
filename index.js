@@ -756,13 +756,32 @@ function init(args, customOptions) {
     }
 }
 
-
 module.exports.create = function(argv, customOptions) {
     //Assume args is actually customOptions if its an object
+    if (_.isObject(argv)){
         customOptions = argv;
     }
+    else if (! _.isArray(argv)){
         argv = [argv];
     }
+    return new Promise(function(resolve, reject) {
+            var data;
+            try {
+                data = init(argv, customOptions);
+                return resolve(data);
+            }
+            catch(err){
+                return reject(err);
+            }
         }
     );
 };
+
+/**
+ * Initialize automatically if not being imported
+ */
+(function(){
+    if (!module.parent) {
+        init(process.argv.slice(2));
+    }
+}());

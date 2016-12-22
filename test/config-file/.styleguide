@@ -1,0 +1,43 @@
+{
+	"sgComment": "SG",
+	"exampleIdentifier": "html_example",
+	"sortCategories": true,
+	"sections": {
+		"styles": "",
+		"development": "Dev:",
+    "Sass stuff": "Sass:"
+	},
+	"rootFolder": "./",
+	"excludeDirs": [
+		"target",
+		"node_modules",
+		".git"
+	],
+	"fileExtensions": {
+		"scss": false,
+		"sass": true,
+		"less": true,
+		"md": true,
+		"css": true
+	},
+	"templateFile": "./template.hbs",
+	"themeFile": "./theme-tocmenu.css",
+	"htmlOutput": "./styleguide/styleguide.html",
+	"jsonOutput": "styleguide/styleguide.json",
+	"handlebarsPartials": {
+		"jquery": "../../template/jquery.js",
+		"sticky": "../../template/sticky.js",
+    "toc": "./toc.js"
+	},
+	"highlightStyle": "arduino-light",
+	"highlightFolder": "../../node_modules/highlight.js/styles",
+	"customVariables": {
+		"pageTitle": "Style Guide",
+    "tocMenu": true
+	},
+	"markedOptions": {
+		"gfm": true,
+		"breaks": true,
+		"smartypants": true
+	}
+}

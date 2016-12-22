@@ -1,0 +1,541 @@
+
+html {
+    font-family: 'Roboto';
+}
+
+code, pre {
+    font-family: 'Roboto Mono';
+    font-size: .95em;
+}
+
+h1 {
+    font-size: 1.75em;
+    font-weight: normal;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol {
+    margin: 0 0 1.5rem;
+}
+
+p {
+    line-height: 1.5rem;
+}
+
+/* SG
+# Sass:Config/Typography Settings
+
+
+## `$$base-font-size` - Pixel
+Font size all other values will use for calculation. Will be converted to `rems`.
+
+## `$$base-line-height` - Pixel
+Line-height for base font-size. Will be used to determine the vertical spacing values when `type-space()` is used.
+
+## `$$font-looseness` - Percentage
+What to base the tightness/looseness of automatically-generated `line-heights`.
+
+## `$$auto-scale-type` - Boolean
+Uses `$$scale-ratio` to create font sizes for headings starting from the `$$base-font-size`.
+
+## `$$scale-ratio` - Number (float)
+Used for `$$auto-scale-type` and for `modular-scale()`.
+
+## `$$rem-px-fallback` - Boolean
+Determines whether `rems()` conversion includes a pixel-value fallback for older browsers like IE8.
+
+*/
+
+/* SG
+# Sass:Config/Grid Settings
+
+## `$$max-site-width` - Pixel
+Maximum desktop width for the site wrapper.
+
+## `$$grid-gutter` - Pixel
+Space between grid items. Also used in `type-space()` for horizontal spacing units.
+*/
+
+/* SG
+
+## `$$max-site-width` - Pixel
+Maximum desktop width for the site wrapper.
+
+## `$$grid-columns` - Number
+Base number of grid columns to be generated. Note that any column number will include all fractions of the fewer columns. For instance, a 12-column grid would also include all fractions of 1-12 (including things like three-sevenths).
+
+## `$$grid-gutter` - Pixel
+Space between grid items. Also used in `type-space()` for horizontal spacing units.
+*/
+
+
+/* SG
+# Lists
+
+A list without a class is rendered normally. All lists can be given a class that will modify how its children will be styled.
+
+```html_example
+<ul>
+    <li>List Item
+        <ul>
+            <li>Nested List Item</li>
+        </ul>
+    </li>
+    <li>List Item</li>
+    <li>List Item</li>
+</ul>
+```
+
+*/
+
+
+/* SG
+# Lists/Bordered Lists
+
+@priority last
+
+Creates a list with borders above and below each list item.
+
+```html_example
+<ul class="list_bordered">
+    <li>List Item</li>
+    <li>List Item</li>
+    <li>List Item</li>
+</ul>
+```
+*/
+
+ul {
+    margin: 0;
+}
+
+[class*="list_bordered"] {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+  margin-bottom: .75rem;
+}
+
+.list_bordered {
+    padding-top: 24px;
+    padding-top:  1.5rem;
+    padding-bottom: 24px;
+    padding-bottom:  1.5rem;
+}
+
+[class*="list_bordered"] > li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0;
+}
+
+[class*="list_bordered"] > li {
+  border-top: 1px solid #e4eaf3;
+  padding-top: 24px;
+  padding-top:  1.5rem;
+  padding-bottom: 24px;
+  padding-bottom:  1.5rem;
+  margin-bottom: -1px;
+}
+
+[class*="list_bordered"] > li:first-child {
+  border-top-color: transparent;
+}
+
+/* SG
+
+Appending `list_bordered` with `--short` will reduce the padding between each item.
+
+```html_example
+<ul class="list_bordered--short">
+    <li>List Item</li>
+    <li>List Item</li>
+    <li>List Item</li>
+</ul>
+```
+*/
+
+.list_bordered--short > li {
+  padding-top: 12px;
+  padding-top:  0.75rem;
+  padding-bottom: 12px;
+  padding-bottom:  0.75rem;
+}
+
+/* SG
+# Lists/Inline Lists
+
+@priority 1
+
+A list where each item is in a row, with spacing to the right of each item.
+
+```html_example
+<ul class="list_inline">
+    <li>List Item</li>
+    <li>List Item</li>
+    <li>List Item</li>
+</ul>
+```
+*/
+.list_inline {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.list_inline > li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0;
+}
+
+.list_inline > li {
+  display: inline-block;
+  padding-left: 0;
+  width: auto;
+  vertical-align: middle;
+  padding-right: 16px;
+  padding-right:  1rem;
+}
+
+.list_inline > li:last-child {
+  padding-right: 0;
+}
+
+/* SG
+# Lists/Breadcrumbs
+
+@priority 3
+
+A list where each item is in a row, with a &#x25B8; between each item.
+
+```html_example
+<ul class="breadcrumbs">
+    <li class="breadcrumb">List Item</li>
+    <li class="breadcrumb">List Item</li>
+    <li class="breadcrumb">List Item</li>
+</ul>
+```
+*/
+.breadcrumbs {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+  padding-right: 32px;
+  padding-right:  2rem;
+}
+
+.breadcrumbs > li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0;
+}
+
+.breadcrumbs > li,
+.breadcrumb {
+  display: inline-block;
+  white-space: nowrap;
+  margin-left: 0;
+}
+
+.breadcrumbs > li a,
+.breadcrumb a {
+  display: block;
+}
+
+.breadcrumbs > li:after,
+.breadcrumb:after {
+  content: "\25B8";
+  display: inline-block;
+}
+
+/* SG
+# Lists/Navigation List
+
+@priority last
+
+List where anchor tags fill the space of their containers. Useful as a modifier class. Can be used on any item with multiple child anchors (doesn't have to be an `ol` or `ul`).
+
+```html_example
+<ul class="list_nav">
+    <li>
+        <a href="#">List Item</a>
+    </li>
+    <li>
+        <a href="#">List Item</a>
+    </li>
+    <li>
+        <a href="#">List Item</a>
+    </li>
+</ul>
+```
+*/
+.list_nav {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.list_nav > li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0;
+}
+
+.list_nav a {
+  padding-top: 12px;
+  padding-top:  0.75rem;
+  padding-bottom: 12px;
+  padding-bottom:  0.75rem;
+}
+
+/* SG
+@category Layout
+@title Media Object
+
+Isolates an image from text wrapping underneath. Useful for creating an association between an image and text. Often used with an icon or avatar. Adding other classes to the `isolate_body` can create a more stylized version.
+
+```html_example
+<div class="media">
+    <img class="media__media" src="http://placehold.it/155x75" alt="placeholder image">
+    <p class="media__body">
+    	Content that sits to the right of the image but will never wrap underneath the image to the left. Etiam porta sem malesuada magna mollis euismod. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+    </p>
+</div>
+```
+*/
+
+.media {
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.media__media,
+.media__body {
+  overflow: hidden;
+  _overflow: visible;
+  zoom: 1;
+}
+
+.media__body {
+    padding-left: 1.5rem;
+}
+
+.media__media {
+  float: left;
+}
+
+/* SG
+# Layout/Arrangement object
+
+Creates an image-content block that vertically aligns images and text (centered, bottom, or top).
+
+**Children of the `arrange` wrapper can be given four classes:**
+* `arrange__fit` or `arrange__media` will create a block that fits the width of its content (useful for images and media).
+* `arrange__fill` will fill the remaining space.
+* `arrange__body` is similar to `arrange__fill` but defaults to middle alignment.
+
+```html_example
+<!-- Default arrangement (using arrange__media and arrange__body) -->
+<div class="arrange">
+	<div class="arrange__media">
+		<img src="http://placehold.it/60x50" alt="placeholder image">
+	</div>
+	<div class="arrange__body">
+		Content that is vertically (middle) aligned with the image.
+	</div>
+</div>
+```
+*/
+
+
+.arrange {
+  display: table;
+  table-layout: auto;
+  min-width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.arrange__media img,
+.arrange__fit img {
+  display: block;
+  max-width: none;
+  margin: auto;
+}
+
+.arrange__body {
+    padding-left: 1.5rem;
+}
+
+.arrange__body,
+.arrange__fill {
+    width: 100%;
+}
+
+.arrange__body,
+.arrange__fill,
+.arrange__fit,
+.arrange__media {
+    display: table-cell;
+}
+
+.arrange__media,
+.arrange__body,
+.arrange__fill,
+.arrange__fit {
+  vertical-align: middle;
+}
+
+.arrange__top > .arrange__media,
+.arrange__top > .arrange__body,
+.arrange__top > .arrange__fill,
+.arrange__top > .arrange__fit {
+  vertical-align: top;
+}
+
+/* SG
+
+```html_example
+<!-- Bottom Arrangement (using arrange__fit and arrange__fill)-->
+<div class="arrange arrange--bottom">
+	<div class="arrange__fit">
+		<img src="http://placehold.it/60x50" alt="placeholder image">
+	</div>
+	<div class="arrange__fill arrange__body">
+		Content that is bottom aligned to the image.
+	</div>
+</div>
+```
+*/
+
+.arrange--bottom > .arrange__media,
+.arrange--bottom > .arrange__body,
+.arrange--bottom > .arrange__fill,
+.arrange--bottom > .arrange__fit {
+  vertical-align: bottom;
+}
+
+/* SG
+
+```html_example
+<!-- Equal width arrangement-->
+<div class="arrange arrange--equal">
+	<div class="arrange__fill">
+		Equal width columns.
+	</div>
+	<div class="arrange__fill arrange__media">
+		<img src="http://placehold.it/120x80" alt="placeholder image">
+	</div>
+	<div class="arrange__fill arrange__body">
+		Can be as many columns as you want.
+	</div>
+</div>
+
+```
+*/
+
+
+.arrange--equal {
+  table-layout: fixed;
+}
+
+.arrange--equal > .arrange__fill,
+.arrange--equal > .arrange__fit {
+  width: 1%;
+}
+
+
+
+/* SG
+# Sass:Colors
+
+Colors can be defined in the `$$base-colors` variable and referenced via the `colors()` function.
+
+*/
+
+/* SG
+# Sass:Colors/Definition
+
+## `$$base-colors`
+### Map (key : color value)
+Sets up consistent color names to be used for color-palette. Dark and light values will be automatically generated. Key values should be accessed through `colors()`.
+`type`, `links`, and `bg` key values are required for some starter styles. If you choose not to use them, you need to replace their references.
+
+Supports a nested map style like the following:
+```scss
+$base-colors: (
+    'type': (
+        'base': #020202,
+        'light': #232323,
+        'dark': #000
+    ),
+    'links': (
+        'base': blue,
+        'light': sky,
+        'dark': navy
+    ),
+    'bg': (
+        'base': #fff,
+        'dark': #ddd
+    )
+);
+```
+*/
+
+/* SG
+# Colors/Lookup
+
+@section sass
+@file tools/_t-color-functions.scss
+
+## `colors()`
+### function( `$color-name, $tone: 'base', $opacity: 1` )
+Get a color value from the global `$$base-colors` map. Darker and lighter tones are available by passing a second string.
+
+```scss
+.foo {
+    background-color: colors(links, light));
+}
+```
+
+Passing only a color name will default to the 'base' color.
+
+@alias color()
+@requires $$base-colors
+@returns color
+
+[Reference](http://blog.12spokes.com/web-design-development/simple-css-color-management-with-sass/)
+*/
+
+
+/* SG
+# Sass:Colors/Manipulation
+
+@file tools/_t-color-functions.scss
+
+## `generate-color-varations()`
+### function( `$map, $functions, $increments, $variations, $blending-colors` )
+
+Takes base color values and generates a full color palette. Used by the `$$base-colors` map to create a project's palette, accessible via `colors()`.
+
+**Arguments:**
+* `$map`: Color map you want to create variations of. Defaults to `$$base-colors`.
+* `$functions`: color functions used to generate variations (e.g. lighten or darken). Can use any `blend` function, provided `$blending-colors` are provided.
+* `$increments`: percentage amount to apply `$function` to each `$variations`.
+* `$variations`: actual names for each color tone when `colors()` used.
+* `$blending-colors`: used when a function is a `blend`. Can be a list or a single color.
+
+@requires `combine-color-maps()`
+
+*/
