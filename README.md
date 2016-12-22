@@ -323,7 +323,7 @@ The Javascript object which you may use in your template file looks like this:
 ```javascript
 {
   "sections": {
-    "sectionName": {
+    "section Name": {
       "category": "Category Name",
       "id": "category-name (HTML safe)"
       "articles": [
@@ -332,7 +332,7 @@ The Javascript object which you may use in your template file looks like this:
           "category": 'Parent Category (from the "# Category/Heading" Markdown)',
           "section": {
             "name": "Parent Section",
-            "ParentSection": true //Useful for template checks
+            "parentSection": true //Useful for template checks (always camel cased)
           },
           "file": "File path where this article originated",
           "heading": 'Article Heading (from the "# Category/Heading" Markdown)',
@@ -347,7 +347,7 @@ The Javascript object which you may use in your template file looks like this:
     ...
   },
   "menus": [
-    "sectionName": [
+    "section Name": [
       {
         "category": 'Category Name (one per unique "# Category")',
         "id": 'Category ID (HTML-safe unique identifier)',
