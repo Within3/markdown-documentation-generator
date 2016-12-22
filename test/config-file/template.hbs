@@ -87,15 +87,10 @@
     </section>
 {{~/each}}
 </main>
-<!--JQuery-->
-<!--[if lte IE 8]>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-<![endif]-->
-<!--[if gt IE 8]><!-->
-<script>{{> jquery}}</script>
-<!--<![endif]-->
 
 <script>
+{{>jquery}};
+
 {{#if customVariables.tocMenu}}
     {{> toc}};
 
