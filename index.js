@@ -58,9 +58,6 @@ let options = {
     }
 };
 
-//Set up identifiers
-_sg.uniqueIdentifier = 'md-sg';
-
 //Argument methods
 const arg = {
     init: function() {
@@ -138,6 +135,7 @@ function readArgs(args) {
 
 /**
  * Merge custom options with default options.
+ * Resolves paths and makes sure they're output in a relative format.
  *
  * @param {Object} customOptions - user-provided options
  * @return {Object} - Merged options
@@ -181,12 +179,15 @@ function mergeOptions(defaults, customOptions) {
 
 /**
  * Read configuration
+ *
+ * @param {Object} customOptions - user-provided options
+ * @return {Object} - Merged user and default options
  */
-
 function registerConfig(customOptions) {
 
     try {
         listFiles(_sg.brand('Configuration'));
+        //Read passed object or .styleguide file
         customOptions = customOptions || fs.readJSONSync('.styleguide', 'utf8');
     }
     catch(err) {
@@ -261,7 +262,7 @@ function findSection($article) {
     }
 
     if (_.isUndefined(currentSection)){
-        //Use the "default" section (the one using no pattern match)
+        //Use the "default" section (the section without a pattern match)
         currentSection = _.invert(options.sections)[''];
         sectionIdentifier = '';
     }
@@ -298,6 +299,12 @@ function SectionStructure() {
  */
 function getMetaData($article, articleData, sectionIdentifier) {
 
+    //Grab the filelocation and store it
+    $article(tags.file).each(function () {
+        articleData.filelocation = $article(this).text().trim();
+
+    }).remove();
+
     $article(tags.section).each(function () {
         articleData.currentSection = $article(this).text().trim();
         sectionIdentifier = options.sections[articleData.currentSection];
@@ -305,7 +312,7 @@ function getMetaData($article, articleData, sectionIdentifier) {
         //A @section tag is pointing to a non-existant section
         if (_.isUndefined(sectionIdentifier)) {
             console.info(_sg.logPre + _sg.warn("Warning: '" + chalk.bold(articleData.currentSection) +
-                "' is not a registered section in your configuration."));
+                "' is not a registered section in your configuration. (" + articleData.filelocation + ")"));
             sectionIdentifier = '';
         }
 
@@ -314,9 +321,12 @@ function getMetaData($article, articleData, sectionIdentifier) {
     $article(tags.category).each(function() {
 
         if (articleData.category === '') {
-            articleData.category = $article(this).text()
+            articleData.category = $article(this)
+                .text()
                 .replace(/^\s+|\s+$/g, '')
-                .replace(sectionIdentifier, '').trim();
+                .replace(sectionIdentifier, '')
+                .trim();
+
             $article(this).remove();
         }
         else {
@@ -338,12 +348,6 @@ function getMetaData($article, articleData, sectionIdentifier) {
 
         //Run example markup through highlight.js
         articleData.markup.push(hl.highlight("html", categoryCode).value);
-
-    }).remove();
-
-    //Grab the filelocation and store it
-    $article(tags.file).each(function () {
-        articleData.filelocation = $article(this).text().trim();
 
     }).remove();
 
@@ -406,7 +410,6 @@ function convertHTMLtoJSON(html) {
             const sectionInfo = findSection($article);
             articleData.currentSection = sectionInfo[0];
             sectionIdentifier = sectionInfo[1];
-
         }
         else if (previousArticle !== undefined) {
             //Without a heading, assume it should be concatenated with the previous category
@@ -425,8 +428,10 @@ function convertHTMLtoJSON(html) {
         //Save sanitized comment html
         articleData.comment = $article.html().replace('<p></p>', '').replace(/^\s+|\s+$/g, '');
 
-        //Move category data to master
-        return checkData(articleData);
+        //Move and place article data into master
+        articleData = checkData(articleData);
+
+        return articleData;
     });
 
     /**
@@ -448,7 +453,7 @@ function convertHTMLtoJSON(html) {
         }
 
         //If the section's ID has already been cached,
-        // just append its data to the previous object
+        //append its data to the previous object
         if (idCache.hasOwnProperty(articleData.id)) {
 
             //Grab the index
@@ -463,9 +468,12 @@ function convertHTMLtoJSON(html) {
             if (articleData.markup.length > 0) {
                 selectedSection.markup = _.union(selectedSection.markup, articleData.markup);
             }
-            if (articleData.code.length > 0 ) {
+            if (articleData.code.length > 0) {
                 selectedSection.code = _.union(selectedSection.code, articleData.code);
             }
+
+            //Set previous article so we can refer back if necessary
+            previousArticle = selectedSection;
 
             return;
         }
@@ -483,10 +491,11 @@ function convertHTMLtoJSON(html) {
             //Remove unnecessary data from final JSON
             delete articleData.currentSection;
 
+            //Set previous article so we can refer back if necessary
+            previousArticle = articleData;
+
             //Append new section to master data
             sanitize.objectPush(masterData.sections[currentSection], articleData);
-
-            previousArticle = articleData;
 
         }
     }
@@ -506,7 +515,7 @@ function formatData(data) {
     //Sort section data
     if (options.sortCategories){
         //Sort Sections
-        Object.keys(data.sections).forEach(function(category){
+        Object.keys(data.sections).forEach(function(category) {
             data.sections[category] = sorting(data.sections[category]);
         });
     }
@@ -554,7 +563,7 @@ function formatData(data) {
     }
 
     //Create menu and section JSON
-    Object.keys(options.sections).forEach(function(section){
+    Object.keys(options.sections).forEach(function(section) {
         data.menus[section] = formatSections(section, true);
         data.sections[section] = formatSections(section, false);
     });
