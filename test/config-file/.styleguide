@@ -2,6 +2,10 @@
 	"sgComment": "SG",
 	"exampleIdentifier": "html_example",
 	"sortCategories": true,
+  "categoryRename": {
+    "find": "/(^\\d+\\.\\s?)/g",
+    "replace": ""
+  },
 	"sections": {
 		"styles": "",
 		"development": "Dev:",

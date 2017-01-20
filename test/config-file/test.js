@@ -23,7 +23,8 @@
 // });
 
 var nodemon = require('nodemon');
+var config = require('../nodemon-watch.js');
 
-nodemon('../../index.js lf').on('exit', function(){
-    process.exit(0);
+nodemon(config, "ls").on('log', function(event) {
+    console.log(event.colour);
 });
