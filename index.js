@@ -600,7 +600,7 @@ function regexType(fileExtension) {
  * @param {Array} fileContents
  *
  */
-function readSGFile(fileExtension, root, name, fileContents) {
+function readSGFile(fileExtension, root, name, fileContents, callback) {
 
     fs.readFile(path.join(root, name), 'utf8', function (err, content) {
         let match,
@@ -620,6 +620,8 @@ function readSGFile(fileExtension, root, name, fileContents) {
             //Convert markdown to html
             fileContents.push(markdown(match[1]) + fileLocation);
         }
+
+        callback();
     });
 }
 
@@ -689,11 +691,10 @@ function walkFiles(walker, callback) {
     var fileContents = [];
 
     walker.on("file", function (root, fileStats, next) {
-        let fileExtension = fileStats.name.substr((~-fileStats.name.lastIndexOf(".") >>> 0) + 2).toLowerCase();
+        const fileExtension = fileStats.name.substr((~-fileStats.name.lastIndexOf(".") >>> 0) + 2).toLowerCase();
 
         if (options.fileExtensions[fileExtension]) {
-            readSGFile(fileExtension, root, fileStats.name, fileContents);
-            next();
+            readSGFile(fileExtension, root, fileStats.name, fileContents, next);
         }
         else {
             next();
@@ -715,10 +716,9 @@ function walkFiles(walker, callback) {
                 '\n  * You\'ve used /*'+options.sgComment+'*/ style comments.'+
                 '\n  * Your "rootFolder" setting is pointing to the root of your style guide files.'+
                 '\n  * If you\'re using the default settings, try using the "init" argument.'+
-                '\n If you\'re still receiving this error, please check the documentation or file an issue at '+
+                '\n If you\'re still receiving this error, please check the documentation or file an issue at: \n'+
                 chalk.blue.bold('github.com/UWHealth/markdown-documentation-generator/')
             );
-            return false;
         }
 
         //Wrap all comments starting with SG in a section, send it back to the promise
