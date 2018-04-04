@@ -44,6 +44,6 @@
 	},
 	"logging": {
     "prefix": "[SG]",
-    "level": "minimal"
+    "level": "verbose"
   }
 }

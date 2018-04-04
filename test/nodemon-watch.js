@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   "restartable": "rs",
   "ignore": [
@@ -5,7 +7,7 @@ module.exports = {
     "test.js"
   ],
   "verbose": false,
-  "script": "../../index.js",
+  "script": path.resolve(__dirname, "../index.js"),
   "env": {
     "NODE_ENV": "development"
   },
