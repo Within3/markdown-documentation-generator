@@ -5,7 +5,8 @@
 
 var _sg        = require('./lib/globals'); //"Global" variables
 var formatters = require('./lib/md-formats');
-var listFiles  = require('./lib/log');
+var logFiles  = require('./lib/log');
+var log        = require('./lib/log').generic;
 var sanitize   = require('./lib/sanitize');
 var sorting    = require('./lib/sorts');
 var tags       = require('./lib/tags').tags;
@@ -43,7 +44,7 @@ let options = {
     htmlOutput: './styleguide/styleguide.html',
     jsonOutput: './styleguide/styleguide.json',
     handlebarsPartials: {
-        "jquery": sanitize.path('./', 'template/jquery.js'),
+        "jquery": path.resolve(__dirname, 'template/jquery.js'),
         "sticky": sanitize.path('./', 'template/sticky.js')
     },
     highlightStyle: 'arduino-light',
@@ -55,6 +56,10 @@ let options = {
         gfm: true,
         breaks: true,
         smartypants: true
+    },
+    logging: {
+        prefix: "[Style Guide]",
+        level: "verbose"
     }
 };
 
@@ -70,7 +75,7 @@ const arg = {
         }
         catch(err) {
             fs.writeFileSync(configFilePath, JSON.stringify(options,null,'\t'));
-            listFiles(configFilePath, 'create');
+            logFiles(configFilePath, 'create');
         }
 
         if (existingConfig !== undefined) {
@@ -151,13 +156,18 @@ function mergeOptions(defaults, customOptions) {
     }
 
     //Resolve paths for only a custom rootFolder
-    if (customOptions.rootFolder){
+    if (customOptions.rootFolder) {
         defaults.highlightFolder = getPath(defaults.highlightFolder);
         defaults.templateFile = getPath(defaults.templateFile);
         defaults.themeFile = getPath(defaults.themeFile);
         defaults.handlebarsPartials.jquery = getPath(defaults.handlebarsPartials.jquery);
         defaults.handlebarsPartials.sticky = getPath(defaults.handlebarsPartials.sticky);
     }
+
+    let logging = Object.assign({}, defaults.logging, customOptions.logging || {});
+
+    _sg.logLevel = logging.level;
+    _sg.logPre = _sg.brand(logging.prefix);
 
     //Overwrite default sections with custom ones if they exist
     defaults.sections = customOptions.sections || defaults.sections;
@@ -186,7 +196,7 @@ function mergeOptions(defaults, customOptions) {
 function registerConfig(customOptions) {
 
     try {
-        listFiles(_sg.brand('Configuration'));
+        logFiles(_sg.brand('Configuration'));
         //Read passed object or .styleguide file
         customOptions = customOptions || fs.readJSONSync('.styleguide', 'utf8');
     }
@@ -198,10 +208,9 @@ function registerConfig(customOptions) {
     }
 
     if (_.isUndefined(customOptions)) {
-        console.info(_sg.warn(
-            _sg.logPre +
+        log(_sg.warn(
             'No configuration file (\'.styleguide\') or options found, using defaults.'
-        ));
+        ), 1);
 
         customOptions = {
             walkerOptions: {
@@ -222,13 +231,13 @@ function registerConfig(customOptions) {
 function readTheme() {
 
     try {
-        listFiles(_sg.brand('Template: ') + options.templateFile);
+        logFiles(_sg.brand('Template: ') + options.templateFile);
         _sg.templateSource = fs.readFileSync(path.resolve(_sg.root, options.templateFile), 'utf8');
 
-        listFiles(_sg.brand('Theme: ') + options.themeFile);
+        logFiles(_sg.brand('Theme: ') + options.themeFile);
         _sg.themeSource = fs.readFileSync(path.resolve(_sg.root, options.themeFile), 'utf8');
 
-        listFiles(_sg.brand('Highlight Style: ') +
+        logFiles(_sg.brand('Highlight Style: ') +
             path.relative(_sg.root, path.join(options.highlightFolder, options.highlightStyle + '.css')));
         _sg.highlightSource = fs.readFileSync(path.join(
             path.resolve(_sg.root, options.highlightFolder), options.highlightStyle + '.css'), 'utf8');
@@ -311,8 +320,8 @@ function getMetaData($article, articleData, sectionIdentifier) {
 
         //A @section tag is pointing to a non-existant section
         if (_.isUndefined(sectionIdentifier)) {
-            console.info(_sg.logPre + _sg.warn("Warning: '" + chalk.bold(articleData.currentSection) +
-                "' is not a registered section in your configuration. (" + articleData.filelocation + ")"));
+            log(_sg.warn("Warning: '" + chalk.bold(articleData.currentSection) +
+                "' is not a registered section in your configuration. (" + articleData.filelocation + ")"), 1);
             sectionIdentifier = '';
         }
 
@@ -607,7 +616,7 @@ function readSGFile(fileExtension, root, name, fileContents, callback) {
             filePath = path.join(root, name),
             regex    = regexType(fileExtension);
 
-        listFiles(path.relative(_sg.root, filePath));
+        logFiles(path.relative(_sg.root, filePath));
 
         if (err) {
             const fileError = _sg.logPre + _sg.error('File Error: ' + filePath) + err;
@@ -649,7 +658,7 @@ function saveFiles(json){
                 console.error(err);
             }
             else {
-                listFiles(options.htmlOutput, 'create');
+                logFiles(options.htmlOutput, 'create');
             }
         });
     }
@@ -662,7 +671,7 @@ function saveFiles(json){
                 console.error(err);
             }
             else {
-                listFiles(options.jsonOutput, 'create');
+                logFiles(options.jsonOutput, 'create');
             }
         });
     }
@@ -685,7 +694,7 @@ function walkFiles(walker, callback) {
         return result;
     }, []).join(', ');
 
-    console.info(_sg.logPre + _sg.info('Reading ' + extensions + ' files...'));
+    log(_sg.info('Reading ' + extensions + ' files...'), 2);
 
     //Send back file contents once walker has reached its end
     var fileContents = [];
@@ -709,8 +718,8 @@ function walkFiles(walker, callback) {
     walker.on("end", function () {
         //If nothing is found after all files are read, give some info
         if (fileContents.length <= 0) {
-            console.info('\n'+
-                _sg.warn(_sg.logPre +
+            log('\n'+
+                _sg.warn(
                 'Could not find anything to document.')+
                 '\n Please check the following:'+
                 '\n  * You\'ve used /*'+options.sgComment+'*/ style comments.'+
@@ -718,7 +727,7 @@ function walkFiles(walker, callback) {
                 '\n  * If you\'re using the default settings, try using the "init" argument.'+
                 '\n If you\'re still receiving this error, please check the documentation or file an issue at: \n'+
                 chalk.blue.bold('github.com/UWHealth/markdown-documentation-generator/')
-            );
+            , 1);
         }
 
         //Wrap all comments starting with SG in a section, send it back to the promise

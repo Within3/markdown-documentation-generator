@@ -2,6 +2,46 @@
   "sections": {
     "styles": [
       {
+        "category": "Category",
+        "id": "styles-category-article",
+        "articles": [
+          {
+            "id": "styles-category-article",
+            "section": {
+              "name": "styles",
+              "styles": true
+            },
+            "category": "Category",
+            "heading": "Article",
+            "code": [],
+            "markup": [],
+            "comment": "<p>Some comments about this thing.</p>",
+            "priority": 50,
+            "filelocation": "about.md"
+          }
+        ]
+      },
+      {
+        "category": "Category TEST",
+        "id": "styles-category_test-another_article",
+        "articles": [
+          {
+            "id": "styles-category_test-another_article",
+            "section": {
+              "name": "styles",
+              "styles": true
+            },
+            "category": "Category TEST",
+            "heading": "Another Article",
+            "code": [],
+            "markup": [],
+            "comment": "<p>Some more comments about this other thing.</p>",
+            "priority": 50,
+            "filelocation": "about.md"
+          }
+        ]
+      },
+      {
         "category": "Layout",
         "id": "styles-layout-arrangement_object",
         "articles": [
@@ -168,7 +208,7 @@
             "heading": "Definition",
             "code": [],
             "markup": [],
-            "comment": "<h2 id=\"-base-colors\" class=\"sg-heading sg-heading-2\"><code id=\"variable--base-colors\" class=\"sg-global-variable sg-code sg-codespan sg-global\" data-code-id=\"$base-colors\">$base-colors</code></h2>\n\n                <h3 id=\"map-key-color-value-\" class=\"sg-heading sg-heading-3\">Map (key : color value)</h3>\n<p>Sets up consistent color names to be used for color-palette. Dark and light values will be automatically generated. Key values should be accessed through <code id=\"function-colors\" class=\"sg-global-function sg-code sg-codespan sg-global\" data-code-id=\"colors()\">colors()</code>.\n<br>\n<code class=\"sg-code sg-codespan\">type</code>, <code class=\"sg-code sg-codespan\">links</code>, and <code class=\"sg-code sg-codespan\">bg</code> key values are required for some starter styles. If you choose not to use them, you need to replace their references.</p><p>Supports a nested map style like the following:</p>\n<div class=\"sg-markup sg-codeblock\">\n<pre class=\"sg-markup_wrap\"><code class=\"hljs sg-code undefined\"><span class=\"hljs-variable\">$base-colors</span>: (\n    <span class=\"hljs-string\">&apos;type&apos;</span>: (\n        <span class=\"hljs-string\">&apos;base&apos;</span>: <span class=\"hljs-number\">#020202</span>,\n        <span class=\"hljs-string\">&apos;light&apos;</span>: <span class=\"hljs-number\">#232323</span>,\n        <span class=\"hljs-string\">&apos;dark&apos;</span>: <span class=\"hljs-number\">#000</span>\n    ),\n    <span class=\"hljs-string\">&apos;links&apos;</span>: (\n        <span class=\"hljs-string\">&apos;base&apos;</span>: blue,\n        <span class=\"hljs-string\">&apos;light&apos;</span>: sky,\n        <span class=\"hljs-string\">&apos;dark&apos;</span>: navy\n    ),\n    <span class=\"hljs-string\">&apos;bg&apos;</span>: (\n        <span class=\"hljs-string\">&apos;base&apos;</span>: <span class=\"hljs-number\">#fff</span>,\n        <span class=\"hljs-string\">&apos;dark&apos;</span>: <span class=\"hljs-number\">#ddd</span>\n    )\n);\n</code></pre>\n</div>",
+            "comment": "<h2 id=\"-base-colors\" class=\"sg-heading sg-heading-2\"><code id=\"variable--base-colors\" class=\"sg-global-variable sg-code sg-codespan sg-global\" data-code-id=\"$base-colors\">$base-colors</code></h2>\n\n                <h3 id=\"map-key-color-value-\" class=\"sg-heading sg-heading-3\">Map (key : color value)</h3>\n<p>Sets up consistent color names to be used for color-palette. Dark and light values will be automatically generated. Key values should be accessed through <code id=\"function-colors\" class=\"sg-global-function sg-code sg-codespan sg-global\" data-code-id=\"colors()\">colors()</code>.\n<br>\n<code class=\"sg-code sg-codespan\">type</code>, <code class=\"sg-code sg-codespan\">links</code>, and <code class=\"sg-code sg-codespan\">bg</code> key values are required for some starter styles. If you choose not to use them, you need to replace their references.</p><p>Supports a nested map style like the following:</p>\n<div class=\"sg-markup sg-codeblock\">\n<pre class=\"sg-markup_wrap\"><code class=\"hljs sg-code  \"><span class=\"hljs-variable\">$base-colors</span>: (\n    <span class=\"hljs-string\">&apos;type&apos;</span>: (\n        <span class=\"hljs-string\">&apos;base&apos;</span>: <span class=\"hljs-number\">#020202</span>,\n        <span class=\"hljs-string\">&apos;light&apos;</span>: <span class=\"hljs-number\">#232323</span>,\n        <span class=\"hljs-string\">&apos;dark&apos;</span>: <span class=\"hljs-number\">#000</span>\n    ),\n    <span class=\"hljs-string\">&apos;links&apos;</span>: (\n        <span class=\"hljs-string\">&apos;base&apos;</span>: blue,\n        <span class=\"hljs-string\">&apos;light&apos;</span>: sky,\n        <span class=\"hljs-string\">&apos;dark&apos;</span>: navy\n    ),\n    <span class=\"hljs-string\">&apos;bg&apos;</span>: (\n        <span class=\"hljs-string\">&apos;base&apos;</span>: <span class=\"hljs-number\">#fff</span>,\n        <span class=\"hljs-string\">&apos;dark&apos;</span>: <span class=\"hljs-number\">#ddd</span>\n    )\n);\n</code></pre>\n</div>",
             "priority": 50
           },
           {
@@ -223,6 +263,26 @@
   },
   "menus": {
     "styles": [
+      {
+        "category": "Category",
+        "id": "styles-category-article",
+        "headings": [
+          {
+            "id": "styles-category-article",
+            "name": "Article"
+          }
+        ]
+      },
+      {
+        "category": "Category TEST",
+        "id": "styles-category_test-another_article",
+        "headings": [
+          {
+            "id": "styles-category_test-another_article",
+            "name": "Another Article"
+          }
+        ]
+      },
       {
         "category": "Layout",
         "id": "styles-layout-arrangement_object",

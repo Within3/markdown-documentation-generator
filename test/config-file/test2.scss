@@ -1,0 +1,39 @@
+/* SG
+# Glyphs/Style
+
+You may resize and change the colors of the icons with the `glyph-`-classes. Available sizes and colors listed:
+
+```html_example
+<p>
+  <i class="icon-search glyph-1x"></i>
+  <i class="icon-search glyph-1_5x"></i>
+  <i class="icon-search glyph-2x"></i>
+  <i class="icon-search glyph-3x"></i>
+</p>
+```
+*/
+
+a [class^="icon-"],
+a [class*=" icon-"] {
+  text-decoration: none;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+  &.glyph-1x { font-size: 1em; }
+  &.glyph-1_5x { font-size: 1.5em; }
+  &.glyph-2x { font-size: 2em; }
+  &.glyph-3x { font-size: 3em; }
+}
+
+/* SG
+```html_example
+<p>
+  <i class="icon-search glyph-red"></i>
+</p>
+```
+**/
+
+.glyph-red {
+  color: $moh-red;
+}

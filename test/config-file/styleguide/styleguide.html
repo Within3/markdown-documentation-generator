@@ -398,6 +398,10 @@
 </head>
 <body class="sg-body" id="styleguide">
 
+<li class="sg-menu_category_item sg-menu_item">
+    <a class="sg-menu_link sg-section_link js-menu_showall" href="#"></a>
+</li>
+
 <nav id="sg-menu" class="sg-menu">
 <h1 class="sg-logo">
         <a href="#" class="sg-menu_link js-menu_showall">Style Guide</a>
@@ -410,6 +414,26 @@
         </div>
 
          
+            <div class="sg-category">
+                <header class="sg-category_head" data-sg-section="Category" id="styles-category-article">
+                    <h2 class="sg-heading-category">Category</h2>
+                </header>                <article class="sg-article"  data-sg-section="Category" data-sg-heading="Article">
+                    <header class="sg-article_head ">
+                        <h3 class="sg-heading sg-heading-article">Article</h3></header>
+                    <div class="sg-article_comment">
+                        <p>Some comments about this thing.</p>
+                    </div>
+                </article>        </div> 
+            <div class="sg-category">
+                <header class="sg-category_head" data-sg-section="Category-TEST" id="styles-category-test-another-article">
+                    <h2 class="sg-heading-category">Category TEST</h2>
+                </header>                <article class="sg-article"  data-sg-section="Category TEST" data-sg-heading="Another Article">
+                    <header class="sg-article_head ">
+                        <h3 class="sg-heading sg-heading-article">Another Article</h3></header>
+                    <div class="sg-article_comment">
+                        <p>Some more comments about this other thing.</p>
+                    </div>
+                </article>        </div> 
             <div class="sg-category">
                 <header class="sg-category_head" data-sg-section="Layout" >
                     <h2 class="sg-heading-category">Layout</h2>
@@ -701,7 +725,7 @@
 <br>
 <code class="sg-code sg-codespan">type</code>, <code class="sg-code sg-codespan">links</code>, and <code class="sg-code sg-codespan">bg</code> key values are required for some starter styles. If you choose not to use them, you need to replace their references.</p><p>Supports a nested map style like the following:</p>
 <div class="sg-markup sg-codeblock">
-<pre class="sg-markup_wrap"><code class="hljs sg-code undefined"><span class="hljs-variable">$base-colors</span>: (
+<pre class="sg-markup_wrap"><code class="hljs sg-code  "><span class="hljs-variable">$base-colors</span>: (
     <span class="hljs-string">&apos;type&apos;</span>: (
         <span class="hljs-string">&apos;base&apos;</span>: <span class="hljs-number">#020202</span>,
         <span class="hljs-string">&apos;light&apos;</span>: <span class="hljs-number">#232323</span>,

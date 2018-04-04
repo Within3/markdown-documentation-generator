@@ -18,6 +18,8 @@
 </head>
 <body class="sg-body" id="styleguide">{{!-- Required ID --}}
 
+{{> ./partial.hbs}}
+
 {{!--Menu--}}
 <nav id="sg-menu" class="sg-menu">
 {{#if customVariables.tocMenu ~}}
@@ -89,10 +91,10 @@
 </main>
 
 <script>
-{{>jquery}};
+{{> ../../template/jquery.js}};
 
 {{#if customVariables.tocMenu}}
-    {{> toc}};
+    {{> ./toc.js}};
 
     $('#sg-menu_wrap').toc({
         'selectors': '.sg-heading-section,.sg-heading-category,.sg-heading-article', //elements to use as headings

@@ -29,9 +29,7 @@
 	"htmlOutput": "./styleguide/styleguide.html",
 	"jsonOutput": "styleguide/styleguide.json",
 	"handlebarsPartials": {
-		"jquery": "../../template/jquery.js",
-		"sticky": "../../template/sticky.js",
-    "toc": "./toc.js"
+		"sticky": "../../template/sticky.js"
 	},
 	"highlightStyle": "arduino-light",
 	"highlightFolder": "../../node_modules/highlight.js/styles",
@@ -43,5 +41,9 @@
 		"gfm": true,
 		"breaks": true,
 		"smartypants": true
-	}
+	},
+	"logging": {
+    "prefix": "[SG]",
+    "level": "minimal"
+  }
 }

@@ -1,6 +1,6 @@
 <li class="sg-menu_category_item sg-menu_item">
     {{#if headings.1.name}}
-    <a class="sg-menu_link sg-category_link" href="#{{sanitize headings.0.id}}">
+    <a class="sg-menu_link sg-category_link" href="#{{#if headings.0.id}}{{sanitize headings.0.id}}{{/if}}">
         {{~name~}}
     </a>
     <span class="sg-menu_toggle toggle-active"
@@ -15,7 +15,7 @@
     {{/each}}
     </ul>
     {{else}}
-    <a class="sg-menu_link sg-section_link js-menu_showall" href="#{{sanitize headings.0.id}}">
+    <a class="sg-menu_link sg-section_link js-menu_showall" href="#{{#if headings.0.id}}{{sanitize headings.0.id}}{{/if}}">
         {{~name~}}
     </a>
     {{/if}}
