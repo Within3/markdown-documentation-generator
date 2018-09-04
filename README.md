@@ -21,11 +21,11 @@ What you end up with is an html file that contains comments, rendered examples, 
 
 Ultimately, the html file you end up with should inherit your site's css so your style guide is **always in sync with your codebase**. And since you are using markdown, your comment style is largely up to you and your team — they will be readable in and outside of your css.
 
-All of this can be done via CLI or as part of a larger Node project, since the json, templates, and html are all publicly exposed. It's _your data_, so you can do with it whatever you please.
+All of this can be done via CLI or as part of a larger Node project, since the json, templates, and html are all publicly exposed. It's your data, so you can do with it whatever you please.
 
 ## Install
 
-Requires [Node.js](http://nodejs.org/) (if unsure if you have node install, run `node -v` in a console.)
+Requires [Node.js](http://nodejs.org/) (if you're unsure if you have node install, run `node -v` in a console.)
 
 Install with npm:
 
@@ -48,7 +48,7 @@ Your html file will be created under /your/web/project/styleguide/styleguide.htm
 
 To override default configuration and create a `.styleguide` config file in the current working directory, you may run:
 ```
-md_documentation init
+md_documentation --init
 ```
 
 ### Node module usage
@@ -119,7 +119,7 @@ Example:
     }
 
 
-This will be rendered as:
+**This will be rendered as:**
 
 ![Screenshot](https://raw.githubusercontent.com/UWHealth/markdown-documentation-generator/master/docs/screenshot-rendered-glyphs.png)
 
@@ -223,7 +223,7 @@ With this in mind, it's worth thinking of sections as deep divisions in content 
 
 If you want to override the default configuration you may create a `.styleguide` file in your project folder (the same folder you run `md_documentation` in). Alternatively, you can pass custom options if you're invoking the module from within another Node application.
 
-The easiest way to create a `.styleguide` file is to run `md_documentation init` which will give you a boilerplate configuration file in the current working directory.
+The easiest way to create a `.styleguide` file is to run `md_documentation --init` which will give you a boilerplate configuration file in the current working directory.
 
 ### Options
 
@@ -316,7 +316,7 @@ Additional variables to make available to your templates (appended to your json)
 The final look and feel of the style guide is based on three different files:
 * [template file](https://github.com/UWHealth/markdown-documentation-generator/blob/master/template/template.html) - Handlebars template which will produce the final html.
 * [theme file](https://github.com/UWHealth/markdown-documentation-generator/blob/master/template/theme.css) - css file which will be included in the template file.
-* highlight file - Syntax highlighting relies on [highlight.js](https://highlightjs.org/). To change the highlight style - set the `highlightStyle` to the  name of the style (filename minus `.css`, [see the list of styles](https://github.com/isagalaev/highlight.js/tree/master/src/styles) ) in your `.styleguide`. See the [demoes of available styles](https://highlightjs.org/static/demo/).
+* highlight file - Syntax highlighting relies on [highlight.js](https://highlightjs.org/). To change the highlight style - set the `highlightStyle` to the  name of the style (filename minus `.css`, [see the list of styles](https://github.com/isagalaev/highlight.js/tree/master/src/styles) ) in your `.styleguide`. See the [demos of available styles](https://highlightjs.org/static/demo/).
 
 To create your own template/theme, copy the [template.html and theme.css](https://github.com/UWHealth/markdown-documentation-generator/tree/master/template) to a folder of your choice. Then set the `templateFile` and `themeFile` in your `.styleguide` to the corresponding paths.
 
@@ -334,14 +334,14 @@ The Javascript object which you may use in your template file looks like this:
           "category": 'Parent Category (from the "# Category/Heading" Markdown)',
           "section": {
             "name": "Parent Section",
-            "parentSection": true //Useful for template checks (always camel cased)
+            "parentSection": true //Useful for template checks (always camel-cased)
           },
           "file": "File path where this article originated",
           "heading": 'Article Heading (from the "# Category/Heading" Markdown)',
           "code": ['HTML Code', ...],
           "markup": ['Highlighted HTML Code', ...],
           "comment": 'Markdown comment converted to HTML',
-          "priority": 'Article sorting value' //Number
+          "priority": 'Article sorting value' // Number
         },
         {...}
       ],
