@@ -206,7 +206,7 @@ function registerConfig(customOptions) {
     }
     catch(err) {
         if (err.code !== "ENOENT") {
-            err.message = _sg.logPre + err.message + '.\n    Check your configuration and try again.';
+            err.message = err.message + '.\n    Check your configuration and try again.';
             throw new Error(_sg.error(err));
         }
     }
@@ -247,7 +247,7 @@ function readTheme() {
             path.resolve(_sg.root, options.highlightFolder), options.highlightStyle + '.css'), 'utf8');
     }
     catch(err) {
-        const pathError = _sg.logPre + _sg.error('Could not read file: ' + path.resolve(err.path));
+        const pathError = _sg.logPre + ' ' + _sg.error('Could not read file: ' + path.resolve(err.path));
         throw new Error(pathError);
     }
 }
@@ -780,10 +780,10 @@ function init(args, customOptions) {
 
 module.exports.create = function(argv, customOptions) {
     //Assume args is actually customOptions if its an object
-    if (_.isObject(argv)){
+    if (_.isObject(argv)) {
         customOptions = argv;
     }
-    else if (! _.isArray(argv)){
+    else if (! _.isArray(argv)) {
         argv = [argv];
     }
     return new Promise(function(resolve, reject) {

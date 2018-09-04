@@ -193,7 +193,7 @@ Closing the css comment.
   ...
 ```
 
-Ordinary css (scss)! You could stop here and understand all you need to, but let's continue.
+Ordinary css! You could stop here and understand all you need to, but let's continue.
 
 ##### Line 24+
 
