@@ -20,6 +20,7 @@ var _          = require('lodash');
 var markdown   = require('marked');
 var path       = require('path');
 var walk       = require('walk');
+var argv       = require('yargs').argv;
 
 //Default options
 let options = {
@@ -89,6 +90,9 @@ const arg = {
         }
         process.exit(0);
     },
+    config: function() {
+        _sg.configFile = argv.config || _sg.configFile;
+    },
     lf: function() {
         _sg.fileList = true;
     },
@@ -106,10 +110,11 @@ const arg = {
         console.info(_sg.brand('                __/ |        __/ |                   '));
         console.info(_sg.brand('               |___/        |___/                    '));
         console.info('');
-        console.info('   ' + _sg.brand('md_documentation') + '         Generate styleguide');
-        console.info('   ' + _sg.brand('md_documentation init') + '    Create a new configuration file in the current directory');
-        console.info('   ' + _sg.brand('md_documentation lf') + '      Show "Reading [filename]" during file processing' );
-        console.info('   ' + _sg.brand('md_documentation help') + '    Show this');
+        console.info('   ' + _sg.brand('md_documentation') + '                     Generate styleguide');
+        console.info('   ' + _sg.brand('md_documentation --config=[filename]') + ' Generate styleguide using a custom config file');
+        console.info('   ' + _sg.brand('md_documentation --init') + '              Create a new configuration file in the current directory');
+        console.info('   ' + _sg.brand('md_documentation --lf') + '                Show "Reading [filename]" during file processing' );
+        console.info('   ' + _sg.brand('md_documentation --help') + '              Show this');
         console.info('');
         console.info('   More help at');
         console.info('   https://github.com/UWHealth/markdown-documentation-generator');
@@ -126,8 +131,7 @@ const arg = {
 function readArgs(args) {
 
     if (args.length > 0) {
-        let curArg = args[0].toLowerCase();
-
+        let curArg = args[0].toLowerCase().replace(/-/g, '').split(/=/g)[0];
         if (_.isUndefined(arg[curArg])) {
             console.info( _sg.logPre + curArg + ' not recognized. Showing help instead.');
             arg.help();
@@ -197,8 +201,8 @@ function registerConfig(customOptions) {
 
     try {
         logFiles(_sg.brand('Configuration'));
-        //Read passed object or .styleguide file
-        customOptions = customOptions || fs.readJSONSync('.styleguide', 'utf8');
+        //Read passed object or configFile global.
+        customOptions = customOptions || fs.readJSONSync(_sg.configFile, 'utf8');
     }
     catch(err) {
         if (err.code !== "ENOENT") {
@@ -209,7 +213,7 @@ function registerConfig(customOptions) {
 
     if (_.isUndefined(customOptions)) {
         log(_sg.warn(
-            'No configuration file (\'.styleguide\') or options found, using defaults.'
+            `No configuration file (\'${_sg.configFile}\') or options found, using defaults.`
         ), 1);
 
         customOptions = {
