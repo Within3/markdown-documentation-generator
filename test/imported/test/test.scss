@@ -86,6 +86,7 @@ Space between grid items. Also used in `type-space()` for horizontal spacing uni
 A list without a class is rendered normally. All lists can be given a class that will modify how its children will be styled.
 
 ```html_example
+{{> ../../config-file/template.hbs}}
 <ul>
     <li>List Item
         <ul>

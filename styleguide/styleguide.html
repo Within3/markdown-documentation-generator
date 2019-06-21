@@ -454,10 +454,18 @@
                 </li>
                 <li class="sg-menu_category_item sg-menu_item">
                      
-                    <a class="sg-menu_link sg-category_link" href="#styles-sass-config-grid-settings">Sass:Config</a>
+                    <a class="sg-menu_link sg-category_link" href="#styles-sass-config-1-grid-settings">Sass:Config</a>
                     <span class="sg-menu_toggle toggle-active"
-                        data-sg-toggle="[data-sg-submenu='Grid Settings']">&#9662;</span>
-                    <ul class="sg-menu_list sg-menu_list-sub" data-sg-submenu="Grid Settings">
+                        data-sg-toggle="[data-sg-submenu='1-Grid Settings']">&#9662;</span>
+                    <ul class="sg-menu_list sg-menu_list-sub" data-sg-submenu="1-Grid Settings">
+                    
+                        <li class="sg-menu_item">
+                            <a href="#styles-sass-config-1-grid-settings" class="sg-menu_link js-submenu_link">1-Grid Settings</a>
+                        </li>
+                    
+                        <li class="sg-menu_item">
+                            <a href="#styles-sass-config-2-typography-settings" class="sg-menu_link js-submenu_link">2-Typography Settings</a>
+                        </li>
                     
                         <li class="sg-menu_item">
                             <a href="#styles-sass-config-grid-settings" class="sg-menu_link js-submenu_link">Grid Settings</a>
@@ -536,11 +544,44 @@
                                 Style
                             </h3></header>
                         <div class="sg-article_comment">
-                            <p>You may resize and change the colors of the icons with the <code class="sg-code sg-codespan">glyph-</code>-classes. Available sizes and colors listed:</p><p>*</p>
+                            <p>  You may resize and change the colors of the icons with the <code class="sg-code sg-codespan">glyph-</code>-classes. Available sizes and colors listed:</p><div class="sg-markup sg-codeblock">
+<pre class="sg-markup_wrap"><code class="hljs sg-code  ">```html_example
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;icon-search glyph-red&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+```
+</code></pre>
+</div><p>You may resize and change the colors of the icons with the <code class="sg-code sg-codespan">glyph-</code>-classes. Available sizes and colors listed:</p><p>*</p>
                         </div>
                         <div class="sg-example">
                             <div class="sg-example_wrap">
-                                <p>
+                                `/*` is just an ordinary css comment. The `SG` means that this is a _style guide_ comment. Only comments beginning with `/* SG` will be included in the style guide, all other comments are ignored. This demarcation is configurable.
+
+
+##### Line 2 (Heading)Every style guide comment must have a heading. `# ` is the Markdown syntax for a heading (equivalent to h1). The name of this category will be _Glyphs_ (which will be shown in the menu). The article will be  _Style_ (which will be shown in the menu when it&apos;s expanded). The heading (the part before the slash) is required, the slash and the article name are optional.
+
+
+##### Line 4 (Comment)The comment will be shown in the style guide. Describe your css rules! Feel free to use [Markdown syntax](https://help.github.com/articles/markdown-basics/). The comment is optional but be nice to your developers!
+
+
+##### Line 6-11 (Code example)
+
+    ```html_example
+    <p>
+      <i class="icon-search glyph-1x"></i>
+      <i class="icon-search glyph-1_5x"></i>
+      <i class="icon-search glyph-2x"></i>
+      <i class="icon-search glyph-3x"></i>
+    </p>
+    <p>
+      <i class="icon-search glyph-red"></i>
+    </p>
+    ```
+
+This is where you write some HTML code to describe how to use your css rules. The HTML will be a) Rendered and used as an example, and b) Output with syntax highlighting. The HTML part is optional but most of the time you&apos;ll use it. Notice that the code is fenced in triple back ticks (and given a language marker of `html_example`) as per Markdown syntax.
+
+
+##### Line 12 (Comment close)<p>
   <i class="icon-search glyph-1x"></i>
   <i class="icon-search glyph-1_5x"></i>
   <i class="icon-search glyph-2x"></i>
@@ -548,6 +589,41 @@
 </p><p>
   <i class="icon-search glyph-red"></i>
 </p>
+                            </div>
+                            <div class="sg-markup">
+                                <pre class="sg-markup_wrap"><code class="hljs">`/*` is just an ordinary css comment. The `SG` means that this is a _style guide_ comment. Only comments beginning with `/* SG` will be included in the style guide, all other comments are ignored. This demarcation is configurable.
+
+
+##### Line 2 (Heading)</code></pre>
+                            </div>
+                            <div class="sg-markup">
+                                <pre class="sg-markup_wrap"><code class="hljs">Every style guide comment must have a heading. `# ` is the Markdown syntax for a heading (equivalent to h1). The name of this category will be _Glyphs_ (which will be shown in the menu). The article will be  _Style_ (which will be shown in the menu when it&amp;apos;s expanded). The heading (the part before the slash) is required, the slash and the article name are optional.
+
+
+##### Line 4 (Comment)</code></pre>
+                            </div>
+                            <div class="sg-markup">
+                                <pre class="sg-markup_wrap"><code class="hljs">The comment will be shown in the style guide. Describe your css rules! Feel free to use [Markdown syntax](https://help.github.com/articles/markdown-basics/). The comment is optional but be nice to your developers!
+
+
+##### Line 6-11 (Code example)
+
+    ```html_example
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"icon-search glyph-1x"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"icon-search glyph-1_5x"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"icon-search glyph-2x"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"icon-search glyph-3x"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"icon-search glyph-red"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    ```
+
+This is where you write some HTML code to describe how to use your css rules. The HTML will be a) Rendered and used as an example, and b) Output with syntax highlighting. The HTML part is optional but most of the time you&amp;apos;ll use it. Notice that the code is fenced in triple back ticks (and given a language marker of `html_example`) as per Markdown syntax.
+
+
+##### Line 12 (Comment close)</code></pre>
                             </div>
                             <div class="sg-markup">
                                 <pre class="sg-markup_wrap"><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>
@@ -766,7 +842,16 @@
                         </div>
                         <div class="sg-example">
                             <div class="sg-example_wrap">
-                                <ul>
+                                {{&gt; ../../config-file/template.hbs}}
+<ul>
+    <li>List Item
+        <ul>
+            <li>Nested List Item</li>
+        </ul>
+    </li>
+    <li>List Item</li>
+    <li>List Item</li>
+</ul><ul>
     <li>List Item
         <ul>
             <li>Nested List Item</li>
@@ -775,6 +860,18 @@
     <li>List Item</li>
     <li>List Item</li>
 </ul>
+                            </div>
+                            <div class="sg-markup">
+                                <pre class="sg-markup_wrap"><code class="hljs">{{&amp;gt; ../../config-file/template.hbs}}
+<span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>List Item
+        <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>Nested List Item<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>List Item<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>List Item<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></code></pre>
                             </div>
                             <div class="sg-markup">
                                 <pre class="sg-markup_wrap"><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
@@ -855,10 +952,8 @@
                             </h3></header>
                         <div class="sg-article_comment">
                             <h2 id="-base-colors" class="sg-heading sg-heading-2"><code id="variable--base-colors" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-colors">$base-colors</code></h2>
-
-                <h3 id="map-key-color-value-" class="sg-heading sg-heading-3">Map (key : color value)</h3>
+<h3 id="map-key-color-value-" class="sg-heading sg-heading-3">Map (key : color value)</h3>
 <p>Sets up consistent color names to be used for color-palette. Dark and light values will be automatically generated. Key values should be accessed through <code id="function-colors" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="colors()">colors()</code>.
-<br>
 <code class="sg-code sg-codespan">type</code>, <code class="sg-code sg-codespan">links</code>, and <code class="sg-code sg-codespan">bg</code> key values are required for some starter styles. If you choose not to use them, you need to replace their references.</p><p>Supports a nested map style like the following:</p>
 <div class="sg-markup sg-codeblock">
 <pre class="sg-markup_wrap"><code class="hljs sg-code  "><span class="hljs-variable">$base-colors</span>: (
@@ -879,10 +974,8 @@
 );
 </code></pre>
 </div><h2 id="-base-colors" class="sg-heading sg-heading-2"><code id="variable--base-colors" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-colors">$base-colors</code></h2>
-
-                <h3 id="map-key-color-value-" class="sg-heading sg-heading-3">Map (key : color value)</h3>
+<h3 id="map-key-color-value-" class="sg-heading sg-heading-3">Map (key : color value)</h3>
 <p>Sets up consistent color names to be used for color-palette. Dark and light values will be automatically generated. Key values should be accessed through <code id="function-colors" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="colors()">colors()</code>.
-<br>
 <code class="sg-code sg-codespan">type</code>, <code class="sg-code sg-codespan">links</code>, and <code class="sg-code sg-codespan">bg</code> key values are required for some starter styles. If you choose not to use them, you need to replace their references.</p><p>Supports a nested map style like the following:</p>
 <div class="sg-markup sg-codeblock">
 <pre class="sg-markup_wrap"><code class="hljs sg-code  "><span class="hljs-variable">$base-colors</span>: (
@@ -911,8 +1004,7 @@
                             </h3></header>
                         <div class="sg-article_comment">
                             <h2 id="generate-color-varations-" class="sg-heading sg-heading-2"><code id="function-generate-color-varations" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="generate-color-varations()">generate-color-varations()</code></h2>
-
-                <h3 id="function-map-functions-increments-variations-blending-colors-" class="sg-heading sg-heading-3">function( <code class="sg-code sg-codespan">$map, $functions, $increments, $variations, $blending-colors</code> )</h3>
+<h3 id="function-map-functions-increments-variations-blending-colors-" class="sg-heading sg-heading-3">function( <code class="sg-code sg-codespan">$map, $functions, $increments, $variations, $blending-colors</code> )</h3>
 <p>Takes base color values and generates a full color palette. Used by the <code id="variable--base-colors" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-colors">$base-colors</code> map to create a project&#x2019;s palette, accessible via <code id="function-colors" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="colors()">colors()</code>.</p><p><strong>Arguments:</strong></p><ul>
 <li><code class="sg-code sg-codespan">$map</code>: Color map you want to create variations of. Defaults to <code id="variable--base-colors" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-colors">$base-colors</code>.</li>
 <li><code class="sg-code sg-codespan">$functions</code>: color functions used to generate variations (e.g. lighten or darken). Can use any <code class="sg-code sg-codespan">blend</code> function, provided <code class="sg-code sg-codespan">$blending-colors</code> are provided.</li>
@@ -921,8 +1013,7 @@
 <li><code class="sg-code sg-codespan">$blending-colors</code>: used when a function is a <code class="sg-code sg-codespan">blend</code>. Can be a list or a single color.</li>
 </ul>
 <p data-code-meta="requires" class="sg-code-meta sg-code-meta-value"> <code class="sg-code sg-codespan"> <code id="function-combine-color-maps" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="combine-color-maps()">combine-color-maps()</code></code> </p><h2 id="generate-color-varations-" class="sg-heading sg-heading-2"><code id="function-generate-color-varations" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="generate-color-varations()">generate-color-varations()</code></h2>
-
-                <h3 id="function-map-functions-increments-variations-blending-colors-" class="sg-heading sg-heading-3">function( <code class="sg-code sg-codespan">$map, $functions, $increments, $variations, $blending-colors</code> )</h3>
+<h3 id="function-map-functions-increments-variations-blending-colors-" class="sg-heading sg-heading-3">function( <code class="sg-code sg-codespan">$map, $functions, $increments, $variations, $blending-colors</code> )</h3>
 <p>Takes base color values and generates a full color palette. Used by the <code id="variable--base-colors" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-colors">$base-colors</code> map to create a project&#x2019;s palette, accessible via <code id="function-colors" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="colors()">colors()</code>.</p><p><strong>Arguments:</strong></p><ul>
 <li><code class="sg-code sg-codespan">$map</code>: Color map you want to create variations of. Defaults to <code id="variable--base-colors" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-colors">$base-colors</code>.</li>
 <li><code class="sg-code sg-codespan">$functions</code>: color functions used to generate variations (e.g. lighten or darken). Can use any <code class="sg-code sg-codespan">blend</code> function, provided <code class="sg-code sg-codespan">$blending-colors</code> are provided.</li>
@@ -933,35 +1024,51 @@
 <p data-code-meta="requires" class="sg-code-meta sg-code-meta-value"> <code class="sg-code sg-codespan"> <code id="function-combine-color-maps" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="combine-color-maps()">combine-color-maps()</code></code> </p>
                         </div>
                     </article>                </div>
-                <div class="sg-category" id="styles-sass-config-grid-settings">
+                <div class="sg-category" id="styles-sass-config-1-grid-settings">
                     <header class="sg-category_head" data-sg-section="Sass-Config">
                         <h2 class="sg-heading sg-heading-category">
                             Sass:Config
                         </h2>
                     </header>
 
-                    <article class="sg-article" id="styles-sass-config-grid-settings" data-sg-section="Sass:Config" data-sg-heading="Grid Settings">
+                    <article class="sg-article" id="styles-sass-config-1-grid-settings" data-sg-section="Sass:Config" data-sg-heading="1-Grid Settings">
+                        <header class="sg-article_head ">
+                            <h3 class="sg-heading sg-heading-article">
+                                1-Grid Settings
+                            </h3></header>
+                        <div class="sg-article_comment">
+                            <h2 id="-max-site-width-pixel" class="sg-heading sg-heading-2"><code id="variable--max-site-width" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$max-site-width">$max-site-width</code> - Pixel</h2>
+<p>Maximum desktop width for the site wrapper.</p><h2 id="-grid-gutter-pixel" class="sg-heading sg-heading-2"><code id="variable--grid-gutter" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$grid-gutter">$grid-gutter</code> - Pixel</h2>
+<p>Space between grid items. Also used in <code id="function-type-space" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="type-space()">type-space()</code> for horizontal spacing units.</p><h2 id="-max-site-width-pixel" class="sg-heading sg-heading-2"><code id="variable--max-site-width" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$max-site-width">$max-site-width</code> - Pixel</h2>
+<p>Maximum desktop width for the site wrapper.</p><h2 id="-grid-columns-number" class="sg-heading sg-heading-2"><code id="variable--grid-columns" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$grid-columns">$grid-columns</code> - Number</h2>
+<p>Base number of grid columns to be generated. Note that any column number will include all fractions of the fewer columns. For instance, a 12-column grid would also include all fractions of 1-12 (including things like three-sevenths).</p><h2 id="-grid-gutter-pixel" class="sg-heading sg-heading-2"><code id="variable--grid-gutter" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$grid-gutter">$grid-gutter</code> - Pixel</h2>
+<p>Space between grid items. Also used in <code id="function-type-space" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="type-space()">type-space()</code> for horizontal spacing units.</p>
+                        </div>
+                    </article>                    <article class="sg-article" id="styles-sass-config-2-typography-settings" data-sg-section="Sass:Config" data-sg-heading="2-Typography Settings">
+                        <header class="sg-article_head ">
+                            <h3 class="sg-heading sg-heading-article">
+                                2-Typography Settings
+                            </h3></header>
+                        <div class="sg-article_comment">
+                            <h2 id="-base-font-size-pixel" class="sg-heading sg-heading-2"><code id="variable--base-font-size" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-font-size">$base-font-size</code> - Pixel</h2>
+<p>Font size all other values will use for calculation. Will be converted to <code class="sg-code sg-codespan">rems</code>.</p><h2 id="-base-line-height-pixel" class="sg-heading sg-heading-2"><code id="variable--base-line-height" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-line-height">$base-line-height</code> - Pixel</h2>
+<p>Line-height for base font-size. Will be used to determine the vertical spacing values when <code id="function-type-space" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="type-space()">type-space()</code> is used.</p><h2 id="-font-looseness-percentage" class="sg-heading sg-heading-2"><code id="variable--font-looseness" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$font-looseness">$font-looseness</code> - Percentage</h2>
+<p>What to base the tightness/looseness of automatically-generated <code class="sg-code sg-codespan">line-heights</code>.</p><h2 id="-auto-scale-type-boolean" class="sg-heading sg-heading-2"><code id="variable--auto-scale-type" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$auto-scale-type">$auto-scale-type</code> - Boolean</h2>
+<p>Uses <code id="variable--scale-ratio" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$scale-ratio">$scale-ratio</code> to create font sizes for headings starting from the <code id="variable--base-font-size" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-font-size">$base-font-size</code>.</p><h2 id="-scale-ratio-number-float-" class="sg-heading sg-heading-2"><code id="variable--scale-ratio" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$scale-ratio">$scale-ratio</code> - Number (float)</h2>
+<p>Used for <code id="variable--auto-scale-type" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$auto-scale-type">$auto-scale-type</code> and for <code id="function-modular-scale" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="modular-scale()">modular-scale()</code>.</p><h2 id="-rem-px-fallback-boolean" class="sg-heading sg-heading-2"><code id="variable--rem-px-fallback" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$rem-px-fallback">$rem-px-fallback</code> - Boolean</h2>
+<p>Determines whether <code id="function-rems" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="rems()">rems()</code> conversion includes a pixel-value fallback for older browsers like IE8.</p>
+                        </div>
+                    </article>                    <article class="sg-article" id="styles-sass-config-grid-settings" data-sg-section="Sass:Config" data-sg-heading="Grid Settings">
                         <header class="sg-article_head ">
                             <h3 class="sg-heading sg-heading-article">
                                 Grid Settings
                             </h3></header>
                         <div class="sg-article_comment">
                             <h2 id="-max-site-width-pixel" class="sg-heading sg-heading-2"><code id="variable--max-site-width" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$max-site-width">$max-site-width</code> - Pixel</h2>
-<p>Maximum desktop width for the site wrapper.</p>
-                <h2 id="-grid-gutter-pixel" class="sg-heading sg-heading-2"><code id="variable--grid-gutter" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$grid-gutter">$grid-gutter</code> - Pixel</h2>
+<p>Maximum desktop width for the site wrapper.</p><h2 id="-grid-gutter-pixel" class="sg-heading sg-heading-2"><code id="variable--grid-gutter" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$grid-gutter">$grid-gutter</code> - Pixel</h2>
 <p>Space between grid items. Also used in <code id="function-type-space" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="type-space()">type-space()</code> for horizontal spacing units.</p><h2 id="-max-site-width-pixel" class="sg-heading sg-heading-2"><code id="variable--max-site-width" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$max-site-width">$max-site-width</code> - Pixel</h2>
-<p>Maximum desktop width for the site wrapper.</p>
-                <h2 id="-grid-columns-number" class="sg-heading sg-heading-2"><code id="variable--grid-columns" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$grid-columns">$grid-columns</code> - Number</h2>
-<p>Base number of grid columns to be generated. Note that any column number will include all fractions of the fewer columns. For instance, a 12-column grid would also include all fractions of 1-12 (including things like three-sevenths).</p>
-                <h2 id="-grid-gutter-pixel" class="sg-heading sg-heading-2"><code id="variable--grid-gutter" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$grid-gutter">$grid-gutter</code> - Pixel</h2>
-<p>Space between grid items. Also used in <code id="function-type-space" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="type-space()">type-space()</code> for horizontal spacing units.</p><h2 id="-max-site-width-pixel" class="sg-heading sg-heading-2"><code id="variable--max-site-width" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$max-site-width">$max-site-width</code> - Pixel</h2>
-<p>Maximum desktop width for the site wrapper.</p>
-                <h2 id="-grid-gutter-pixel" class="sg-heading sg-heading-2"><code id="variable--grid-gutter" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$grid-gutter">$grid-gutter</code> - Pixel</h2>
-<p>Space between grid items. Also used in <code id="function-type-space" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="type-space()">type-space()</code> for horizontal spacing units.</p><h2 id="-max-site-width-pixel" class="sg-heading sg-heading-2"><code id="variable--max-site-width" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$max-site-width">$max-site-width</code> - Pixel</h2>
-<p>Maximum desktop width for the site wrapper.</p>
-                <h2 id="-grid-columns-number" class="sg-heading sg-heading-2"><code id="variable--grid-columns" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$grid-columns">$grid-columns</code> - Number</h2>
-<p>Base number of grid columns to be generated. Note that any column number will include all fractions of the fewer columns. For instance, a 12-column grid would also include all fractions of 1-12 (including things like three-sevenths).</p>
-                <h2 id="-grid-gutter-pixel" class="sg-heading sg-heading-2"><code id="variable--grid-gutter" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$grid-gutter">$grid-gutter</code> - Pixel</h2>
+<p>Maximum desktop width for the site wrapper.</p><h2 id="-grid-columns-number" class="sg-heading sg-heading-2"><code id="variable--grid-columns" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$grid-columns">$grid-columns</code> - Number</h2>
+<p>Base number of grid columns to be generated. Note that any column number will include all fractions of the fewer columns. For instance, a 12-column grid would also include all fractions of 1-12 (including things like three-sevenths).</p><h2 id="-grid-gutter-pixel" class="sg-heading sg-heading-2"><code id="variable--grid-gutter" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$grid-gutter">$grid-gutter</code> - Pixel</h2>
 <p>Space between grid items. Also used in <code id="function-type-space" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="type-space()">type-space()</code> for horizontal spacing units.</p>
                         </div>
                     </article>                    <article class="sg-article" id="styles-sass-config-typography-settings" data-sg-section="Sass:Config" data-sg-heading="Typography Settings">
@@ -971,27 +1078,11 @@
                             </h3></header>
                         <div class="sg-article_comment">
                             <h2 id="-base-font-size-pixel" class="sg-heading sg-heading-2"><code id="variable--base-font-size" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-font-size">$base-font-size</code> - Pixel</h2>
-<p>Font size all other values will use for calculation. Will be converted to <code class="sg-code sg-codespan">rems</code>.</p>
-                <h2 id="-base-line-height-pixel" class="sg-heading sg-heading-2"><code id="variable--base-line-height" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-line-height">$base-line-height</code> - Pixel</h2>
-<p>Line-height for base font-size. Will be used to determine the vertical spacing values when <code id="function-type-space" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="type-space()">type-space()</code> is used.</p>
-                <h2 id="-font-looseness-percentage" class="sg-heading sg-heading-2"><code id="variable--font-looseness" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$font-looseness">$font-looseness</code> - Percentage</h2>
-<p>What to base the tightness/looseness of automatically-generated <code class="sg-code sg-codespan">line-heights</code>.</p>
-                <h2 id="-auto-scale-type-boolean" class="sg-heading sg-heading-2"><code id="variable--auto-scale-type" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$auto-scale-type">$auto-scale-type</code> - Boolean</h2>
-<p>Uses <code id="variable--scale-ratio" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$scale-ratio">$scale-ratio</code> to create font sizes for headings starting from the <code id="variable--base-font-size" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-font-size">$base-font-size</code>.</p>
-                <h2 id="-scale-ratio-number-float-" class="sg-heading sg-heading-2"><code id="variable--scale-ratio" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$scale-ratio">$scale-ratio</code> - Number (float)</h2>
-<p>Used for <code id="variable--auto-scale-type" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$auto-scale-type">$auto-scale-type</code> and for <code id="function-modular-scale" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="modular-scale()">modular-scale()</code>.</p>
-                <h2 id="-rem-px-fallback-boolean" class="sg-heading sg-heading-2"><code id="variable--rem-px-fallback" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$rem-px-fallback">$rem-px-fallback</code> - Boolean</h2>
-<p>Determines whether <code id="function-rems" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="rems()">rems()</code> conversion includes a pixel-value fallback for older browsers like IE8.</p><h2 id="-base-font-size-pixel" class="sg-heading sg-heading-2"><code id="variable--base-font-size" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-font-size">$base-font-size</code> - Pixel</h2>
-<p>Font size all other values will use for calculation. Will be converted to <code class="sg-code sg-codespan">rems</code>.</p>
-                <h2 id="-base-line-height-pixel" class="sg-heading sg-heading-2"><code id="variable--base-line-height" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-line-height">$base-line-height</code> - Pixel</h2>
-<p>Line-height for base font-size. Will be used to determine the vertical spacing values when <code id="function-type-space" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="type-space()">type-space()</code> is used.</p>
-                <h2 id="-font-looseness-percentage" class="sg-heading sg-heading-2"><code id="variable--font-looseness" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$font-looseness">$font-looseness</code> - Percentage</h2>
-<p>What to base the tightness/looseness of automatically-generated <code class="sg-code sg-codespan">line-heights</code>.</p>
-                <h2 id="-auto-scale-type-boolean" class="sg-heading sg-heading-2"><code id="variable--auto-scale-type" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$auto-scale-type">$auto-scale-type</code> - Boolean</h2>
-<p>Uses <code id="variable--scale-ratio" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$scale-ratio">$scale-ratio</code> to create font sizes for headings starting from the <code id="variable--base-font-size" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-font-size">$base-font-size</code>.</p>
-                <h2 id="-scale-ratio-number-float-" class="sg-heading sg-heading-2"><code id="variable--scale-ratio" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$scale-ratio">$scale-ratio</code> - Number (float)</h2>
-<p>Used for <code id="variable--auto-scale-type" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$auto-scale-type">$auto-scale-type</code> and for <code id="function-modular-scale" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="modular-scale()">modular-scale()</code>.</p>
-                <h2 id="-rem-px-fallback-boolean" class="sg-heading sg-heading-2"><code id="variable--rem-px-fallback" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$rem-px-fallback">$rem-px-fallback</code> - Boolean</h2>
+<p>Font size all other values will use for calculation. Will be converted to <code class="sg-code sg-codespan">rems</code>.</p><h2 id="-base-line-height-pixel" class="sg-heading sg-heading-2"><code id="variable--base-line-height" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-line-height">$base-line-height</code> - Pixel</h2>
+<p>Line-height for base font-size. Will be used to determine the vertical spacing values when <code id="function-type-space" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="type-space()">type-space()</code> is used.</p><h2 id="-font-looseness-percentage" class="sg-heading sg-heading-2"><code id="variable--font-looseness" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$font-looseness">$font-looseness</code> - Percentage</h2>
+<p>What to base the tightness/looseness of automatically-generated <code class="sg-code sg-codespan">line-heights</code>.</p><h2 id="-auto-scale-type-boolean" class="sg-heading sg-heading-2"><code id="variable--auto-scale-type" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$auto-scale-type">$auto-scale-type</code> - Boolean</h2>
+<p>Uses <code id="variable--scale-ratio" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$scale-ratio">$scale-ratio</code> to create font sizes for headings starting from the <code id="variable--base-font-size" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$base-font-size">$base-font-size</code>.</p><h2 id="-scale-ratio-number-float-" class="sg-heading sg-heading-2"><code id="variable--scale-ratio" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$scale-ratio">$scale-ratio</code> - Number (float)</h2>
+<p>Used for <code id="variable--auto-scale-type" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$auto-scale-type">$auto-scale-type</code> and for <code id="function-modular-scale" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="modular-scale()">modular-scale()</code>.</p><h2 id="-rem-px-fallback-boolean" class="sg-heading sg-heading-2"><code id="variable--rem-px-fallback" class="sg-global-variable sg-code sg-codespan sg-global" data-code-id="$rem-px-fallback">$rem-px-fallback</code> - Boolean</h2>
 <p>Determines whether <code id="function-rems" class="sg-global-function sg-code sg-codespan sg-global" data-code-id="rems()">rems()</code> conversion includes a pixel-value fallback for older browsers like IE8.</p>
                         </div>
                     </article>                </div>

@@ -12,5 +12,8 @@ module.exports = {
     "NODE_ENV": "development"
   },
   "ext": "js hbs css scss styleguide",
-  "args": []
+  "args": [],
+  "watch": [
+      path.resolve(__dirname, '../') + '/**/*'
+  ]
 };
