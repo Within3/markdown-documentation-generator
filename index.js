@@ -526,7 +526,7 @@ function convertHTMLtoJSON(html) {
  */
 function formatData(data) {
     //Sort section data
-    if (options.sortCategories){
+    if (options.sortCategories) {
         //Sort Sections
         Object.keys(data.sections).forEach(function(category) {
             data.sections[category] = sorting(data.sections[category]);
@@ -539,7 +539,6 @@ function formatData(data) {
         let sectionObj = {};
         let menuArr = [];
         let sectionArr = [];
-
 
         data.sections[sectionName].forEach(function(section) {
 
@@ -595,13 +594,10 @@ function regexType(fileExtension) {
 
     let sgComment = _.escapeRegExp(options.sgComment);
 
-    if (["md", "markdown", "mdown"].indexOf(fileExtension) !== -1) {
-        // Use <SG>...</SG> for markdown files
-        return new RegExp('\\<' + sgComment + '>([\\s\\S]*?)\\<\\/' + sgComment + '\\>', 'gi');
+    // return new RegExp('/\\* ?' + sgComment + '([\\s\\S]*?)\\*/', 'gi');
+    // Check for /* SG or <SG> tags
+    return new RegExp('(?:\\/\\*|<) ?'+sgComment+' ?>?([\\s\\S]*?)(?:<\\/ ?'+sgComment+' ?>|\\*\\/)', 'gmi')
     }
-    // Use /*SG ... */ for everything else
-    return new RegExp('/\\* ?' + sgComment + '([\\s\\S]*?)\\*/', 'gi');
-}
 
 
 /**
@@ -685,25 +681,21 @@ function saveFiles(json){
 
 
 /**
- * Walk the file tree, and return templated html
+ * Add Walker options and listeners
  *
  * @param {Object} walker
  * @returns {Promise<String>} the file contents wrapped in divs
  *
  */
-function walkFiles(walker, callback) {
-
-    const extensions = _.reduce(options.fileExtensions, function(result, value, key){
-        if(value){result.push(key);}
-        return result;
-    }, []).join(', ');
-
-    log(_sg.info('Reading ' + extensions + ' files...'), 2);
+function walkFiles(walker, walkerOptions) {
 
     //Send back file contents once walker has reached its end
     var fileContents = [];
 
-    walker.on("file", function (root, fileStats, next) {
+    return new Promise((resolve, reject) => {
+
+        walkerOptions.listeners = {
+            "file": (root, fileStats, next) => {
         const fileExtension = fileStats.name.substr((~-fileStats.name.lastIndexOf(".") >>> 0) + 2).toLowerCase();
 
         if (options.fileExtensions[fileExtension]) {
@@ -712,14 +704,14 @@ function walkFiles(walker, callback) {
         else {
             next();
         }
-    });
+            },
 
-    walker.on("errors", function (root, nodeStatsArray) {
+            "errors": (root, nodeStatsArray) => {
         const fileError = _sg.logPre + _sg.error('File reading Error ') + nodeStatsArray;
-        throw new Error(fileError);
-    });
+                reject(new Error(fileError));
+            },
 
-    walker.on("end", function () {
+            "end": () => {
         //If nothing is found after all files are read, give some info
         if (fileContents.length <= 0) {
             log('\n'+
@@ -735,11 +727,26 @@ function walkFiles(walker, callback) {
         }
 
         //Wrap all comments starting with SG in a section, send it back to the promise
-        return callback(fileContents.join('</div>'+
+                resolve(fileContents.join('</div>'+
             '\n<div class="sg-article-' + _sg.uniqueIdentifier + '">\n'));
+            }
+        };
+
+        log(_sg.info('Reading ' + extension_names(options) + ' files...'), 2);
+
+        walker.walk(_sg.root, walkerOptions);
+
     });
 }
 
+function extension_names(options) {
+    return _.reduce(options.fileExtensions,
+        (result, value, key) => {
+            if(value){ result.push(key); }
+            return result;
+        }, []
+    ).join(', ');
+}
 
 function init(args, customOptions) {
 
@@ -765,13 +772,14 @@ function init(args, customOptions) {
     markdown.setOptions(options.markedOptions);
 
     //Walk the file tree
-    const walker = walk.walk(_sg.root, options.walkerOptions);
-
     try {
-        return walkFiles(walker, function(fileContents) {
+        return walkFiles(walk, options.walkerOptions)
+            .then((fileContents) => {
             const json = convertHTMLtoJSON('<div class="sg-article-' + _sg.uniqueIdentifier + '">\n' + fileContents + '</div>');
             return saveFiles(json, options);
         });
+
+        console.log(fileContents);
     }
     catch(err) {
         throw new Error(err);
@@ -779,7 +787,8 @@ function init(args, customOptions) {
 }
 
 module.exports.create = function(argv, customOptions) {
-    //Assume args is actually customOptions if its an object
+    customOptions = customOptions || {};
+    //Assume args is actually customOptions if it's an object
     if (_.isObject(argv)) {
         customOptions = argv;
     }
@@ -789,14 +798,13 @@ module.exports.create = function(argv, customOptions) {
     return new Promise(function(resolve, reject) {
             var data;
             try {
-                data = init(argv, customOptions);
-                return resolve(data);
+            data = init(argv, customOptions)
+            resolve(data);
             }
             catch(err){
                 return reject(err);
             }
-        }
-    );
+    });
 };
 
 /**
