@@ -4,3 +4,7 @@ bk.package.json
 npm-debug.log
 
 .styleguide
+
+test/*
+
+styleguide/*
