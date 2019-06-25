@@ -201,8 +201,11 @@ function registerConfig(customOptions) {
 
     try {
         logFiles(_sg.brand('Configuration'));
-        //Read passed object or configFile global.
-        customOptions = customOptions || fs.readJSONSync(_sg.configFile, 'utf8');
+        _sg.configFile = path.isAbsolute(_sg.configFile)
+            ? _sg.configFile
+            : path.join(process.cwd(), _sg.configFile);
+        customOptions = customOptions
+            || require(_sg.configFile);
     }
     catch(err) {
         if (err.code !== "ENOENT") {
@@ -787,7 +790,7 @@ module.exports.create = function(argv, customOptions) {
             var data;
             try {
                 init(argv, customOptions, (data) => {
-                return resolve(data);
+                    return resolve(data);
                 });
             }
             catch(err){
