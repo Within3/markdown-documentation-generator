@@ -648,39 +648,34 @@ function readSGFile(fileExtension, root, name, fileContents, callback) {
 function saveFiles(json){
 
     let output = {
-        'json': json,
+        'json': JSON.stringify(json, null, '  '),
         'html': template(json, options)
     };
-    let filePath;
 
+    let filePromises = [];
 
-    if (options.htmlOutput && _.isString(options.htmlOutput)) {
-        filePath = path.resolve(_sg.root, options.htmlOutput);
-        fs.outputFile(filePath, output.html, function(err) {
-            if (err) {
-                console.error(_sg.logPre + _sg.error('Error saving html file'));
+    Object.keys(output).forEach((fileType) => {
+        let filePath = options[fileType+'Output'];
+
+        if (filePath && _.isString(filePath)) {
+            let fullFilePath = path.resolve(_sg.root, filePath);
+            filePromises.push(
+                fs.outputFile(fullFilePath, output[fileType])
+                .then(() => {
+                    logFiles(filePath, 'create');
+                })
+                .catch((err) => {
+                    console.error(
+                        _sg.logPre +
+                        _sg.error(` Error saving ${fileType} file`)
+                    );
                 console.error(err);
-            }
-            else {
-                logFiles(options.htmlOutput, 'create');
-            }
-        });
+                })
+            )
     }
+    })
 
-    if (options.jsonOutput && _.isString(options.jsonOutput)) {
-        filePath = path.resolve(_sg.root, options.jsonOutput);
-        fs.outputFile(options.jsonOutput, JSON.stringify(json, null, '  '), function(err) {
-            if (err){
-                console.error(_sg.logPre + _sg.error('Error saving json file'));
-                console.error(err);
-            }
-            else {
-                logFiles(options.jsonOutput, 'create');
-            }
-        });
-    }
-
-    return output;
+    return filePromises;
 }
 
 
@@ -741,7 +736,7 @@ function walkFiles(walker, callback) {
 }
 
 
-function init(args, customOptions) {
+function init(args, customOptions, callback) {
 
     //Set up stuff based on arguments
     readArgs(args);
@@ -770,7 +765,9 @@ function init(args, customOptions) {
     try {
         return walkFiles(walker, function(fileContents) {
             const json = convertHTMLtoJSON('<div class="sg-article-' + _sg.uniqueIdentifier + '">\n' + fileContents + '</div>');
-            return saveFiles(json, options);
+            // Resolve files
+            Promise.all(saveFiles(json, options))
+                .then(() => callback(json));
         });
     }
     catch(err) {
@@ -789,8 +786,9 @@ module.exports.create = function(argv, customOptions) {
     return new Promise(function(resolve, reject) {
             var data;
             try {
-                data = init(argv, customOptions);
+                init(argv, customOptions, (data) => {
                 return resolve(data);
+                });
             }
             catch(err){
                 return reject(err);
