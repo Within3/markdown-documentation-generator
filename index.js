@@ -156,7 +156,10 @@ function mergeOptions(defaults, customOptions) {
     //Return a relative path for simpler display purposes
     function getPath(folder){
         const root = path.resolve(customOptions.rootFolder);
-        return path.relative(root, path.resolve(__dirname, folder));
+
+        return path.isAbsolute(folder)
+            ? folder
+            : path.relative(root, path.resolve(__dirname, folder));
     }
 
     //Resolve paths for only a custom rootFolder
