@@ -207,10 +207,13 @@ function registerConfig(customOptions) {
         _sg.configFile = path.isAbsolute(_sg.configFile)
             ? _sg.configFile
             : path.join(process.cwd(), _sg.configFile);
+
+        console.log(customOptions, process.cwd(), _sg.configFile, _sg.brand('Configuration'))
         customOptions = customOptions
             || require(_sg.configFile);
     }
     catch(err) {
+        console.log(err);
         if (err.code !== "ENOENT") {
             err.message = err.message + '.\n    Check your configuration and try again.';
             throw new Error(_sg.error(err));
@@ -773,7 +776,8 @@ function init(args, customOptions, callback) {
             const json = convertHTMLtoJSON('<div class="sg-article-' + _sg.uniqueIdentifier + '">\n' + fileContents + '</div>');
             // Resolve files
             Promise.all(saveFiles(json, options))
-                .then(() => callback(json));
+                .then(() => { callback && callback(json) })
+                .catch((err) => { throw Error(err) });
         });
     }
     catch(err) {
