@@ -369,7 +369,7 @@ function getMetaData($article, articleData, sectionIdentifier) {
         articleData.code.push(categoryCode);
 
         //Run example markup through highlight.js
-        articleData.markup.push(hl.highlight("html", categoryCode).value);
+        articleData.markup.push(hl.highlight(categoryCode, {language: 'html'}).value);
 
     }).remove();
 
