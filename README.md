@@ -1,6 +1,6 @@
 # markdown-documentation-generator
 ### Screenshot
-![Screenshot](https://raw.githubusercontent.com/UWHealth/markdown-documentation-generator/master/docs/screenshot-example.jpg)
+![Screenshot](https://raw.githubusercontent.com/deimosindustries/markdown-documentation-generator/master/docs/screenshot-example.jpg)
 
 ### What is a living style guide?
 > To me, a style guide is a living document of [style] code, which details all the various elements and coded modules of your site or application. Beyond its use in consolidating the front-end code, it also documents the visual language, such as header styles and color palettes, used to create the site. This way, it’s a one-stop place for the entire team—from product owners and producers to designers and developers—to reference when discussing site changes and iterations. [...] - [Susan Robertson/A list apart](http://alistapart.com/article/creating-style-guides)
@@ -27,7 +27,7 @@ Requires [Node.js](http://nodejs.org/) (if you're unsure if you have node instal
 Install with npm:
 
 ```
-npm install -g markdown-documentation-generator
+npm install @deimosindustries/markdown-documentation-generator
 ```
 
 
@@ -118,7 +118,7 @@ Example:
 
 **This will be rendered as:**
 
-![Screenshot](https://raw.githubusercontent.com/UWHealth/markdown-documentation-generator/master/docs/screenshot-rendered-glyphs.png)
+![Screenshot](https://raw.githubusercontent.com/deimosindustries/markdown-documentation-generator/master/docs/screenshot-rendered-glyphs.png)
 
 * `cd` to the web project (any folder containing css/scss/less files. The tool will search nested folders).
 * run `md_documentation` to generate style guide.
@@ -311,11 +311,11 @@ Additional variables to make available to your templates (appended to your json)
 ### Custom Themes
 
 The final look and feel of the style guide is based on three different files:
-* [template file](https://github.com/UWHealth/markdown-documentation-generator/blob/master/template/template.html) - Handlebars template which will produce the final html.
-* [theme file](https://github.com/UWHealth/markdown-documentation-generator/blob/master/template/theme.css) - css file which will be included in the template file.
+* [template file](https://github.com/deimosindustries/markdown-documentation-generator/blob/master/template/template.html) - Handlebars template which will produce the final html.
+* [theme file](https://github.com/deimosindustries/markdown-documentation-generator/blob/master/template/theme.css) - css file which will be included in the template file.
 * highlight file - Syntax highlighting relies on [highlight.js](https://highlightjs.org/). To change the highlight style - set the `highlightStyle` to the  name of the style (filename minus `.css`, [see the list of styles](https://github.com/isagalaev/highlight.js/tree/master/src/styles) ) in your `.styleguide`. See the [demos of available styles](https://highlightjs.org/static/demo/).
 
-To create your own template/theme, copy the [template.html and theme.css](https://github.com/UWHealth/markdown-documentation-generator/tree/master/template) to a folder of your choice. Then set the `templateFile` and `themeFile` in your `.styleguide` to the corresponding paths.
+To create your own template/theme, copy the [template.html and theme.css](https://github.com/deimosindustries/markdown-documentation-generator/tree/master/template) to a folder of your choice. Then set the `templateFile` and `themeFile` in your `.styleguide` to the corresponding paths.
 
 The Javascript object which you may use in your template file looks like this:
 
