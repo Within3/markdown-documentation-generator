@@ -1,0 +1,31 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Publish packages
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+    branches: [ master ]
+  repository_dispatch:
+    types: deploy-master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Node.js 14.4.0
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14.4.0'
+    - name: Publish package on npmjs
+      run: npm publish
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - name: Publish package on github
+      run: rm .npmrc && mv .githubrc .npmrc && npm publish
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
