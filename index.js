@@ -117,6 +117,9 @@ const arg = {
         console.info('   ' + _sg.brand('md_documentation --help') + '              Show this');
         console.info('');
         console.info('   More help at');
+        console.info('   https://github.com/deimosindustries/markdown-documentation-generator');
+        console.info('');
+        console.info('   Forked from');
         console.info('   https://github.com/UWHealth/markdown-documentation-generator');
         console.info('');
         process.exit(0);

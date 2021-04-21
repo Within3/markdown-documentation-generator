@@ -1,7 +1,4 @@
 # markdown-documentation-generator
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bb0cc50ea95f47cfba2ccece0ef73cbb)](https://www.codacy.com/app/cleecanth/markdown-documentation-generator?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=UWHealth/markdown-documentation-generator&amp;utm_campaign=Badge_Grade)
-
 ### Screenshot
 ![Screenshot](https://raw.githubusercontent.com/UWHealth/markdown-documentation-generator/master/docs/screenshot-example.jpg)
 

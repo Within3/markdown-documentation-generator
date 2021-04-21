@@ -24,9 +24,9 @@
   },
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/UWHealth/markdown-documentation-generator/issues"
+    "url": "https://github.com/deimosindustries/markdown-documentation-generator/issues"
   },
-  "homepage": "https://github.com/UWHealth/markdown-documentation-generator#readme",
+  "homepage": "https://github.com/deimosindustries/markdown-documentation-generator#readme",
   "engines": {
     "node": ">= 4"
   },
