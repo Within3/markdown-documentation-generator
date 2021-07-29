@@ -1,6 +1,6 @@
 {
   "name": "@deimosindustries/markdown-documentation-generator",
-  "version": "3.2.4",
+  "version": "3.2.5",
   "description": "Searches files for markdown and generates a static style/documentation guide. A fork of markdown-styleguide-generator.",
   "main": "index.js",
   "scripts": {
