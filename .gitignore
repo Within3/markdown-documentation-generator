@@ -1,5 +1,6 @@
 bk.package.json
 npm-debug.log
+styleguide/
 node_modules/
 .git
 .styleguide*

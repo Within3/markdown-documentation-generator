@@ -212,8 +212,8 @@ function registerConfig(customOptions) {
             : path.join(process.cwd(), _sg.configFile);
 
         console.log(customOptions, process.cwd(), _sg.configFile, _sg.brand('Configuration'))
-        customOptions = customOptions
-            || require(_sg.configFile);
+        const configFile = fs.readJSONSync(_sg.configFile, 'utf8');
+        customOptions = customOptions || configFile;
     }
     catch(err) {
         console.log(err);
